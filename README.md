@@ -2,7 +2,7 @@
 
 Welcome to the SOEN344-W2019 wiki!
 
-[Google Drive]  (https://drive.google.com/drive/u/1/folders/16J-DX5ORekRHLZsBB5cQl3qEEmFJBttY)
+[Google Drive](https://drive.google.com/drive/u/1/folders/16J-DX5ORekRHLZsBB5cQl3qEEmFJBttY)
 
 ## Team Information
 
