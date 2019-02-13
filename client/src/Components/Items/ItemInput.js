@@ -36,9 +36,11 @@ class ItemInput extends Component {
         /* Send the HTTP POST request along with the form data to the node js server. 
         Send the data as an object because we have used the body-parser at 
         the backend to pluck the data from the request and save it in the database. 
+
+        The path used is from our routes > api > catalog.js file
         */
         if (item) {
-            axios.post('/api/items', item)
+            axios.post('/api/catalog/item/create', item)
             .then(res => {
                 if (res.data) {
                     this.props.getItems();

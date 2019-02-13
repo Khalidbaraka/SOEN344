@@ -3,8 +3,8 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
-
-const items = require('./routes/api/items');
+// Add all necessary route modules here
+const catalogRouter = require('./routes/api/catalog');
 
 const app = express();
 
@@ -21,8 +21,8 @@ mongoose.connect(db)
     .then(() => console.log('MongoDB Connected..'))
     .catch(err => console.log(err));
 
-// Use routes
-app.use('/api/items', items)
+// Using the route modules. Add the necessary routes to the middleware stack here
+app.use('/api/catalog', catalogRouter)
 
 const PORT = process.env.PORT || 5000;
 
