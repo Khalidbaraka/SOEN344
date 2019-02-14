@@ -20,9 +20,12 @@ class Items extends Component {
     }
 
     /* We send the GET request to the node.js server and fetch that data from the API
-    We don't need to write http://localhost:5000/api/items since we added "proxy": "http://localhost:5000" to package.json */
+    We don't need to write http://localhost:5000/api/items since we added "proxy": "http://localhost:5000" to package.json
+    
+    The path used is from our routes > api > catalog.js file
+    */
     getItems = () => {
-        axios.get('/api/items')
+        axios.get('/api/catalog/item')
         .then(res => {
           if(res.data){
             this.setState({
@@ -35,7 +38,7 @@ class Items extends Component {
 
     // Idem, delete the data from the API
     deleteItem = (id) => {
-        axios.delete(`/api/items/` + id)
+        axios.delete('/api/catalog/item/' + id + '/delete')
           .then(res => {
             if(res.data){
               this.getItems()
