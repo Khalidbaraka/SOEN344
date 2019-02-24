@@ -3,6 +3,7 @@ import axios from 'axios';
 
 class NurseLogin extends Component{
 	render(){
+		console.log("Logging Nurse");
 		return(
             <div className="container">
                 <h1 className="text-center my-4"> Login as Nurse </h1>

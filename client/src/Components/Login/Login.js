@@ -13,7 +13,7 @@ class Login extends Component{
         return (
             <div className="container-fluid" style={{width: 500}}>
             <h1 className="text-center my-4"> Login </h1>
-            <Tabs defaultActiveKey="patient" id="uncontrolled-tab-example">
+            <Tabs defaultActiveKey="patient" id="uncontrolled-tab-example" unmountOnExit="True">
               <Tab eventKey="doctor" title="Doctor">
                 <DoctorLogin />
               </Tab>
