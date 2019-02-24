@@ -53,7 +53,7 @@ class AppNavbar extends Component {
                     </li>
                   </ul>
                    <ul className="navbar-nav ml-auto mt-2 mt-lg-0">
-                    <li className="nav-item" onClick={this.showModal}> Login </li>
+                    <li className="nav-link" onClick={this.showModal}> Login </li>
                     </ul>
                 </div>
               </nav>
