@@ -8,6 +8,7 @@ import About from './Components/About';
 import AppNavbar from './Components/AppNavbar';
 import Home from './Components/Home';
 import Items from './Components/Items/Items';
+import Login from './Components/Login/Login'
 
 class App extends Component {
   render() {
@@ -23,6 +24,7 @@ class App extends Component {
             <Route exact path='/' component={ Home }/>
             <Route path='/about' component={ About}/>
             <Route path='/items' component={ Items }/>
+            <Route path='/login' component={ Login}/>
             <Route render={() => (<div> Sorry, this page does not exist. </div>)} />
           </Switch>
         </div>
