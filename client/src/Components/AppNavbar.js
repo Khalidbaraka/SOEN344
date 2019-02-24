@@ -58,7 +58,7 @@ class AppNavbar extends Component {
                 </div>
               </nav>
               <LoginModal isOpen={this.state.showModal} onClose={() => this.hideModal()}>
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onClick={() => this.hideModal()}>×</button>
+              <button type="button" className="close" data-dismiss="modal" aria-hidden="true" onClick={() => this.hideModal()}>×</button>
                 <Login/>
                 
               </LoginModal>
