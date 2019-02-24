@@ -54,10 +54,7 @@ class AppNavbar extends Component {
                       <Link to={'/items'} className="nav-link"> Items </Link>
                     </li>
                     <li className="nav-item">
-                      <Link to={'/nurseLogin'} className="nav-link"> Nurse Login </Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link to={'/patientLogin'} className="nav-link"> Patient Login </Link>
+                      <Link to={'/signup'} className="nav-link"> Sign Up </Link>
                     </li>
                   </ul>
                    <ul className="navbar-nav ml-auto mt-2 mt-lg-0">
