@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 
 import { Link } from 'react-router-dom';
 
+
+
 class AppNavbar extends Component {
     constructor(props) {
       super(props);
@@ -40,6 +42,12 @@ class AppNavbar extends Component {
                     </li>
                     <li className="nav-item">
                       <Link to={'/items'} className="nav-link"> Items </Link>
+                    </li>
+                    <li className="nav-item">
+                      <Link to={'/nurseLogin'} className="nav-link"> Nurse Login </Link>
+                    </li>
+                    <li className="nav-item">
+                      <Link to={'/patientLogin'} className="nav-link"> Patient Login </Link>
                     </li>
                   </ul>
                 </div>
