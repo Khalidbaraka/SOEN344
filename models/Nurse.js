@@ -6,7 +6,8 @@ const NurseSchema = new Schema ({
     accessID: {
         type: String, 
         required: true,
-        index: {unique: true}
+        index: {unique: true},
+        pattern: "([A-Z]{3})+([0-9]{5})"
     }, 
     password: {
         type: String,
