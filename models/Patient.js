@@ -11,7 +11,7 @@ const PatientSchema = new Schema ({
         type: String,
         required: true
     },
-    healthCard: {
+    patientID: {
         type: String,
         required: true
     },
