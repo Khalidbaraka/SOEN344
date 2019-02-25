@@ -12,6 +12,14 @@ const NurseSchema = new Schema ({
         type: String,
         required: true
     },
+    first_name: {
+        type: String,
+        required: true
+    },
+    last_name: {
+        type: String,
+        required: true
+    }
 });
 
 module.exports = Nurse = mongoose.model('nurse', NurseSchema);
