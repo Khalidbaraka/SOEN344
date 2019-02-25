@@ -9,19 +9,18 @@ exports.patient_list = (req, res) => {
     Patient.find().then(patients => res.json(patients))
 }
 
-
 // register/create patient
-exports.patient_register = (req,res)=>{
+exports.patient_register = (req,res) =>{
 
-    Patient.findOne({patientID: req.body.patientID})
+    Patient.findOne({healthCardNumber: req.body.healthCardNumber})
         .then(patient  => {
             if (patient) {
-                return res.status(400).json({patientID: 'patient file already exists'});
+                return res.status(400).json({healthCardNumber: 'Patient file already exists'});
             } else {
                 const newPatient = new Patient({
-                    firstname: req.body.firstname,
-                    lastname: req.body.lastname,
-                    patientID: req.body.patientID,
+                    healthCardNumber: req.body.healthCardNumber,
+                    firstName: req.body.firstName,
+                    lastName: req.body.lastName,
                     password: req.body.password
                 });
 
@@ -47,14 +46,13 @@ exports.patient_delete = (req, res) => {
         ).catch(err => res.status(404).json({success: false}));
 }
 
-
 // update an exisitig object
-exports.patient_update= (req,res) => {
-    console.log("inside the method");
-    Patient.findOneAndUpdate({patientID: req.body.patientID},{ $set:
+exports.patient_update = (req,res) => {
+    Patient.findOneAndUpdate({healthCardNumber: req.body.healthCardNumber}, { $set:
             {
                 firstname: req.body.firstname,
-                lastname: req.body.lastname
+                lastname: req.body.lastname, 
+                password: req.body.password
             }
     }, {new: true} ).then(patient => res.json(patient));
 

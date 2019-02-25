@@ -3,15 +3,16 @@ const Schema = mongoose.Schema;
 // Creating patient schema
 const PatientSchema = new Schema ({
 
-    firstname: {
+    healthCardNumber: {
+        type: String, 
+        required: true,
+        index: {unique: true}
+    },
+    firstName: {
         type: String,
         required: true
     },
-    lastname: {
-        type: String,
-        required: true
-    },
-    patientID: {
+    lastName: {
         type: String,
         required: true
     },
