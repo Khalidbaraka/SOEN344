@@ -11,11 +11,21 @@ class NurseSignUp extends Component{
     return (
       <div>
           <Form>
-              <Form.Group controlId="formBasicEmail">
+              <Form.Group controlId="formFirstName">
+                  <Form.Label>First name</Form.Label>
+                  <Form.Control type="text" placeholder="Enter First Name" />
+              </Form.Group>
+
+              <Form.Group controlId="formLastName">
+                  <Form.Label>Last name</Form.Label>
+                  <Form.Control type="text" placeholder="Enter Last Name" />
+              </Form.Group>
+
+              <Form.Group controlId="formBasicUsername">
                   <Form.Label>Access ID</Form.Label>
-                  <Form.Control type="email" placeholder="Enter ID" />
+                  <Form.Control type="text" placeholder="Enter ID (3 letters followed by 5 digits)" />
                   <Form.Text className="text-muted">
-                    ex: DOL96315
+                     ex: DOL96315
                   </Form.Text>
               </Form.Group>
 
