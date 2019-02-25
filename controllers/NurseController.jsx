@@ -8,9 +8,15 @@ exports.nurse_list = (req, res) => {
         .then(nurses => res.json(nurses))
 };
 
+// Find NurseByAccessID
+exports.nurse_by_access_id = (req, res) => {
+    Nurse.findOne({ accessID: req.body.accessID })
+        .then(nurse => res.json(nurse))
+};
+
 // Create/Register nurse
 exports.nurse_register = (req, res) => {
-    Nurse.find({ accessID: req.body.accessID })
+    Nurse.findOne({ accessID: req.body.accessID })
         .then(nurse => {
             if(nurse == null){
                 const newNurse = new Nurse({
@@ -23,4 +29,17 @@ exports.nurse_register = (req, res) => {
                 return res.status(400).json({ accessID: 'accessID is already in the system' });
             }
         })
+};
+
+// Edit Password
+exports.change_nurse_password = (req, res) => {
+    Nurse.findOneAndUpdate({ accessID: req.body.accessID }, { $set: { password: req.body.password } })
+        .then(nurse => res.json(nurse))
+};
+
+// Delete Nurse
+exports.nurse_delete = (req, res) =>{
+    Nurse.findOneAndDelete( { accessID: req.body.accessID } )
+        .then(nurse => res.json({ deleted: true }))
+        .catch(err => res.status(404).json({success: false}));
 };
