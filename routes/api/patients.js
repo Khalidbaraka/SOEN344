@@ -22,6 +22,10 @@ router.get('/patientsList', patientController.patient_list);
 // @access Public
 router.post('/register',patientController.patient_register);
 
+// delete by health Card which is patientID
+router.delete('/delete/:id', patientController.patient_delete);
+
+
 
 
 module.exports = router;

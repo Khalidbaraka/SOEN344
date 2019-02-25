@@ -37,6 +37,12 @@ exports.patient_register = (req,res)=>{
             }
         });
 
-
 }
 
+// delete a patient from db
+exports.patient_delete = (req, res) => {
+    Patient.findById(req.params.id)
+        .then(patient => patient.remove()
+            .then(() => res.json({success: true}))
+        ).catch(err => res.status(404).json({success: false}));
+}
