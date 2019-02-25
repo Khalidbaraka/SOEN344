@@ -3,6 +3,8 @@ import LoginModal from './Login/LoginModal';
 import Login from './Login/Login';
 import { Link } from 'react-router-dom';
 
+
+
 class AppNavbar extends Component {
     constructor(props) {
       super(props);
@@ -50,6 +52,9 @@ class AppNavbar extends Component {
                     </li>
                     <li className="nav-item">
                       <Link to={'/items'} className="nav-link"> Items </Link>
+                    </li>
+                    <li className="nav-item">
+                      <Link to={'/signup'} className="nav-link"> Sign Up </Link>
                     </li>
                   </ul>
                    <ul className="navbar-nav ml-auto mt-2 mt-lg-0">
