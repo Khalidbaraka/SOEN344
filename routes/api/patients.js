@@ -22,8 +22,18 @@ router.get('/patientsList', patientController.patient_list);
 // @access Public
 router.post('/register',patientController.patient_register);
 
+// @route post api/patients/delete/id
+// @desc  delete patient
+// @access Public
 // delete by health Card which is patientID
 router.delete('/delete/:id', patientController.patient_delete);
+
+
+
+// @route put api/update/id
+// @desc  update patient
+// @access Public
+router.put('/update', patientController.patient_update);
 
 
 

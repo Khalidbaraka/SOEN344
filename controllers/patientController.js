@@ -46,3 +46,18 @@ exports.patient_delete = (req, res) => {
             .then(() => res.json({success: true}))
         ).catch(err => res.status(404).json({success: false}));
 }
+
+
+// update an exisitig object
+exports.patient_update= (req,res) => {
+    console.log("inside the method");
+    Patient.findOneAndUpdate({patientID: req.body.patientID},{ $set:
+            {
+                firstname: req.body.firstname,
+                lastname: req.body.lastname
+            }
+    }, {new: true} ).then(patient => res.json(patient));
+
+
+}
+
