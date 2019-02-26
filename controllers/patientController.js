@@ -46,7 +46,7 @@ exports.patient_delete = (req, res) => {
         ).catch(err => res.status(404).json({success: false}));
 }
 
-// update an exisitig object
+// update an existing object
 exports.patient_update = (req,res) => {
     Patient.findOneAndUpdate({healthCardNumber: req.body.healthCardNumber}, { $set:
             {

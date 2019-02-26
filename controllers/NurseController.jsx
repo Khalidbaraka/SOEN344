@@ -16,6 +16,7 @@ exports.nurse_list = (req, res) => {
 exports.nurse_by_access_id = (req, res) => {
     Nurse.findOne({ accessID: req.body.accessID })
         .then(nurse => res.json(nurse))
+        .catch(err => console.log(err))
 };
 
 // Login nurse
@@ -83,23 +84,22 @@ exports.nurse_register = (req, res) => {
         res.send('error: '+ err)
     })
 };
-   
-
 
 // Edit Password
 exports.change_nurse_password = (req, res) => {
-    Nurse.findOneAndUpdate({ accessID: req.body.accessID }, { $set: { password: req.body.password } })
-        .then(nurse => {
-            bcryptjs.genSalt(10, (err, salt) =>
-            {
-                bcryptjs.hash(nurse.password, salt, (err, hash) => {
-                    if (err) {
-                        throw err;
-                    }
-                    nurse.password = hash;
-                    res.json(nurse)
+    Nurse.findOne({ accessID: req.body.accessID })
+        .then(() => {
+                bcryptjs.genSalt(10, (err, salt) =>
+                {
+                    bcryptjs.hash(req.body.password, salt, (err, hash) => {
+                        if (err) {
+                            throw err;
+                        }
+
+                        Nurse.findOneAndUpdate({ accessID: req.body.accessID }, { $set: {password: hash}})
+                            .then(updatedNurse => res.json(updatedNurse))
+                    })
                 })
-            })
         })
 };
 
