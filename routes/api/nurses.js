@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcrypt');
+
 
 const nurse_controller = require ('./../../controllers/NurseController.jsx');
 
@@ -13,3 +13,6 @@ router.post('/register', nurse_controller.nurse_register);
 
 
 
+
+
+module.exports = router;
