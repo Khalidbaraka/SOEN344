@@ -19,6 +19,36 @@ exports.nurse_by_access_id = (req, res) => {
         .then(nurse => res.json(nurse))
 };
 
+// Login nurse
+exports.nurse_login = (req, res) => {
+    Nurse.findOne({
+        accessID: req.body.accessID
+    })
+    .then(nurse => {
+        if(nurse) {
+            if(bcrypt.compareSync(req.body.password, nurse.password))
+            {
+                const payload = {
+                    _id: nurse._id,
+                    first_name: nurse.first_name,
+                    last_name: nurse.last_name,
+                    accessID: nurse.accessID
+                }
+                res.json({ status: nurse.accessID + ' registered'})
+            }
+            else{
+                res.json({error: "Nurse does not exist"})
+            }
+        }
+        else{
+            res.json({error: "Nurse does not exist"})
+        }
+    })
+    .catch(err => {
+        res.send('error: '+ err)
+    })
+};
+
 // Create/Register nurse
 exports.nurse_register = (req, res) => {
    
