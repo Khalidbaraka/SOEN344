@@ -2,7 +2,6 @@
 const Nurse = require('./../models/Nurse');
 let bcryptjs = require('bcryptjs');
 const bcrypt = require('bcrypt');
-const jwt = require("jsonwebtoken");
 
 
 
@@ -34,14 +33,14 @@ exports.nurse_login = (req, res) => {
                     last_name: nurse.last_name,
                     accessID: nurse.accessID
                 }
-                res.json({ status: nurse.accessID + ' registered'})
+                res.json({ status: nurse.accessID + ' logged in'})
             }
             else{
-                res.json({error: "Nurse does not exist"})
+                res.json({error: "Incorrect accessID or password"})
             }
         }
         else{
-            res.json({error: "Nurse does not exist"})
+            res.json({error: "Incorrect accessID or password"})
         }
     })
     .catch(err => {
