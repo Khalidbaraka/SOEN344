@@ -1,5 +1,5 @@
 // Nurse Model
-const Nurse = require('./../models/Nurse');
+const Nurse = require('../models/Nurse');
 let bcryptjs = require('bcryptjs');
 const bcrypt = require('bcrypt');
 
@@ -68,15 +68,24 @@ exports.nurse_register = (req, res) => {
                 nurseData.password = hash
                 Nurse.create(nurseData)
                 .then(nurse => {
-                    res.json({ status: nurse.accessID + ' registered'})
+                    res.json({
+                        success: true,
+                        message: 'Signed up!'
+                    });
                 })
                 .catch(err => {
-                    res.send('error: '+ err)
+                    res.json({
+                        success: false,
+                        message: 'Error: Server error'
+                    });
                 })
             })
         }
         else{
-            res.json({error: 'Nurse already exists'})
+            res.json({
+                success: false,
+                message: 'Nurse already exists'
+            });
         }
     })
     .catch(err => {

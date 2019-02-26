@@ -9,6 +9,7 @@ import AppNavbar from './Components/AppNavbar';
 import Home from './Components/Home';
 import Items from './Components/Items/Items';
 import Login from './Components/Login/Login'
+import NurseHomepage from './Components/Homepage/NurseHomepage';
 import SignUp from './Components/SignUp/SignUp'
 
 class App extends Component {
@@ -27,6 +28,7 @@ class App extends Component {
             <Route path='/items' component={ Items }/>
             <Route path='/login' component={ Login}/>
             <Route path='/signup' component={ SignUp }/>
+            <Route path='/homepage/nurse' component={ NurseHomepage }/>
             <Route render={() => (<div> Sorry, this page does not exist. </div>)} />
           </Switch>
         </div>
