@@ -6,11 +6,11 @@ import axios from 'axios';
 export const login = nurse => {
     return axios
     .post('api/nurses/login', {
-        first_name: nurse.first_name,
+        accessID: nurse.accessID,
         password: nurse.password
     })
     .then(res => {
-        console.log("logged in")
+        console.log(res.data)
 
     })
     .catch(err => {
@@ -44,7 +44,6 @@ class NurseLogin extends Component{
             accessID: this.state.accessID,
             password: this.state.password
         }
-
         login(nurse).then(res =>
         {
             if(res){
@@ -52,11 +51,11 @@ class NurseLogin extends Component{
                 // this.props.history.push('/NurseHomePage')
             }
         })
+    
     }
     
 
     render(){
-		console.log("Logging Nurse");
 		return(
             <div className="container">
                <Form noValidate onSubmit = {this.onSubmit}>
@@ -71,7 +70,7 @@ class NurseLogin extends Component{
 
               <Form.Group controlId="formBasicPassword">
                   <Form.Label>Password</Form.Label>
-                  <Form.Control name="password" type="password" placeholder="Enter Password" value = {this.state.accessID} onChange={this.onChange} />
+                  <Form.Control name="password" type="password" placeholder="Enter Password" value = {this.state.password} onChange={this.onChange} />
               </Form.Group>
               
               <Button variant="primary" type="submit">

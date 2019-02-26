@@ -12,7 +12,9 @@ export const register = newNurse => {
       password: newNurse.password
   })
   .then(res => {
-      console.log("successfully registered")
+      console.log(res.data)
+  }).catch(error => {
+      console.log(error.res)
   })
 }
 
@@ -47,6 +49,15 @@ class NurseSignUp extends Component{
           password: this.state.password
       }
 
+      //access id and password front end validation
+      const errors = {}
+      const accessIDFormat = /[a-zA-Z]{3}\d{5}/
+      const emptyPasswordFormat = /^$|\s+/
+      errors.accessID = !nurse.accessID.match(accessIDFormat) ? "Invalid ID" : ""
+      errors.password = nurse.password.match(emptyPasswordFormat) ? "Password should not be empty or contain spaces anywhere": ""
+      console.log(errors) 
+
+      if(errors.accessID === "" && errors.password === ""){
       register(nurse).then(res =>
       {
           if(res){
@@ -54,6 +65,7 @@ class NurseSignUp extends Component{
               // this.props.history.push('/NurseHomePage')
           }
       })
+    }
   }
 
   render() {
