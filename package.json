@@ -13,10 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-<<<<<<< HEAD
     "bcrypt": "^3.0.4",
-=======
->>>>>>> e898fb28c8fee5a87bfb22f5f3f32ab85a7d88fa
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "concurrently": "^4.1.0",
