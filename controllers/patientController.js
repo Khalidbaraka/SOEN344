@@ -1,6 +1,6 @@
 // Patient Model
 const Patient = require('./../models/Patient');
-var bcryptjs = require('bcryptjs');
+const bcryptjs = require('bcryptjs');
 
 //  Callback functions that they will invoke on our routes
 
@@ -19,6 +19,11 @@ exports.patient_register = (req,res) =>{
             } else {
                 const newPatient = new Patient({
                     healthCardNumber: req.body.healthCardNumber,
+                    birthday: req.body.birthday,
+                    gender: req.body.gender,
+                    phoneNumber: req.body.phoneNumber,
+                    physicalAddress: req.body.physicalAddress,
+                    emailAddress: req.body.emailAddress,
                     firstName: req.body.firstName,
                     lastName: req.body.lastName,
                     password: req.body.password
@@ -30,13 +35,36 @@ exports.patient_register = (req,res) =>{
                         newPatient.password=hash;
                         newPatient.save().then(patient => res.json(patient)).catch(err=>console.log(err));
                     })
-
                 })
-
             }
         });
-
 }
+
+//login
+exports.patient_login = (req, res) => {
+
+    Patient.findOne({
+        healthCardNumber: req.body.healthCardNumber
+    })
+    .then(patient => {
+        if(patient) {
+            if(bcryptjs.compareSync(req.body.password, patient.password))
+            {
+                res.json({ status: patient.healthCardNumber + 'logged in'})
+            }
+            else {
+                res.json({ error: "wrong password"})
+            }
+
+        }
+        else {
+            res.json({ error: "patient not found"})
+        }
+    })
+        .catch(err => {
+            res.send('error: ' + err)
+        })
+};
 
 // delete a patient from db
 exports.patient_delete = (req, res) => {
@@ -46,12 +74,18 @@ exports.patient_delete = (req, res) => {
         ).catch(err => res.status(404).json({success: false}));
 }
 
-// update an exisitig object
+// update an existing object
 exports.patient_update = (req,res) => {
     Patient.findOneAndUpdate({healthCardNumber: req.body.healthCardNumber}, { $set:
             {
-                firstname: req.body.firstname,
-                lastname: req.body.lastname, 
+                healthCardNumber: req.body.healthCardNumber,
+                birthday: req.body.birthday,
+                gender: req.body.gender,
+                phoneNumber: req.body.phoneNumber,
+                physicalAddress: req.body.physicalAddress,
+                emailAddress: req.body.emailAddress,
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
                 password: req.body.password
             }
     }, {new: true} ).then(patient => res.json(patient));

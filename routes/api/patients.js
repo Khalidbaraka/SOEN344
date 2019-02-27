@@ -14,7 +14,12 @@ router.get('/patientsList', patientController.patient_list);
 // @route post api/patients/register
 // @desc  Register Patient
 // @access Public
-router.post('/register',patientController.patient_register);
+router.post('/register', patientController.patient_register);
+
+// @route post api/patients/login
+// @desc  Login Patient
+// @access Public
+router.post('/login', patientController.patient_login);
 
 // @route post api/patients/delete/id
 // @desc  delete patient
