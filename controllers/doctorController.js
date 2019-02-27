@@ -78,26 +78,17 @@ exports.doctor_login = (req, res) =>{
 
 //Update
 exports.doctor_update = (req, res) =>{
-	Doctor.findOneAndUpdate(req.params.permit_number, {$set: 
-		{
+	bcryptjs.hash(req.body.password, 10, (err, hash) => {
+        //params is from the routes url, ex /api/doctor/:permit_number/update
+        Doctor.findOneAndUpdate( {permit_number: req.params.permit_number} , { $set: {
                 first_name: req.body.first_name,
                 last_name: req.body.last_name, 
-                password: req.body.password,
+                password: hash,
                 speciality: req.body.speciality,
                 city: req.body.city
-            }})
-		.then(doctor => {
-            bcryptjs.genSalt(10, (err, salt) =>
-            {
-                bcryptjs.hash(doctor.password, salt, (err, hash) => {
-                    if (err) {
-                        throw err;
-                    }
-                    doctor.password = hash;
-                    res.json(doctor)
-                })
-            })
-        })
+        }})
+            .then(doctor => res.json(doctor))
+    })
 }
 
 //Delete
