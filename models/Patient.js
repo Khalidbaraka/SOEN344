@@ -8,6 +8,26 @@ const PatientSchema = new Schema ({
         required: true,
         index: {unique: true}
     },
+    birthday: {
+        type: Number,
+        required: true,
+    },
+    gender: {
+        type: String,
+        required: true
+    },
+    phoneNumber: {
+        type: String,
+        required: true
+    },
+    physicalAddress: {
+        type: String,
+        required: true
+    },
+    emailAddress: {
+        type: String,
+        required: true
+    },
     firstName: {
         type: String,
         required: true

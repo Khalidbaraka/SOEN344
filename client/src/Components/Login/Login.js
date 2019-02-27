@@ -11,7 +11,7 @@ class Login extends Component{
        render() {
        
         return (
-            <div className="container-fluid" style={{width: 500}}>
+            <div className="container-fluid" style={{height:365, width: 400}}>
             <h1 className="text-center my-4"> Login </h1>
             <Tabs defaultActiveKey="patient" id="uncontrolled-tab-example" unmountOnExit="True">
               <Tab eventKey="doctor" title="Doctor">
