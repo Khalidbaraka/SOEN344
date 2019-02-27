@@ -65,9 +65,7 @@ class NurseLogin extends Component{
         const { isAuthenticated } = this.state;
 
          if ( isAuthenticated ) {
-         //collapse login modal
-         'LoginModal'.modal('hide')
-         
+
          //direct to nurse homepage
         return <Redirect to='/homepage/nurse'/>;
          }
