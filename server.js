@@ -26,7 +26,8 @@ mongoose.connect(db)
 // Using the route modules. Add the necessary routes to the middleware stack here
 app.use('/api/catalog', catalogRouter)
 app.use('/api/patients', patientsRouter)
-app.use('/api/doctor', doctorRouter)
+// uncomment after implementing routes 
+//app.use('/api/doctor', doctorRouter)
 
 const PORT = process.env.PORT || 5000;
 

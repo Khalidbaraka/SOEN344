@@ -42,6 +42,40 @@ exports.doctor_get_by_permit = (req, res) =>{
 		.then(doctor => res.json(doctor))
 }
 
+//Login
+exports.doctor_login = (req, res) =>{
+    Doctor.findOne({permit_number: req.body.permit_number})
+        .then(doctor => {
+            if(doctor){
+                if(bcryptjs.compareSync(req.body.password, doctor.password)){
+                    const foundDoctor = {
+                        permit_number: doctor.permit_number,
+                        first_name: doctor.first_name,
+                        last_name: doctor.last_name,
+                        speciality: doctor.speciality,
+                        city: doctor.city
+                    }
+                    res.json({
+                        success: true,
+                        message: ' Dotor logged in succesfully'
+                    })
+                }
+                else {
+                    res.json({
+                        success: false,
+                        message: 'Incorrect Permit Number or Password'
+                    })
+                }
+            }
+            else{
+                res.json({
+                    sucess: false,
+                    message: 'Incorrect Permit Number or Password'
+                })
+            }
+        })
+}
+
 //Update
 exports.doctor_update = (req, res) =>{
 	Doctor.findOneAndUpdate(req.params.permit_number, {$set: 
