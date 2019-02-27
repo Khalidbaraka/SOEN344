@@ -33,14 +33,23 @@ exports.nurse_login = (req, res) => {
                     last_name: nurse.last_name,
                     accessID: nurse.accessID
                 }
-                res.json({ status: nurse.accessID + ' logged in'})
+                res.json({
+                    success: true,
+                    message: 'Logged in!'
+                });
             }
             else{
-                res.json({error: "Incorrect accessID or password"})
+                res.json({
+                    success: false,
+                    message: 'Incorrect id or password'
+                });
             }
         }
         else{
-            res.json({error: "Incorrect accessID or password"})
+            res.json({
+                success: false,
+                message: 'Incorrect id or password'
+            });
         }
     })
     .catch(err => {
