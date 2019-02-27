@@ -1,22 +1,9 @@
 import React, { Component } from 'react';
-import { Button, Form } from 'react-bootstrap';
 import axios from 'axios';
+import { Button, Card, Form } from 'react-bootstrap';
+import { Redirect } from 'react-router-dom';
 
-//nurse login function
-export const login = nurse => {
-    return axios
-    .post('api/nurses/login', {
-        accessID: nurse.accessID,
-        password: nurse.password
-    })
-    .then(res => {
-        console.log(res.data)
 
-    })
-    .catch(err => {
-        console.log(err)
-    })
-}
 
 class NurseLogin extends Component{
 
@@ -25,6 +12,8 @@ class NurseLogin extends Component{
         this.state = {
             accessID: '',
             password: '', 
+            message: '', 
+            isAuthenticated: false
         }
         this.onChange = this.onChange.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
@@ -44,21 +33,56 @@ class NurseLogin extends Component{
             accessID: this.state.accessID,
             password: this.state.password
         }
-        login(nurse).then(res =>
-        {
-            if(res){
-                // go to home page 
-                // this.props.history.push('/NurseHomePage')
+        axios
+         .post('api/nurses/login', {
+        accessID: nurse.accessID,
+        password: nurse.password
+         })
+        .then(res => {
+            if (res.data.success) {
+                this.setState({
+                    isAuthenticated: true
+                });
             }
+            else{
+                this.setState({
+                    accessID: '',
+                    password: '',
+                    message: res.data.message
+                });
+            }
+
+        })
+         .catch(err => {
+        console.log(err.res)
         })
     
     }
     
 
     render(){
+
+        const { isAuthenticated } = this.state;
+
+         if ( isAuthenticated ) {
+
+         //direct to nurse homepage
+        return <Redirect to='/homepage/nurse'/>;
+         }
+
+        const message = this.state.message;
 		return(
-            <div className="container">
-               <Form noValidate onSubmit = {this.onSubmit}>
+            <div>
+            <Card className="p-4">
+            <Form noValidate onSubmit = {this.onSubmit} className="font-weight-bold">
+            { message ? 
+                        <Card border="danger" className="my-3"> 
+                            <Card.Body> 
+                                <Card.Title>{ message } </Card.Title>
+                            </Card.Body> 
+                        </Card>
+                    : ''}
+               
 
               <Form.Group controlId="formBasicUsername">
                   <Form.Label>Access ID</Form.Label>
@@ -77,6 +101,7 @@ class NurseLogin extends Component{
                   Submit
               </Button>
           </Form>
+          </Card>
             </div>
         );
 	}
