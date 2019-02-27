@@ -66,7 +66,7 @@ exports.nurse_register = (req, res) => {
         if(!nurse)
         {
             bcrypt.hash(req.body.password, 10, (err, hash) => {
-                nurseData.password = hash
+                nurseData.password = hash;
                 Nurse.create(nurseData)
                 .then(nurse => {
                     res.json({ status: nurse.accessID + ' registered'})
@@ -76,7 +76,7 @@ exports.nurse_register = (req, res) => {
                 })
             })
         }
-        else{
+        else {
             res.json({error: 'Nurse already exists'})
         }
     })
@@ -87,20 +87,10 @@ exports.nurse_register = (req, res) => {
 
 // Edit Password
 exports.change_nurse_password = (req, res) => {
-    Nurse.findOne({ accessID: req.body.accessID })
-        .then(() => {
-                bcryptjs.genSalt(10, (err, salt) =>
-                {
-                    bcryptjs.hash(req.body.password, salt, (err, hash) => {
-                        if (err) {
-                            throw err;
-                        }
-
-                        Nurse.findOneAndUpdate({ accessID: req.body.accessID }, { $set: {password: hash}})
-                            .then(updatedNurse => res.json(updatedNurse))
-                    })
-                })
-        })
+    bcrypt.hash(req.body.password, 10, (err, hash) => {
+        Nurse.findOneAndUpdate({ accessID: req.body.accessID }, { $set: {password: hash}})
+            .then(updatedNurse => res.json(updatedNurse))
+    })
 };
 
 // Delete Nurse
