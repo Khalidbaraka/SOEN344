@@ -25,28 +25,12 @@ exports.nurse_login = (req, res) => {
         accessID: req.body.accessID
     })
     .then(nurse => {
-        if(nurse) {
-            if(bcrypt.compareSync(req.body.password, nurse.password))
-            {
-                const payload = {
-                    _id: nurse._id,
-                    first_name: nurse.first_name,
-                    last_name: nurse.last_name,
-                    accessID: nurse.accessID
-                }
-                res.json({
-                    success: true,
-                    message: 'Logged in!'
-                });
-            }
-            else{
-                res.json({
-                    success: false,
-                    message: 'Incorrect id or password'
-                });
-            }
-        }
-        else{
+        if(nurse && bcrypt.compareSync(req.body.password, nurse.password)) {
+            res.json({
+                success: true,
+                message: 'Logged in!'
+            });
+        } else {
             res.json({
                 success: false,
                 message: 'Incorrect id or password'
