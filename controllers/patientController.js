@@ -33,7 +33,11 @@ exports.patient_register = (req,res) =>{
                     bcryptjs.hash(newPatient.password, salt, (err,hash)=>{
                         if(err) {throw err;}
                         newPatient.password=hash;
-                        newPatient.save().then(patient => res.json(patient)).catch(err=>console.log(err));
+                        newPatient.save().then(patient =>
+                            res.json(patient)).catch(err=>console.log(err));
+                            res.json({
+                                success: true,
+                            });
                     })
                 })
             }
