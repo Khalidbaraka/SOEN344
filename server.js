@@ -7,7 +7,7 @@ const cors = require('cors');
 const catalogRouter = require('./routes/api/catalog');
 const nurseRouter = require('./routes/api/nurses');
 const patientsRouter = require('./routes/api/patients');
-const doctorRouter = require('./routes/api/doctor');
+const doctorRouter = require('./routes/api/doctors');
 
 const app = express();
 
@@ -28,8 +28,7 @@ mongoose.connect(db)
 app.use('/api/catalog', catalogRouter)
 app.use('/api/nurses', nurseRouter)
 app.use('/api/patients', patientsRouter)
-// uncomment after implementing doctor routes 
-//app.use('/api/doctor', doctorRouter)
+app.use('/api/doctors', doctorRouter)
 
 const PORT = process.env.PORT || 5000;
 
