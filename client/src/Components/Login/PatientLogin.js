@@ -63,6 +63,7 @@ class PatientLogin extends Component{
     render(){
 
         const { isAuthenticated } = this.state;
+        const message = this.state.message;
 
          if ( isAuthenticated ) {
 
@@ -70,15 +71,14 @@ class PatientLogin extends Component{
         return <Redirect to='/homepage/patient'/>;
          }
 
-        const message = this.state.message;
 		return(
             <div>
             <Card className="p-4">
             <Form noValidate onSubmit = {this.onSubmit} className="font-weight-bold">
             { message ? 
-                        <Card border="danger" className="my-3"> 
+                        <Card border="danger" className="text-center my-3"> 
                             <Card.Body> 
-                                <Card.Title>{ message } </Card.Title>
+                                <Card.Title><div className="text-monospace">{ message }</div> </Card.Title>
                             </Card.Body> 
                         </Card>
                     : ''}
@@ -97,7 +97,7 @@ class PatientLogin extends Component{
                   <Form.Control name="password" type="password" placeholder="Enter Password" value = {this.state.password} onChange={this.onChange} />
               </Form.Group>
               
-              <Button variant="primary" type="submit">
+              <Button variant="primary" type="submit" className="float-right mt-3">
                   Submit
               </Button>
           </Form>
