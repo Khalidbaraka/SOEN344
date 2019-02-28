@@ -9,7 +9,7 @@ class DoctorLogin extends Component{
     constructor(){
         super()
         this.state = {
-            accessID: '',
+            permit_number: '',
             password: '', 
             message: '', 
             isAuthenticated: false
@@ -28,14 +28,14 @@ class DoctorLogin extends Component{
     {
         e.preventDefault()
 
-        const nurse = {
-            accessID: this.state.accessID,
+        const doctor = {
+            permit_number: this.state.permit_number,
             password: this.state.password
         }
         axios
-         .post('api/nurses/login', {
-        accessID: nurse.accessID,
-        password: nurse.password
+         .post('api/doctors/login', {
+        permit_number: doctor.permit_number,
+        password: doctor.password
          })
         .then(res => {
             if (res.data.success) {
@@ -45,7 +45,7 @@ class DoctorLogin extends Component{
             }
             else{
                 this.setState({
-                    accessID: '',
+                    permit_number: '',
                     password: '',
                     message: res.data.message
                 });
@@ -63,11 +63,10 @@ class DoctorLogin extends Component{
 
 
         const { isAuthenticated } = this.state;
-        const message = this.state.message;
 
         if ( isAuthenticated ) {
 
-            //direct to nurse homepage
+            //direct to doctor homepage
             return <Redirect to='/homepage/doctor'/>;
         }
 
