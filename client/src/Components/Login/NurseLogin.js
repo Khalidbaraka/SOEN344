@@ -1,9 +1,8 @@
-import React, { Component } from 'react';
-import axios from 'axios';
 import { Button, Card, Form } from 'react-bootstrap';
+import React, { Component } from 'react';
+
 import { Redirect } from 'react-router-dom';
-
-
+import axios from 'axios';
 
 class NurseLogin extends Component{
 
@@ -63,45 +62,44 @@ class NurseLogin extends Component{
     render(){
 
         const { isAuthenticated } = this.state;
-
-         if ( isAuthenticated ) {
-
-         //direct to nurse homepage
-        return <Redirect to='/homepage/nurse'/>;
-         }
-
         const message = this.state.message;
-		return(
+
+        if ( isAuthenticated ) {
+
+            //direct to nurse homepage
+            return <Redirect to='/homepage/nurse'/>;
+        }
+
+		return (
             <div>
-            <Card className="p-4">
-            <Form noValidate onSubmit = {this.onSubmit} className="font-weight-bold">
-            { message ? 
-                        <Card border="danger" className="my-3"> 
-                            <Card.Body> 
-                                <Card.Title>{ message } </Card.Title>
-                            </Card.Body> 
-                        </Card>
-                    : ''}
-               
+                <Card className="p-4">
+                    <Form noValidate onSubmit = {this.onSubmit} className="font-weight-bold">
+                        { message ? 
+                            <Card border="danger" className="text-center my-3"> 
+                                <Card.Body> 
+                                    <Card.Title><div className="text-monospace">{ message }</div> </Card.Title>
+                                </Card.Body> 
+                            </Card>
+                        : ''}
+                        
+                        <Form.Group controlId="formBasicUsername">
+                            <Form.Label>Access ID</Form.Label>
+                            <Form.Control name="accessID" type="text" placeholder="Enter Access ID" value = {this.state.accessID} onChange={this.onChange}/>
+                            <Form.Text className="text-muted">
+                                ex: DOL96315
+                            </Form.Text>
+                        </Form.Group>
 
-              <Form.Group controlId="formBasicUsername">
-                  <Form.Label>Access ID</Form.Label>
-                  <Form.Control name="accessID" type="text" placeholder="Enter Access ID" value = {this.state.accessID} onChange={this.onChange}/>
-                  <Form.Text className="text-muted">
-                     ex: DOL96315
-                  </Form.Text>
-              </Form.Group>
-
-              <Form.Group controlId="formBasicPassword">
-                  <Form.Label>Password</Form.Label>
-                  <Form.Control name="password" type="password" placeholder="Enter Password" value = {this.state.password} onChange={this.onChange} />
-              </Form.Group>
-              
-              <Button variant="primary" type="submit">
-                  Submit
-              </Button>
-          </Form>
-          </Card>
+                        <Form.Group controlId="formBasicPassword">
+                            <Form.Label>Password</Form.Label>
+                            <Form.Control name="password" type="password" placeholder="Enter Password" value = {this.state.password} onChange={this.onChange} />
+                        </Form.Group>
+                        
+                        <Button variant="outline-info" type="submit" className="float-right mt-3">
+                            Submit
+                        </Button>
+                    </Form>
+                </Card>
             </div>
         );
 	}

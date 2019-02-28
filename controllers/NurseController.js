@@ -30,6 +30,7 @@ exports.nurse_login = (req, res) => {
                 success: true,
                 message: 'Logged in!'
             });
+            
         } else {
             res.json({
                 success: false,

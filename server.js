@@ -11,6 +11,7 @@ const doctorRouter = require('./routes/api/doctors');
 
 const app = express();
 
+
 // Bodyparser Middleware 
 app.use(cors());
 app.use(bodyParser.urlencoded({extended: true}));

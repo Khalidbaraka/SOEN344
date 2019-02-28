@@ -10,8 +10,8 @@ import Home from './Components/Home';
 import Items from './Components/Items/Items';
 import Login from './Components/Login/Login'
 import NurseHomepage from './Components/Homepage/NurseHomepage';
-import SignUp from './Components/SignUp/SignUp'
 import PatientHomepage from "./Components/Homepage/PatientHomepage";
+import SignUp from './Components/SignUp/SignUp'
 
 class App extends Component {
   render() {
@@ -27,7 +27,7 @@ class App extends Component {
             <Route exact path='/' component={ Home }/>
             <Route path='/about' component={ About}/>
             <Route path='/items' component={ Items }/>
-            <Route path='/login' component={ Login}/>
+            <Route path='/login' component={ Login }/>
             <Route path='/signup' component={ SignUp }/>
             <Route path='/homepage/nurse' component={ NurseHomepage }/>
             <Route path='/homepage/patient' component={ PatientHomepage }/>
