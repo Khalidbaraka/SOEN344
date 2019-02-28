@@ -84,12 +84,12 @@ class DoctorLogin extends Component{
                         : ''}
               <Form.Group controlId="formBasicUsername">
                   <Form.Label>Permit Number</Form.Label>
-                  <Form.Control type="text" placeholder="Enter 7-digits Permit Number" />
+                  <Form.Control type="text" placeholder="Enter 7-digits Permit Number" value = {this.state.accessID} onChange={this.onChange}/>
               </Form.Group>
 
               <Form.Group controlId="formBasicPassword">
                   <Form.Label>Password</Form.Label>
-                  <Form.Control type="password" placeholder="Enter Password" />
+                  <Form.Control type="password" placeholder="Enter Password" value = {this.state.accessID} onChange={this.onChange}/>
               </Form.Group>
 
               <Button variant="primary" type="submit">
