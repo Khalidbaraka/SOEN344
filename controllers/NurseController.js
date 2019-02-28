@@ -16,6 +16,7 @@ exports.nurse_list = (req, res) => {
 exports.nurse_by_access_id = (req, res) => {
     Nurse.findOne({ accessID: req.body.accessID })
         .then(nurse => res.json(nurse))
+        .catch(err => console.log(err))
 };
 
 // Login nurse
@@ -24,28 +25,12 @@ exports.nurse_login = (req, res) => {
         accessID: req.body.accessID
     })
     .then(nurse => {
-        if(nurse) {
-            if(bcrypt.compareSync(req.body.password, nurse.password))
-            {
-                const payload = {
-                    _id: nurse._id,
-                    first_name: nurse.first_name,
-                    last_name: nurse.last_name,
-                    accessID: nurse.accessID
-                }
-                res.json({
-                    success: true,
-                    message: 'Logged in!'
-                });
-            }
-            else{
-                res.json({
-                    success: false,
-                    message: 'Incorrect id or password'
-                });
-            }
-        }
-        else{
+        if(nurse && bcrypt.compareSync(req.body.password, nurse.password)) {
+            res.json({
+                success: true,
+                message: 'Logged in!'
+            });
+        } else {
             res.json({
                 success: false,
                 message: 'Incorrect id or password'
@@ -74,7 +59,7 @@ exports.nurse_register = (req, res) => {
         if(!nurse)
         {
             bcrypt.hash(req.body.password, 10, (err, hash) => {
-                nurseData.password = hash
+                nurseData.password = hash;
                 Nurse.create(nurseData)
                 .then(nurse => {
                     res.json({
@@ -90,7 +75,7 @@ exports.nurse_register = (req, res) => {
                 })
             })
         }
-        else{
+        else {
             res.json({
                 success: false,
                 message: 'Nurse already exists'
@@ -101,24 +86,13 @@ exports.nurse_register = (req, res) => {
         res.send('error: '+ err)
     })
 };
-   
-
 
 // Edit Password
 exports.change_nurse_password = (req, res) => {
-    Nurse.findOneAndUpdate({ accessID: req.body.accessID }, { $set: { password: req.body.password } })
-        .then(nurse => {
-            bcryptjs.genSalt(10, (err, salt) =>
-            {
-                bcryptjs.hash(nurse.password, salt, (err, hash) => {
-                    if (err) {
-                        throw err;
-                    }
-                    nurse.password = hash;
-                    res.json(nurse)
-                })
-            })
-        })
+    bcrypt.hash(req.body.password, 10, (err, hash) => {
+        Nurse.findOneAndUpdate({ accessID: req.body.accessID }, { $set: {password: hash}})
+            .then(updatedNurse => res.json(updatedNurse))
+    })
 };
 
 // Delete Nurse
