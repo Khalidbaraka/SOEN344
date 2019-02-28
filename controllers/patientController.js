@@ -57,17 +57,17 @@ exports.patient_login = (req, res) => {
                 res.json
                 ({ 
                     success: true,
-                    message: 'logged in'
+                    message: 'Patient Logged in Successfully'
                 });
             }
             else {
                 res.json({ 
                     success: false,
-                    message: "Wrong Password"});
+                    message: "Incorrect Password"});
             }
         }
         else {
-            res.json({ message: "Patient Card Number Not Found"});
+            res.json({ message: "Incorrect Patient Health Card Number"});
         }
     })
         .catch(err => {
