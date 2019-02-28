@@ -25,23 +25,29 @@ exports.nurse_login = (req, res) => {
         accessID: req.body.accessID
     })
     .then(nurse => {
-        if(nurse && bcrypt.compareSync(req.body.password, nurse.password)) {
-            res.json({
-                success: true,
-                message: 'Logged in!'
-            });
-            
-        } else {
-            res.json({
-                success: false,
-                message: 'Incorrect id or password'
-            });
+       if(nurse) {
+            if(bcryptjs.compareSync(req.body.password, nurse.password))
+            {
+                res.json
+                ({ 
+                    success: true,
+                    message: 'Nurse Logged in Succesfully'
+                });
+            }
+            else {
+                res.json({ 
+                    success: false,
+                    message: "Incorrect Password"});
+            }
         }
-    })
-    .catch(err => {
-        res.send('error: '+ err)
-    })
-};
+        else {
+            res.json({ message: "Incorrect Nurse Access ID"});
+        }
+        })
+        .catch(err => {
+            res.send('error: ' + err)
+        })
+        };
 
 // Create/Register nurse
 exports.nurse_register = (req, res) => {
