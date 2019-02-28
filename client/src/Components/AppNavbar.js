@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 
 import { Link } from 'react-router-dom';
 import Login from './Login/Login';
-import LoginModal from './Login/LoginModal';
 
 class AppNavbar extends Component {
     constructor(props) {
@@ -10,17 +9,8 @@ class AppNavbar extends Component {
       
       this.state = {
         isOpen: false,
-        showModal: false
       }
     }
-
-    showModal = () => {
-      this.setState({ showModal: true });
-    };
-
-    hideModal = () => {
-      this.setState({ showModal: false });
-    };
 
     toggle = (e) => {
       e.preventDefault();
@@ -54,18 +44,15 @@ class AppNavbar extends Component {
                     </li>
                   </ul>
                   <ul className="navbar-nav ml-auto mt-2 mt-lg-0">
-                    <li className="nav-link" onClick={this.showModal}> Login </li>
+                    <li className="nav-item">
+                      <Link to={'/login'} className="nav-link"> Login </Link>
+                    </li>
                     <li className="nav-item">
                       <Link to={'/signup'} className="nav-link"> Sign Up </Link>
                     </li>
                   </ul>
                 </div>
               </nav>
-              <LoginModal isOpen={this.state.showModal} onClose={() => this.hideModal()}>
-              <button type="button" className="close" data-dismiss="modal" aria-hidden="true" onClick={() => this.hideModal()}>×</button>
-                <Login/>
-                
-              </LoginModal>
             </div>
         );
     }
