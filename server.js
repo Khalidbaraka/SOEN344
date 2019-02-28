@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const session = require('express-session')
 
 // Add all necessary route modules here
 const catalogRouter = require('./routes/api/catalog');
@@ -10,6 +11,15 @@ const patientsRouter = require('./routes/api/patients');
 const doctorRouter = require('./routes/api/doctors');
 
 const app = express();
+
+app.use(session({
+    secret: 'soen344-team-9',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        expires: 600000
+    }
+}))
 
 // Bodyparser Middleware 
 app.use(cors());
@@ -25,6 +35,13 @@ mongoose.connect(db)
     .catch(err => console.log(err));
 
 // Using the route modules. Add the necessary routes to the middleware stack here
+
+app.get('/', (req, res) => {
+    const { accessID } = req.session;
+    console.log(accessID);
+    res.send('Server Home Page')
+    
+})
 
 app.use('/api/catalog', catalogRouter);
 app.use('/api/nurses', nurseRouter);

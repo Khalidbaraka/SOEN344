@@ -30,6 +30,9 @@ exports.nurse_login = (req, res) => {
                 success: true,
                 message: 'Logged in!'
             });
+            req.session.accessID = nurse.accessID;
+            console.log(req.session);
+            
         } else {
             res.json({
                 success: false,
