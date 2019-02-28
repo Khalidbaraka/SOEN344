@@ -82,19 +82,19 @@ class DoctorLogin extends Component{
                                 </Card.Body> 
                             </Card>
                         : ''}
-              <Form.Group controlId="formBasicUsername">
-                  <Form.Label>Permit Number</Form.Label>
-                  <Form.Control type="text" placeholder="Enter 7-digits Permit Number" value = {this.state.permit_number} onChange={this.onChange}/>
-              </Form.Group>
+                        <Form.Group controlId="formBasicUsername">
+                            <Form.Label>Permit Number</Form.Label>
+                            <Form.Control name="permit_number" type="text" placeholder="Enter 7-digits Permit Number" value = {this.state.permit_number} onChange={this.onChange}/>
+                        </Form.Group>
 
-              <Form.Group controlId="formBasicPassword">
-                  <Form.Label>Password</Form.Label>
-                  <Form.Control type="password" placeholder="Enter Password" value = {this.state.password} onChange={this.onChange}/>
-              </Form.Group>
+                        <Form.Group controlId="formBasicPassword">
+                            <Form.Label>Password</Form.Label>
+                            <Form.Control name="password" type="password" placeholder="Enter Password" value = {this.state.password} onChange={this.onChange}/>
+                        </Form.Group>
 
-              <Button variant="primary" type="submit">
-                  Submit
-              </Button>
+                        <Button variant="primary" type="submit">
+                            Submit
+                        </Button>
           </Form>
 
             </div>
