@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Card, Form } from 'react-bootstrap';
 
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
@@ -63,6 +63,7 @@ class DoctorLogin extends Component{
 
 
         const { isAuthenticated } = this.state;
+        const message = this.state.message;
 
         if ( isAuthenticated ) {
 
@@ -73,7 +74,14 @@ class DoctorLogin extends Component{
 		console.log("Logging Doctor");
 		return(
             <div className="container">
-               <Form>
+               <Form noValidate onSubmit = {this.onSubmit} className="font-weight-bold">
+                        { message ? 
+                            <Card border="danger" className="text-center my-3"> 
+                                <Card.Body> 
+                                    <Card.Title><div className="text-monospace">{ message }</div> </Card.Title>
+                                </Card.Body> 
+                            </Card>
+                        : ''}
               <Form.Group controlId="formBasicUsername">
                   <Form.Label>Permit Number</Form.Label>
                   <Form.Control type="text" placeholder="Enter 7-digits Permit Number" />
