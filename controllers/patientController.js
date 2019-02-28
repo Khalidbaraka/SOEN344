@@ -54,15 +54,20 @@ exports.patient_login = (req, res) => {
         if(patient) {
             if(bcryptjs.compareSync(req.body.password, patient.password))
             {
-                res.json({ status: patient.healthCardNumber + 'logged in'})
+                res.json
+                ({ 
+                    success: true,
+                    message: 'Patient Logged in Successfully'
+                });
             }
             else {
-                res.json({ error: "wrong password"})
+                res.json({ 
+                    success: false,
+                    message: "Incorrect Password"});
             }
-
         }
         else {
-            res.json({ error: "patient not found"})
+            res.json({ message: "Incorrect Patient Health Card Number"});
         }
     })
         .catch(err => {
