@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import LoginModal from './Login/LoginModal';
-import Login from './Login/Login';
+
 import { Link } from 'react-router-dom';
-
-
+import Login from './Login/Login';
+import LoginModal from './Login/LoginModal';
 
 class AppNavbar extends Component {
     constructor(props) {
@@ -53,13 +52,13 @@ class AppNavbar extends Component {
                     <li className="nav-item">
                       <Link to={'/items'} className="nav-link"> Items </Link>
                     </li>
+                  </ul>
+                  <ul className="navbar-nav ml-auto mt-2 mt-lg-0">
+                    <li className="nav-link" onClick={this.showModal}> Login </li>
                     <li className="nav-item">
                       <Link to={'/signup'} className="nav-link"> Sign Up </Link>
                     </li>
                   </ul>
-                   <ul className="navbar-nav ml-auto mt-2 mt-lg-0">
-                    <li className="nav-link" onClick={this.showModal}> Login </li>
-                    </ul>
                 </div>
               </nav>
               <LoginModal isOpen={this.state.showModal} onClose={() => this.hideModal()}>

@@ -3,52 +3,68 @@ import React, { Component } from 'react';
 
 import NurseSignUp from './NurseSignUp';
 import PatienSignUp from './PatientSignUp'
+import PatientSignUp from './PatientSignUp';
 
 class SignUp extends Component{
     constructor(props) {
         super(props);
     
         this.state = {
-          PatientOpen: false,
-          NurseOpen:false
+          isPatientSignUpOpen: false,
+          isNurseSignUpOpen:false
         };
     }
 
+    patientSignUpHandler = () => {
+        const isPatientSignUpOpen = this.state.isPatientSignUpOpen;
+
+        this.setState(prevState => ({
+            ...prevState,
+            isPatientSignUpOpen: !isPatientSignUpOpen,
+            isNurseSignUpOpen: false
+          }))
+    }
+
+    nurseSignUpHandler = () => {
+        const isNurseSignUpOpen = this.state.isNurseSignUpOpen;
+
+        this.setState(prevState => ({
+            ...prevState,
+            isNurseSignUpOpen: !isNurseSignUpOpen,
+            isPatientSignUpOpen: false
+          }))
+    }
+
     render() {
-        const { PatientOpen } = this.state;
-        const { NurseOpen } = this.state;
+        const { isPatientSignUpOpen } = this.state;
+        const { isNurseSignUpOpen } = this.state;
 
         return (
             <div>
                 <Container>
                     <Row className="text-center align-middle my-5" >
-                        <Col md={6}>
+                        <Col md={12}>
                             <Button
-                                onClick={() => this.setState({ PatientOpen: !PatientOpen })}
-                                aria-controls="example-fade-text"
-                                aria-expanded={PatientOpen}
+                                onClick={this.patientSignUpHandler}
+                                variant="outline-info"
+                                className="w-25 mx-3"
                             >
                                 Patient Sign Up
                             </Button>
-                            <Fade in={this.state.PatientOpen} className="my-5">
-                                <div id="example-fade-text">
-                                    <PatienSignUp/>
-                                </div>
-                            </Fade>
-                        </Col>
-                        <Col md={6}>
                             <Button
-                                onClick={() => this.setState({ NurseOpen: !NurseOpen })}
-                                aria-controls="example-fade-text"
-                                aria-expanded={NurseOpen}
+                                onClick={this.nurseSignUpHandler}
+                                variant="outline-info"
+                                className="w-25 mx-3"
                                 >
                                 Nurse Sign Up
                             </Button>
-                            <Fade in={this.state.NurseOpen} className="my-5">
-                                <div id="example-fade-text">
-                                    <NurseSignUp/>
-                                </div>
-                            </Fade>                
+                        </Col>
+                    </Row>
+                    <hr/>
+                    <Row className="my-5">
+                        <Col md={{ span: 8, offset: 2}}>
+                            { isPatientSignUpOpen ? <PatientSignUp/> : "" }
+                            { isNurseSignUpOpen ? <NurseSignUp/> : "" }
                         </Col>
                     </Row>
                 </Container>
