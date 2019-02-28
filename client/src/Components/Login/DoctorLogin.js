@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Form } from 'react-bootstrap';
+
+import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 
 class DoctorLogin extends Component{
@@ -56,8 +58,19 @@ class DoctorLogin extends Component{
     
     }
 
-    
+
 	render(){
+
+
+        const { isAuthenticated } = this.state;
+        const message = this.state.message;
+
+        if ( isAuthenticated ) {
+
+            //direct to nurse homepage
+            return <Redirect to='/homepage/doctor'/>;
+        }
+
 		console.log("Logging Doctor");
 		return(
             <div className="container">
