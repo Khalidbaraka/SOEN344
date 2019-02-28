@@ -7,6 +7,7 @@ const cors = require('cors');
 const catalogRouter = require('./routes/api/catalog');
 const nurseRouter = require('./routes/api/nurses');
 const patientsRouter = require('./routes/api/patients');
+const doctorRouter = require('./routes/api/doctors');
 
 const app = express();
 
@@ -24,9 +25,12 @@ mongoose.connect(db)
     .catch(err => console.log(err));
 
 // Using the route modules. Add the necessary routes to the middleware stack here
+
 app.use('/api/catalog', catalogRouter);
 app.use('/api/nurses', nurseRouter);
 app.use('/api/patients', patientsRouter);
+app.use('/api/doctors', doctorRouter);
+
 
 const PORT = process.env.PORT || 5000;
 
