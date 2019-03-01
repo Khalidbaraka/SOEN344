@@ -21,14 +21,6 @@ exports.doctor_register = (req, res) =>{
                     speciality: req.body.speciality,
                     city: req.body.city
                 });
-                   var token = jwt.sign(foundDoctor, config.secret,{
-                        expiresIn: 86400 //24h
-                    });
-                    res.json({
-                        success: true,
-                        message: ' Dotor logged in succesfully',
-                        token: token
-                    })
 
                 bcryptjs.genSalt(10,(err, salt)=>{
                     bcryptjs.hash(newDoctor.password, salt, (err,hash)=>{
@@ -65,9 +57,13 @@ exports.doctor_login = (req, res) =>{
                         speciality: doctor.speciality,
                         city: doctor.city
                     }
+                    var token = jwt.sign(foundDoctor, config.secret,{
+                        expiresIn: 86400 //24h
+                    });
                     res.json({
                         success: true,
-                        message: ' Dotor logged in succesfully'
+                        message: ' Dotor logged in succesfully',
+                        token: token
                     })
                 }
                 else {
