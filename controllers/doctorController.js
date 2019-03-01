@@ -1,6 +1,8 @@
 //Doctor Model
 const Doctor = require('./../models/Doctor');
 var bcryptjs = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const config = require('./../config/keys');
 
 //  Callback functions for the routes
 
@@ -55,9 +57,13 @@ exports.doctor_login = (req, res) =>{
                         speciality: doctor.speciality,
                         city: doctor.city
                     }
+                    var token = jwt.sign(foundDoctor, config.secret,{
+                        expiresIn: 86400 //24h
+                    });
                     res.json({
                         success: true,
-                        message: ' Dotor logged in succesfully'
+                        message: ' Dotor logged in succesfully',
+                        token: token
                     })
                 }
                 else {
