@@ -1,9 +1,10 @@
 import {Button, Card, Form} from 'react-bootstrap';
 import React, { Component } from 'react';
-import Row from "react-bootstrap/Row";
+
 import Col from "react-bootstrap/Col";
-import axios from 'axios';
 import {Redirect} from "react-router-dom";
+import Row from "react-bootstrap/Row";
+import axios from 'axios';
 
 class PatientSignUp extends Component{
     constructor() {
@@ -18,14 +19,13 @@ class PatientSignUp extends Component{
             emailAddress: "",
             healthCardNumber: "",
             password: "",
-            isAuthenticated: false
+            isRegistered: false
         };
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
     }
 
     onChange(e) {
-        console.log( e.target.value);
         this.setState({[e.target.name]: e.target.value})
     }
 
@@ -72,7 +72,7 @@ class PatientSignUp extends Component{
 
                     if (res.data.success) {
                         this.setState({
-                            isAuthenticated: true
+                            isRegistered: true
                         });
 
                     } else {
@@ -97,10 +97,10 @@ class PatientSignUp extends Component{
 
     render() {
 
-        const { isAuthenticated } = this.state;
+        const { isRegistered } = this.state;
 
-        if ( isAuthenticated ) {
-            return <Redirect to='/homepage/patient'/>;
+        if ( isRegistered ) {
+            return <Redirect to='/login'/>;
         }
 
         return (

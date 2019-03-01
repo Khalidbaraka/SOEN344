@@ -13,7 +13,8 @@ class NurseSignUp extends Component{
             accessID: '',
             password: '', 
             message: '', 
-            isAuthenticated: false
+            isRegistered: false, 
+            tab: "nurse"
         }
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);  
@@ -54,7 +55,7 @@ class NurseSignUp extends Component{
   
                 if (res.data.success) {
                     this.setState({
-                        isAuthenticated: true
+                        isRegistered: true
                     });
                     
                 } else {
@@ -74,10 +75,13 @@ class NurseSignUp extends Component{
 
   render() {
 
-    const { isAuthenticated } = this.state;
+    const { isRegistered } = this.state;
 
-    if ( isAuthenticated ) {
-        return <Redirect to='/homepage/nurse'/>;
+    if ( isRegistered ) {
+        return <Redirect to={{
+                    pathname: '/login',
+                    state: { tab: 'nurse' }
+                }}/>
     }
 
     const message = this.state.message;
