@@ -1,9 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-
 const nurse_controller = require ('./../../controllers/NurseController.js');
-
+const decoder = require('../../middleware');
 
 // @route POST api/nurses/register
 // @desc  Register Nurse
@@ -14,6 +13,8 @@ router.post('/register', nurse_controller.nurse_register);
 // @desc  Login Nurse
 // @access Public
 router.post('/login', nurse_controller.nurse_login);
+
+router.use(decoder);
 
 // @route GET api/nurses/nursesList
 // @desc get list of nurses from db
