@@ -5,7 +5,6 @@ import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 
 const jwt = require('jsonwebtoken');
-
 class PatientLogin extends Component{
 
     constructor(){
@@ -26,33 +25,28 @@ class PatientLogin extends Component{
     }
 
     //go to home page after submitting 
-    onSubmit(e)
-    {
-        e.preventDefault()
+    onSubmit(e) {
+        e.preventDefault();
 
         const patient = {
             healthCardNumber: this.state.healthCardNumber,
             password: this.state.password
-        }
-        axios
-         .post('api/patients/login', {
+        };
+
+        axios.post('api/patients/login', {
             healthCardNumber: patient.healthCardNumber,
             password: patient.password
-         })
-        .then(res => {
-            console.log(res);
-            
+        })
+        .then(res => {           
             if (res.data.success) {
                 const decoded = jwt.decode(res.data.token, {complete: true});
                 
                 localStorage.setItem('userToken', JSON.stringify(decoded.payload.patient));
-                var user = JSON.parse(localStorage.getItem('userToken'));
                 
                 this.setState({
                     isAuthenticated: true
                 });
-            }
-            else{
+            } else {
                 this.setState({
                     healthCardNumber: '',
                     password: '',
@@ -61,10 +55,9 @@ class PatientLogin extends Component{
             }
 
         })
-         .catch(err => {
-        console.log(err.res)
+        .catch (err => {
+            console.log(err.res);
         })
-    
     }
     
 

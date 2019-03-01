@@ -2,7 +2,7 @@
 const Patient = require('./../models/Patient');
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const secret = 'soen344';
+const config = require('./../config/keys');
 
 //  Callback functions that they will invoke on our routes
 
@@ -54,37 +54,34 @@ exports.patient_login = (req, res) => {
     })
     .then(patient => {
         if(patient) {
-            if(bcryptjs.compareSync(req.body.password, patient.password))
-            {
+            if(bcryptjs.compareSync(req.body.password, patient.password)) {
+
                 const payload = {
                     patient: patient
                 };
 
-                let token = jwt.sign(payload, secret, {
-                    expiresIn: 1440
+                var token = jwt.sign(payload, config.secret,{
+                    expiresIn: 86400 //24h
                 });
 
-                res.send
-                ({ 
-                    token,
+                res.json({
                     success: true,
-                    message: 'Patient Logged in Successfully'
+                    message: 'Patient Logged in Successfully',
+                    token: token
                 });
-            
-            }
-            else {
+            } else {
                 res.json({ 
                     success: false,
-                    message: "Incorrect Password"});
+                    message: "Incorrect Password"
+                });
             }
-        }
-        else {
+        } else {
             res.json({ message: "Incorrect Patient Health Card Number"});
         }
     })
-        .catch(err => {
-            res.send('error: ' + err)
-        })
+    .catch(err => {
+        res.send('error: ' + err)
+    })
 };
 
 // delete a patient from db
