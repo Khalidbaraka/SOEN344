@@ -1,80 +1,84 @@
-import React, { Component } from 'react';
 import { Button, Card, Form } from 'react-bootstrap';
+import React, { Component } from 'react';
 
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 
+const jwt = require('jsonwebtoken');
+
 class DoctorLogin extends Component{
 
-    constructor(){
-        super()
+    constructor() {
+        super();
+
         this.state = {
             permit_number: '',
-            password: '', 
-            message: '', 
+            password: '',
+            message: '',
             isAuthenticated: false
         }
-        this.onChange = this.onChange.bind(this)
-        this.onSubmit = this.onSubmit.bind(this)
     }
 
-    onChange(e)
-    {
-        this.setState({[e.target.name]: e.target.value})
+    onChange = (e) => {
+        this.setState({
+            [e.target.name]: e.target.value
+        })
     }
 
     //go to home page after submitting 
-    onSubmit(e)
-    {
-        e.preventDefault()
+    onSubmit = (e) => {
+        e.preventDefault();
 
         const doctor = {
             permit_number: this.state.permit_number,
             password: this.state.password
-        }
-        axios
-         .post('api/doctors/login', {
-        permit_number: doctor.permit_number,
-        password: doctor.password
-         })
-        .then(res => {
-            if (res.data.success) {
-                this.setState({
-                    isAuthenticated: true
-                });
-            }
-            else{
-                this.setState({
-                    permit_number: '',
-                    password: '',
-                    message: res.data.message
-                });
-            }
+        };
 
+        axios.post('api/doctors/login', {
+                permit_number: doctor.permit_number,
+                password: doctor.password
+            })
+            .then(res => {
+                if (res.data.success) {
+                    const decoded = jwt.decode(res.data.token, {
+                        complete: true
+                    });
+                    localStorage.setItem('userToken', JSON.stringify(decoded.payload));
+
+                    this.setState({
+                        isAuthenticated: true
+                    });
+                } else {
+                    this.setState({
+                        permit_number: '',
+                        password: '',
+                        message: res.data.message
+                    });
+                }
+
+            })
+            .catch(err => {
+                console.log(err.res)
         })
-         .catch(err => {
-        console.log(err.res)
-        })
-    
+
     }
 
+	render() {
 
-	render(){
+        const {
+            isAuthenticated,
+            message
+        } = this.state;
 
-
-        const { isAuthenticated } = this.state;
-        const message = this.state.message;
-
-        if ( isAuthenticated ) {
-
+        if (isAuthenticated) {
             //direct to doctor homepage
-            return <Redirect to='/homepage/doctor'/>;
+            return <Redirect to = '/homepage/doctor' / > ;
         }
 
-		console.log("Logging Doctor");
 		return(
-            <div className="container">
-               <Form noValidate onSubmit = {this.onSubmit} className="font-weight-bold">
+            <div>
+                <Card className="p-4">
+                    <Form noValidate onSubmit = {this.onSubmit} className="font-weight-bold">
                         { message ? 
                             <Card border="danger" className="text-center my-3"> 
                                 <Card.Body> 
@@ -86,19 +90,18 @@ class DoctorLogin extends Component{
                             <Form.Label>Permit Number</Form.Label>
                             <Form.Control name="permit_number" type="text" placeholder="Enter 7-digits Permit Number" value = {this.state.permit_number} onChange={this.onChange}/>
                         </Form.Group>
-
+    
                         <Form.Group controlId="formBasicPassword">
                             <Form.Label>Password</Form.Label>
                             <Form.Control name="password" type="password" placeholder="Enter Password" value = {this.state.password} onChange={this.onChange}/>
                         </Form.Group>
-
-                        <Button variant="primary" type="submit">
+    
+                        <Button variant="outline-info" type="submit" className="float-right mt-3">
                             Submit
                         </Button>
-          </Form>
-
+                    </Form>
+                </Card>
             </div>
-
         );
 	}
 }

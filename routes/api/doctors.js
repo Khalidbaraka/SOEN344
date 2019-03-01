@@ -1,15 +1,23 @@
 const express = require('express');
 const router = express.Router();
-var bcryptjs = require('bcryptjs');
 
 //loading the model
-const Doctor= require('../../models/Doctor');
 const doctorController = require('../../controllers/doctorController');
+const decoder = require('../../middleware');
+
 
 // @route post api/doctors/register
 // @desc  Register Doctor
 // @access Public
 router.post('/register', doctorController.doctor_register);
+
+// @route post api/doctors/login
+// @desc  Login Doctor
+// @access Public
+router.post('/login', doctorController.doctor_login);
+
+// Protecting the routes below. The order is important
+router.use(decoder);
 
 // @route GET api/doctors/getDoctorsList
 // @desc Get doctor by permit number
@@ -20,11 +28,6 @@ router.get('/getDoctorsList', doctorController.doctor_get_list);
 // @desc Loads doctors table from db
 // @access Public
 router.get('/getDoctorByPermit', doctorController.doctor_get_by_permit);
-
-// @route post api/doctors/login
-// @desc  Login Doctor
-// @access Public
-router.post('/login', doctorController.doctor_login);
 
 // @route put api/doctors/update/permit_number
 // @desc  Update Doctor

@@ -4,28 +4,30 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 
-class NurseLogin extends Component{
+const jwt = require('jsonwebtoken');
 
-    constructor(){
-        super()
+class NurseLogin extends Component {
+
+    constructor() {
+        super();
         this.state = {
             accessID: '',
-            password: '', 
-            message: '', 
+            password: '',
+            message: '',
             isAuthenticated: false
         }
         this.onChange = this.onChange.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
     }
 
-    onChange(e)
-    {
-        this.setState({[e.target.name]: e.target.value})
+    onChange = (e) => {
+        this.setState({
+            [e.target.name]: e.target.value
+        })
     }
 
     //go to home page after submitting 
-    onSubmit(e)
-    {
+    onSubmit = (e) => {
         e.preventDefault()
 
         const nurse = {
@@ -33,41 +35,45 @@ class NurseLogin extends Component{
             password: this.state.password
         }
         axios
-         .post('api/nurses/login', {
-        accessID: nurse.accessID,
-        password: nurse.password
-         })
-        .then(res => {
-            if (res.data.success) {
-                this.setState({
-                    isAuthenticated: true
-                });
-            }
-            else{
-                this.setState({
-                    accessID: '',
-                    password: '',
-                    message: res.data.message
-                });
-            }
+            .post('api/nurses/login', {
+                accessID: nurse.accessID,
+                password: nurse.password
+            })
+            .then(res => {
+                if (res.data.success) {
+                    const decoded = jwt.decode(res.data.token, {
+                        complete: true
+                    });
+                    localStorage.setItem('userToken', JSON.stringify(decoded.payload));
 
+                    this.setState({
+                        isAuthenticated: true
+                    });
+                } else {
+                    this.setState({
+                        accessID: '',
+                        password: '',
+                        message: res.data.message
+                    });
+                }
+
+            })
+            .catch(err => {
+                console.log(err.res)
         })
-         .catch(err => {
-        console.log(err.res)
-        })
-    
+
     }
     
+    render() {
 
-    render(){
+        const {
+            isAuthenticated,
+            message
+        } = this.state;
 
-        const { isAuthenticated } = this.state;
-        const message = this.state.message;
-
-        if ( isAuthenticated ) {
-
+        if (isAuthenticated) {
             //direct to nurse homepage
-            return <Redirect to='/homepage/nurse'/>;
+            return <Redirect to = '/homepage/nurse' / > ;
         }
 
 		return (
