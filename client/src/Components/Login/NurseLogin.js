@@ -44,7 +44,7 @@ class NurseLogin extends Component {
                     const decoded = jwt.decode(res.data.token, {
                         complete: true
                     });
-                    localStorage.setItem('userToken', JSON.stringify(decoded.payload.nurse));
+                    localStorage.setItem('userToken', JSON.stringify(decoded.payload));
 
                     this.setState({
                         isAuthenticated: true

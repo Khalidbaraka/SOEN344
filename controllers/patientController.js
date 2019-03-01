@@ -63,7 +63,11 @@ exports.patient_login = (req, res) => {
                 if (bcryptjs.compareSync(req.body.password, patient.password)) {
 
                     const payload = {
-                        patient: patient
+                        healthCardNumber: patient.healthCardNumber,
+                        physicalAddress: patient.physicalAddress,
+                        emailAddress: patient.emailAddress,
+                        firstName: patient.firstName,
+                        lastName: patient.lastName,
                     };
 
                     var token = jwt.sign(payload, config.secret, {
