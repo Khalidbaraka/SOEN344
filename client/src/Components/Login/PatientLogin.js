@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
-import axios from 'axios';
 import { Button, Card, Form } from 'react-bootstrap';
+import React, { Component } from 'react';
+
 import { Redirect } from 'react-router-dom';
+import axios from 'axios';
 
-
+const jwt = require('jsonwebtoken');
 
 class PatientLogin extends Component{
 
@@ -39,7 +40,14 @@ class PatientLogin extends Component{
             password: patient.password
          })
         .then(res => {
+            console.log(res);
+            
             if (res.data.success) {
+                const decoded = jwt.decode(res.data.token, {complete: true});
+                
+                localStorage.setItem('userToken', JSON.stringify(decoded.payload.patient));
+                var user = JSON.parse(localStorage.getItem('userToken'));
+                
                 this.setState({
                     isAuthenticated: true
                 });

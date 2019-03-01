@@ -1,6 +1,8 @@
 // Patient Model
 const Patient = require('./../models/Patient');
 const bcryptjs = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const secret = 'soen344';
 
 //  Callback functions that they will invoke on our routes
 
@@ -54,11 +56,21 @@ exports.patient_login = (req, res) => {
         if(patient) {
             if(bcryptjs.compareSync(req.body.password, patient.password))
             {
-                res.json
+                const payload = {
+                    patient: patient
+                };
+
+                let token = jwt.sign(payload, secret, {
+                    expiresIn: 1440
+                });
+
+                res.send
                 ({ 
+                    token,
                     success: true,
                     message: 'Patient Logged in Successfully'
                 });
+            
             }
             else {
                 res.json({ 

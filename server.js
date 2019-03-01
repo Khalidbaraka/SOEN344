@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
 
 // Add all necessary route modules here
 const catalogRouter = require('./routes/api/catalog');
@@ -11,6 +12,7 @@ const doctorRouter = require('./routes/api/doctors');
 
 const app = express();
 
+const secret = 'soen344';
 
 // Bodyparser Middleware 
 app.use(cors());

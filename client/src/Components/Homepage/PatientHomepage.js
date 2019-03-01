@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
 
+const jwt = require('jsonwebtoken');
+
 class PatientHomepage extends Component {
+    constructor(props) {
+        super(props);
+     
+    }
+
     render() {
         return (
             <div>
