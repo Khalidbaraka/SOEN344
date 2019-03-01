@@ -57,7 +57,7 @@ class Items extends Component {
         */
         return (
             <div className="container">
-                <h1 className="text-center my-4"> My Items </h1>
+                <h1 className="text-center my-4"> Logs </h1>
                 <ItemInput getItems={this.getItems}/>
                 <ItemList items={items} deleteItem={this.deleteItem}/>
             </div>

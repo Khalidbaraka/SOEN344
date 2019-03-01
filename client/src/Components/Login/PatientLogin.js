@@ -97,7 +97,7 @@ class PatientLogin extends Component{
                             <Form.Control name="password" type="password" placeholder="Enter Password" value = {this.state.password} onChange={this.onChange} />
                         </Form.Group>
                         
-                        <Button variant="primary" type="submit" className="float-right mt-3">
+                        <Button variant="outline-info" type="submit" className="float-right mt-3">
                             Submit
                         </Button>
                     </Form>

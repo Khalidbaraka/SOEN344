@@ -12,7 +12,7 @@ class Login extends Component{
       <div className="container">
         <Row>
           <Col md={{ span: 8, offset: 2}}>
-            <Tabs fill className="my-5" defaultActiveKey="patient" id="uncontrolled-tab-example" unmountOnExit="True">
+            <Tabs fill className="mt-5" defaultActiveKey="patient" id="uncontrolled-tab-example" unmountOnExit="True">
               <Tab eventKey="doctor" title="Doctor">
                 <DoctorLogin />
               </Tab>

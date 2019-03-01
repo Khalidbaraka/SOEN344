@@ -41,7 +41,7 @@ class AppNavbar extends Component {
                       <Link to={'/about'} className="nav-link"> About </Link>
                     </li>
                     <li className="nav-item">
-                      <Link to={'/items'} className="nav-link"> Items </Link>
+                      <Link to={'/items'} className="nav-link"> Logs </Link>
                     </li>
                   </ul>
                   { localStorage.getItem('userToken') ? (

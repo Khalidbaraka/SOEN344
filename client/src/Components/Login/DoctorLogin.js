@@ -76,29 +76,31 @@ class DoctorLogin extends Component{
         }
 
 		return(
-            <div className="container">
-               <Form noValidate onSubmit = {this.onSubmit} className="font-weight-bold">
-                    { message ? 
-                        <Card border="danger" className="text-center my-3"> 
-                            <Card.Body> 
-                                <Card.Title><div className="text-monospace">{ message }</div> </Card.Title>
-                            </Card.Body> 
-                        </Card>
-                    : ''}
-                    <Form.Group controlId="formBasicUsername">
-                        <Form.Label>Permit Number</Form.Label>
-                        <Form.Control name="permit_number" type="text" placeholder="Enter 7-digits Permit Number" value = {this.state.permit_number} onChange={this.onChange}/>
-                    </Form.Group>
-
-                    <Form.Group controlId="formBasicPassword">
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control name="password" type="password" placeholder="Enter Password" value = {this.state.password} onChange={this.onChange}/>
-                    </Form.Group>
-
-                    <Button variant="primary" type="submit">
-                        Submit
-                    </Button>
-                </Form>
+            <div>
+                <Card className="p-4">
+                    <Form noValidate onSubmit = {this.onSubmit} className="font-weight-bold">
+                        { message ? 
+                            <Card border="danger" className="text-center my-3"> 
+                                <Card.Body> 
+                                    <Card.Title><div className="text-monospace">{ message }</div> </Card.Title>
+                                </Card.Body> 
+                            </Card>
+                        : ''}
+                        <Form.Group controlId="formBasicUsername">
+                            <Form.Label>Permit Number</Form.Label>
+                            <Form.Control name="permit_number" type="text" placeholder="Enter 7-digits Permit Number" value = {this.state.permit_number} onChange={this.onChange}/>
+                        </Form.Group>
+    
+                        <Form.Group controlId="formBasicPassword">
+                            <Form.Label>Password</Form.Label>
+                            <Form.Control name="password" type="password" placeholder="Enter Password" value = {this.state.password} onChange={this.onChange}/>
+                        </Form.Group>
+    
+                        <Button variant="outline-info" type="submit" className="float-right mt-3">
+                            Submit
+                        </Button>
+                    </Form>
+                </Card>
             </div>
         );
 	}
