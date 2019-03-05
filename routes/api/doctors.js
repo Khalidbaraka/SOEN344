@@ -17,7 +17,6 @@ router.post('/register', doctorController.doctor_register);
 router.post('/login', doctorController.doctor_login);
 
 // Protecting the routes below. The order is important
-router.use(decoder);
 
 // @route GET api/doctors/getDoctorsList
 // @desc Get doctor by permit number
@@ -37,6 +36,8 @@ router.put('/update/:permit_number', doctorController.doctor_update);
 // @route post api/doctors/delete
 // @desc  Delete Doctor
 // @access Public
-router.delete('/delete', doctorController.doctor_delete);
+router.delete('/delete/:permit_number', doctorController.doctor_delete);
+
+router.use(decoder);
 
 module.exports = router;
