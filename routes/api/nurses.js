@@ -25,7 +25,7 @@ router.get('/nursesList', nurse_controller.nurse_list);
 // @route GET api/nurses/select
 // @desc get a nurse by the nurse's accessID (nurse in req body)
 // @access Public
-router.get('/select', nurse_controller.nurse_by_access_id);
+router.get('/select/', nurse_controller.nurse_by_access_id);
 
 // @route PUT api/nurses/editPassword
 // @desc  Change a Nurse's password

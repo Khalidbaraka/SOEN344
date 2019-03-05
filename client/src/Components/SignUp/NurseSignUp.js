@@ -8,8 +8,8 @@ class NurseSignUp extends Component{
     constructor() {
         super();
         this.state = {
-            first_name: '',
-            last_name: '',
+            firstName: '',
+            lastName: '',
             accessID: '',
             password: '', 
             message: '', 
@@ -29,8 +29,8 @@ class NurseSignUp extends Component{
         e.preventDefault()
 
         const nurse = {
-            first_name: this.state.first_name,
-            last_name: this.state.last_name,
+            firstName: this.state.firstName,
+            lastName: this.state.lastName,
             accessID: this.state.accessID,
             password: this.state.password
         }
@@ -46,8 +46,8 @@ class NurseSignUp extends Component{
         if (errors.accessID === "" && errors.password === "") {
 
             axios.post('api/nurses/register', {
-                first_name: nurse.first_name,
-                last_name: nurse.last_name,
+                firstName: nurse.firstName,
+                lastName: nurse.lastName,
                 accessID: nurse.accessID,
                 password: nurse.password
             })
@@ -60,8 +60,8 @@ class NurseSignUp extends Component{
                     
                 } else {
                     this.setState({
-                        first_name: '',
-                        last_name: '',
+                        firstName: '',
+                        lastName: '',
                         accessID: '',
                         password: '',
                         message: res.data.message
@@ -99,12 +99,12 @@ class NurseSignUp extends Component{
                     : ''}
                     <Form.Group controlId="formFirstName">
                         <Form.Label>First name</Form.Label>
-                        <Form.Control name = "first_name" type="text" placeholder="Enter First Name" value = {this.state.first_name} onChange={this.onChange} />
+                        <Form.Control name = "firstName" type="text" placeholder="Enter First Name" value = {this.state.firstName} onChange={this.onChange} />
                     </Form.Group>
     
                     <Form.Group controlId="formLastName">
                         <Form.Label>Last name</Form.Label>
-                        <Form.Control name = "last_name" type="text" placeholder="Enter Last Name" value = {this.state.last_name} onChange={this.onChange} />
+                        <Form.Control name = "lastName" type="text" placeholder="Enter Last Name" value = {this.state.lastName} onChange={this.onChange} />
                     </Form.Group>
     
                     <Form.Group controlId="formBasicUsername">

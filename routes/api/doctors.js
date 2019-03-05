@@ -37,6 +37,6 @@ router.put('/update/:permit_number', doctorController.doctor_update);
 // @route post api/doctors/delete
 // @desc  Delete Doctor
 // @access Public
-router.delete('/delete', doctorController.doctor_delete);
+router.delete('/delete/:permit_number', doctorController.doctor_delete);
 
 module.exports = router;

@@ -33,8 +33,8 @@ exports.nurse_login = (req, res) => {
                 if (bcryptjs.compareSync(req.body.password, nurse.password)) {
                     const payload = {
                         accessID: nurse.accessID,
-                        first_name: nurse.first_name,
-                        last_name: nurse.last_name,
+                        firstName: nurse.firstName,
+                        lastName: nurse.lastName,
                     };
 
                     var token = jwt.sign(payload, config.secret,{
@@ -67,8 +67,8 @@ exports.nurse_login = (req, res) => {
 exports.nurse_register = (req, res) => {
 
     const nurseData = {
-        first_name: req.body.first_name,
-        last_name: req.body.last_name,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
         accessID: req.body.accessID,
         password: req.body.password
     }
