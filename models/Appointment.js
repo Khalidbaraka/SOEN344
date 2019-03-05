@@ -15,19 +15,19 @@ const AppointmentSchema = new Schema ({
     },
     clinic: { 
         required: true,
-        type: Schema.Types.ObjectId, ref: 'Clinic'
+        type: Schema.Types.ObjectId, ref: 'clinic'
     },
     doctor: { 
         required: true,
-        type: Schema.Types.ObjectId, ref: 'Doctor' 
+        type: Schema.Types.ObjectId, ref: 'doctor' 
     },
     patient: { 
         required: true,
-        type: Schema.Types.ObjectId, ref: 'Patient' 
+        type: Schema.Types.ObjectId, ref: 'patient' 
     },
     room: { 
         required: true,
-        type: Schema.Types.ObjectId, ref: 'Room' 
+        type: Schema.Types.ObjectId, ref: 'room' 
     },
     start: {
         required: true,

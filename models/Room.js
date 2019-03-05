@@ -9,7 +9,7 @@ const RoomSchema = new Schema ({
     },
     appointments: [{
     	type: Schema.Types.ObjectId, 
-    	ref: 'Appointment' 
+    	ref: 'appointment' 
     }]
 });
 

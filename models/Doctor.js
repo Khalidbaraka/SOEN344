@@ -29,7 +29,11 @@ const DoctorSchema = new Schema ({
     city: {
         type: String,
         required: true
-    }
+    },
+    appointments: [{
+        type: Schema.Types.ObjectId, 
+        ref: 'appointment' 
+    }]
 });
 
 module.exports = Doctor = mongoose.model('doctor', DoctorSchema);
