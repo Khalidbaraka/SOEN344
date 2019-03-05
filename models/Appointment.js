@@ -7,10 +7,6 @@ const AppointmentSchema = new Schema ({
         required: true,
         type: Date,
     }, 
-    dateFor: {
-        type: String,
-        required: true
-    },
     type: {
         type: Number,
         required: true,
@@ -33,16 +29,17 @@ const AppointmentSchema = new Schema ({
         required: true,
         type: Schema.Types.ObjectId, ref: 'Room' 
     },
-    startTime: {
-        require: true,
-        type: String
+    start: {
+        required: true,
+        type: Date
     },
     duration:{
         type: String,
-        require: true
+        required: true
     },
-    endTime:{
-        type: String,
+    end:{
+        type: Date,
+        required: true
     },
     price:{
         type: Number,

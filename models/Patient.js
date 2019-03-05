@@ -39,7 +39,11 @@ const PatientSchema = new Schema ({
     password: {
         type: String,
         required: true
-    }
+    },
+    appointments: [{
+        type: Schema.Types.ObjectId, 
+        ref: 'Appointment' 
+    }]
 });
 
 module.exports = Patient = mongoose.model('patients', PatientSchema);

@@ -6,7 +6,11 @@ const RoomSchema = new Schema ({
     name: {
         type: String,
         required: true
-    }
+    },
+    appointments: [{
+    	type: Schema.Types.ObjectId, 
+    	ref: 'Appointment' 
+    }]
 });
 
 module.exports = Room = mongoose.model('room', RoomSchema);
