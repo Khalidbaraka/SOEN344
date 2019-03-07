@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import PatientNavBar from "../PatientNavBar";
+import {Route, Switch} from "react-router-dom";
 
 const jwt = require('jsonwebtoken');
 
@@ -10,10 +12,9 @@ class PatientHomepage extends Component {
 
     render() {
         return (
-            <div>
-                <h1> Patient Homepage </h1>
-            </div>
-        );
+            <div>Welcome to Patient Page</div>
+
+        )
     }
 }
 
