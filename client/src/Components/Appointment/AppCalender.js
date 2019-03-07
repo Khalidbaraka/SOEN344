@@ -80,7 +80,7 @@ class AppCalender extends Component {
                         return (
                             <Form>
                                 <Form.Row noGutters={true}>
-                                    <Col md={12}><Form.Label>Enter the date and time from which you would like the search to be performed</Form.Label></Col>
+                                    <Col md={12}><Form.Label>Please select date and time of appointment'</Form.Label></Col>
                                     <Col md={3}><Form.Control value={this.state.startTime.format("YYYY-MM-DD HH:mm")} /></Col>
                                     <Button variant="outline-info"><i className="fa fa-calendar-plus-o" aria-hidden="true"></i></Button>
                                 </Form.Row>
@@ -92,7 +92,7 @@ class AppCalender extends Component {
 
                 <Alert variant="info" className="my-4">
                     <div> Appointment Type: <span className="font-weight-bold">{this.props.type}</span> </div>
-                    <div> From: <span className="font-weight-bold">{ startTime.toDate().toString() }</span> </div>
+                    <div> For: <span className="font-weight-bold">{ startTime.toDate().toString() }</span> </div>
                 </Alert>
             </div>
         );
