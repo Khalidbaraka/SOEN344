@@ -12,11 +12,8 @@ class PatientHomepage extends Component {
 
     render() {
         return (
+            <div>Welcome to Patient Page</div>
 
-            <Switch>
-                <Route path='/patientMyApp' component={ PatientApp }/>
-                <Route path='/patientScheduleApp' component={ patientScheduleApp}/>
-            </Switch>
         )
     }
 }
