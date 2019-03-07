@@ -5,8 +5,6 @@ import {Route, Switch} from "react-router-dom";
 import Identification from '../Appointment/Identification';
 import { Link } from 'react-router-dom'
 
-const jwt = require('jsonwebtoken');
-
 class PatientHomepage extends Component {
     constructor(props) {
         super(props);

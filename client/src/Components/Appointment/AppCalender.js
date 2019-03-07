@@ -13,10 +13,25 @@ class AppCalender extends Component {
         super(props);
         
         this.state = {
-            startTime: moment()
+            startTime: moment().startOf('day')
         }
     }
 
+    disabledHours = () => {
+        return [0, 1, 2, 3, 4, 5, 6, 7, 21, 22, 23];
+    }
+
+
+    disabledSeconds = (h, m) => {
+        const arraySeconds = [];
+        let i = 0;
+        while (i <= 60) {
+            arraySeconds.push(i);
+            i++;
+        }
+
+        return arraySeconds
+    }
 
     onChange = (value) => {       
         console.log("Moment", value.toDate());
@@ -36,9 +51,10 @@ class AppCalender extends Component {
         // rc-time-picker Panel
         const timePickerElement = <TimePickerPanel 
             format='HH:mm'
-            showSecond={false}
+            defaultValue={moment().startOf('day')}
+            disabledHours={this.disabledHours}
+            disabledSeconds={this.disabledSeconds}
             minuteStep={this.props.type == "Walk-in" ? 20 : 60}
-            secondStep={60}
             />;
 
         // rc-calendar
