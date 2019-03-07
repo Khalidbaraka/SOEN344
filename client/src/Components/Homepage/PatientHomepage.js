@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PatientNavBar from "../PatientNavBar";
+import {Route, Switch} from "react-router-dom";
 
 const jwt = require('jsonwebtoken');
 
@@ -11,8 +12,11 @@ class PatientHomepage extends Component {
 
     render() {
         return (
-            <PatientNavBar/>
 
+            <Switch>
+                <Route path='/patientMyApp' component={ PatientApp }/>
+                <Route path='/patientScheduleApp' component={ patientScheduleApp}/>
+            </Switch>
         )
     }
 }

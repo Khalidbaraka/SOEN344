@@ -21,7 +21,7 @@ class App extends Component {
   render() {
     return (
         <div className="Container">
-          <PatientNavBar/>
+          <AppNavbar/>
 
           {/* This file is the starting point, build components from there. 
             * Component Routes. Please check https://auth0.com/blog/react-router-4-practical-tutorial/ for Nested Routes
