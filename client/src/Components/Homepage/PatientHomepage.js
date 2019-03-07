@@ -20,7 +20,7 @@ class PatientHomepage extends Component {
                     <Col md={3}>
                         <ListGroup variant="flush"className="my-5 text-monospace">
                             <ListGroup.Item> Menu </ListGroup.Item>
-                            <ListGroup.Item><Link to='/homepage/patient/myAppointment'> Make Appointment </Link></ListGroup.Item>
+                            <ListGroup.Item><Link to='/homepage/patient/myAppointment'> MyAppointment </Link></ListGroup.Item>
                             <ListGroup.Item><Link to='/homepage/patient/scheduleAppointment'> Schedule an Appointment </Link></ListGroup.Item>
                         </ListGroup>
                     </Col>

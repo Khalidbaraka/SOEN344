@@ -8,38 +8,32 @@ import DatePicker from 'rc-calendar/lib/Picker';
 import TimePickerPanel from 'rc-time-picker/lib/Panel';
 import moment from 'moment';
 
-const format = 'YYYY-MM-DD HH:mm';
-const momentTz = require('moment-timezone');
-
-
-
-
 class AppCalender extends Component {
     constructor(props) {
         super(props);
         
         this.state = {
-            value: moment()
+            startTime: moment()
         }
     }
 
-    componentDidMount = () => {
-        
-    }
-    
-    getFormat = (time) => {
-        return time ? format : 'YYYY-MM-DD';
-    }
 
     onChange = (value) => {       
         console.log("Moment", value.toDate());
         
-        this.setState({
-            value: value
-        });            
+        const nextState = {
+            ...this.state,
+            startTime: value
+        };
+        
+        this.setState(nextState);           
     }
     
     render() {
+
+        const { startTime } = this.state
+
+        // rc-time-picker Panel
         const timePickerElement = <TimePickerPanel 
             format='HH:mm'
             showSecond={false}
@@ -47,41 +41,43 @@ class AppCalender extends Component {
             secondStep={60}
             />;
 
+        // rc-calendar
         const calendar = (<Calender
             showWeekNumber={false}
             disabledTime={false}
-            format='YYYY-MM-DD'
+            format='YYYY-MM-DD HH:mm'
             showToday={true}
             timePicker={timePickerElement}
             showOk={true}
-            value={this.state.value}
+            value={startTime}
             onChange={this.onChange}
             />);
 
-
         return (
             <div classNameName="my-4">
-                <Alert variant="info">
-                    Appointment Type: {this.props.type}
-                </Alert>
                 <DatePicker
                     animation="slide-up"
                     calendar={calendar}
                 >
                 {
-                    ({value}) => {
+                    ({startTime}) => {
                         return (
                             <Form>
                                 <Form.Row noGutters={true}>
                                     <Col md={12}><Form.Label>Enter the date and time from which you would like the search to be performed</Form.Label></Col>
-                                    <Col md={3}><Form.Control value={value ? value.format('YYYY-MM-DD HH:mm') : ''}/></Col>
-                                    <Button><i className="fa fa-calendar-plus-o" aria-hidden="true"></i></Button>
+                                    <Col md={3}><Form.Control value={this.state.startTime.format("YYYY-MM-DD HH:mm")} /></Col>
+                                    <Button variant="outline-info"><i className="fa fa-calendar-plus-o" aria-hidden="true"></i></Button>
                                 </Form.Row>
                             </Form>
                                 
                         )
                     }
                 }</DatePicker>
+
+                <Alert variant="info" className="my-4">
+                    <div> Appointment Type: <span className="font-weight-bold">{this.props.type}</span> </div>
+                    <div> From: <span className="font-weight-bold">{ startTime.toDate().toString() }</span> </div>
+                </Alert>
             </div>
         );
     }
