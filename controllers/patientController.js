@@ -1,6 +1,8 @@
 // Patient Model
 const Patient = require('./../models/Patient');
 const bcryptjs = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const config = require('./../config/keys');
 
 //  Callback functions that they will invoke on our routes
 
@@ -10,12 +12,16 @@ exports.patient_list = (req, res) => {
 }
 
 // register/create patient
-exports.patient_register = (req,res) =>{
+exports.patient_register = (req, res) => {
 
-    Patient.findOne({healthCardNumber: req.body.healthCardNumber})
-        .then(patient  => {
+    Patient.findOne({
+            healthCardNumber: req.body.healthCardNumber
+        })
+        .then(patient => {
             if (patient) {
-                return res.status(400).json({healthCardNumber: 'Patient file already exists'});
+                return res.status(400).json({
+                    healthCardNumber: 'Patient file already exists'
+                });
             } else {
                 const newPatient = new Patient({
                     healthCardNumber: req.body.healthCardNumber,
@@ -29,15 +35,17 @@ exports.patient_register = (req,res) =>{
                     password: req.body.password
                 });
 
-                bcryptjs.genSalt(10,(err, salt)=>{
-                    bcryptjs.hash(newPatient.password, salt, (err,hash)=>{
-                        if(err) {throw err;}
-                        newPatient.password=hash;
+                bcryptjs.genSalt(10, (err, salt) => {
+                    bcryptjs.hash(newPatient.password, salt, (err, hash) => {
+                        if (err) {
+                            throw err;
+                        }
+                        newPatient.password = hash;
                         newPatient.save().then(patient =>
-                            res.json(patient)).catch(err=>console.log(err));
-                            res.json({
-                                success: true,
-                            });
+                            res.json(patient)).catch(err => console.log(err));
+                        res.json({
+                            success: true,
+                        });
                     })
                 })
             }
@@ -48,23 +56,42 @@ exports.patient_register = (req,res) =>{
 exports.patient_login = (req, res) => {
 
     Patient.findOne({
-        healthCardNumber: req.body.healthCardNumber
-    })
-    .then(patient => {
-        if(patient) {
-            if(bcryptjs.compareSync(req.body.password, patient.password))
-            {
-                res.json({ status: patient.healthCardNumber + 'logged in'})
-            }
-            else {
-                res.json({ error: "wrong password"})
-            }
+            healthCardNumber: req.body.healthCardNumber
+        })
+        .then(patient => {
+            if (patient) {
+                if (bcryptjs.compareSync(req.body.password, patient.password)) {
 
-        }
-        else {
-            res.json({ error: "patient not found"})
-        }
-    })
+                    const payload = {
+                        healthCardNumber: patient.healthCardNumber,
+                        physicalAddress: patient.physicalAddress,
+                        emailAddress: patient.emailAddress,
+                        firstName: patient.firstName,
+                        lastName: patient.lastName,
+                    };
+
+                    var token = jwt.sign(payload, config.secret, {
+                        expiresIn: 86400 //24h
+                    });
+
+                    res.json({
+                        success: true,
+                        message: 'Patient Logged in Successfully',
+                        token: token
+                    });
+                } else {
+                    res.json({
+                        success: false,
+                        message: 'Incorrect Password'
+                    });
+                }
+            } else {
+                res.json({
+                    success: false,
+                    message: 'Incorrect Patient Health Card Number'
+                });
+            }
+        })
         .catch(err => {
             res.send('error: ' + err)
         })
@@ -74,26 +101,32 @@ exports.patient_login = (req, res) => {
 exports.patient_delete = (req, res) => {
     Patient.findById(req.params.id)
         .then(patient => patient.remove()
-            .then(() => res.json({success: true}))
-        ).catch(err => res.status(404).json({success: false}));
+            .then(() => res.json({
+                success: true
+            }))
+        ).catch(err => res.status(404).json({
+            success: false
+        }));
 }
 
 // update an existing object
-exports.patient_update = (req,res) => {
-    Patient.findOneAndUpdate({healthCardNumber: req.body.healthCardNumber}, { $set:
-            {
-                healthCardNumber: req.body.healthCardNumber,
-                birthday: req.body.birthday,
-                gender: req.body.gender,
-                phoneNumber: req.body.phoneNumber,
-                physicalAddress: req.body.physicalAddress,
-                emailAddress: req.body.emailAddress,
-                firstName: req.body.firstName,
-                lastName: req.body.lastName,
-                password: req.body.password
-            }
-    }, {new: true} ).then(patient => res.json(patient));
-
+exports.patient_update = (req, res) => {
+    Patient.findOneAndUpdate({
+        healthCardNumber: req.body.healthCardNumber
+    }, {
+        $set: {
+            healthCardNumber: req.body.healthCardNumber,
+            birthday: req.body.birthday,
+            gender: req.body.gender,
+            phoneNumber: req.body.phoneNumber,
+            physicalAddress: req.body.physicalAddress,
+            emailAddress: req.body.emailAddress,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            password: req.body.password
+        }
+    }, {
+        new: true
+    }).then(patient => res.json(patient));
 
 }
-

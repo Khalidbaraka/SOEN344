@@ -2,7 +2,6 @@ import {Button, Col, Container, Fade, Row} from 'react-bootstrap'
 import React, { Component } from 'react';
 
 import NurseSignUp from './NurseSignUp';
-import PatienSignUp from './PatientSignUp'
 import PatientSignUp from './PatientSignUp';
 
 class SignUp extends Component{

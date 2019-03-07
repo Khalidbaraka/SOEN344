@@ -1,9 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-
 const nurse_controller = require ('./../../controllers/NurseController.js');
-
+const decoder = require('../../middleware');
 
 // @route POST api/nurses/register
 // @desc  Register Nurse
@@ -15,6 +14,9 @@ router.post('/register', nurse_controller.nurse_register);
 // @access Public
 router.post('/login', nurse_controller.nurse_login);
 
+// Protecting the routes below. The order is important
+router.use(decoder);
+
 // @route GET api/nurses/nursesList
 // @desc get list of nurses from db
 // @access Public
@@ -23,7 +25,7 @@ router.get('/nursesList', nurse_controller.nurse_list);
 // @route GET api/nurses/select
 // @desc get a nurse by the nurse's accessID (nurse in req body)
 // @access Public
-router.get('/select', nurse_controller.nurse_by_access_id);
+router.get('/select/', nurse_controller.nurse_by_access_id);
 
 // @route PUT api/nurses/editPassword
 // @desc  Change a Nurse's password

@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 // Create Schema 
 const DoctorSchema = new Schema ({
-    permit_number: {
+    permitNumber: {
         required: true,
         unique: true,
         type: Number,
@@ -14,11 +14,11 @@ const DoctorSchema = new Schema ({
         type: String,
         required: true
     },
-    first_name: {
+    firstName: {
         type: String,
         required: true
     },
-    last_name: {
+    lastName: {
         type: String,
         required: true
     },
@@ -29,7 +29,11 @@ const DoctorSchema = new Schema ({
     city: {
         type: String,
         required: true
-    }
+    },
+    appointments: [{
+        type: Schema.Types.ObjectId, 
+        ref: 'appointment' 
+    }]
 });
 
 module.exports = Doctor = mongoose.model('doctor', DoctorSchema);
