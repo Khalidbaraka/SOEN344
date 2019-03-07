@@ -1,0 +1,83 @@
+import 'rc-time-picker/assets/index.css';
+
+import { Alert, Button, Col, Form, Row } from 'react-bootstrap';
+import React, { Component } from 'react';
+
+import Calender from 'rc-calendar';
+import DatePicker from 'rc-calendar/lib/Picker';
+import TimePicker from 'rc-time-picker';
+import TimePickerPanel from 'rc-time-picker/lib/Panel';
+import moment from 'moment';
+
+const format = 'YYYY-MM-DD HH:mm';
+const now = moment();
+
+
+
+class AppCalender extends Component {
+    constructor(props) {
+        super(props);
+        
+        this.state = {
+            value: "",
+        }
+    }
+    
+    getFormat = (time) => {
+        return time ? format : 'YYYY-MM-DD';
+    }
+
+    onChange = (value) => {
+        this.setState({
+            value,
+        });
+    }
+    
+    render() {
+        const timePickerElement = <TimePickerPanel 
+            defaultValue={moment('00:00', 'HH:mm')} 
+            format='HH:mm'
+            minuteStep={this.props.type == "Walk-in" ? 20 : 60}
+            secondStep={60} />;
+
+        const calendar = (<Calender
+            showWeekNumber={false}
+            disabledTime={false}
+            format={this.getFormat(true)}
+            showToday={true}
+            timePicker={timePickerElement}
+            showOk={true}
+            disabledSeconds={true}
+            value={this.state.value}
+            onChange={this.onChange}
+            />);
+
+        return (
+            <div className="my-4">
+                <Alert variant="info">
+                    Appointment Type: {this.props.type}
+                </Alert>
+                <DatePicker
+                    animation="slide-up"
+                    calendar={calendar}
+                >
+                {
+                    ({value}) => {
+                        return (
+                            <Form>
+                                <Form.Row noGutters={true}>
+                                    <Col md={12}><Form.Label>Enter the date and time from which you would like the search to be performed</Form.Label></Col>
+                                    <Col md={3}><Form.Control value={value ? value.format('YYYY-MM-DD HH:mm') : ''}/></Col>
+                                    <Button><i class="fa fa-calendar-plus-o" aria-hidden="true"></i></Button>
+                                </Form.Row>
+                            </Form>
+                                
+                        )
+                    }
+                }</DatePicker>
+            </div>
+        );
+    }
+}
+
+export default AppCalender;
