@@ -19,12 +19,11 @@ class AppCalender extends Component {
         super(props);
         
         this.state = {
-            value: "",
+            value: moment()
         }
     }
 
     componentDidMount = () => {
-        console.log(momentTz().tz("America/Los_Angeles").format());
         
     }
     
@@ -32,14 +31,12 @@ class AppCalender extends Component {
         return time ? format : 'YYYY-MM-DD';
     }
 
-    onChange = (value) => {
-        const momentDateTz = momentTz.tz(value,'YYYY-MM-DD HH:mm', "America/Toronto")
-        const momentDate = moment(value,'YYYY-MM-DD HH:mm')
-        this.setState({
-            value: momentDateTz
-        });            
-        console.log("Moment", this.state.value._d);
+    onChange = (value) => {       
+        console.log("Moment", value.toDate());
         
+        this.setState({
+            value: value
+        });            
     }
     
     render() {
@@ -47,12 +44,13 @@ class AppCalender extends Component {
             format='HH:mm'
             showSecond={false}
             minuteStep={this.props.type == "Walk-in" ? 20 : 60}
-            secondStep={60} />;
+            secondStep={60}
+            />;
 
         const calendar = (<Calender
             showWeekNumber={false}
             disabledTime={false}
-            format={this.getFormat(true)}
+            format='YYYY-MM-DD'
             showToday={true}
             timePicker={timePickerElement}
             showOk={true}

@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
+import PatientNavBar from "../PatientNavBar";
 
 class NurseHomepage extends Component {
     render() {
         return (
-            <div>
-                <h1> Nurse Homepage </h1>
-            </div>
-        );
+            <div>HEllO World we made it</div>
+
+
+
+    );
     }
 }
 
