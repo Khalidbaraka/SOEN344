@@ -3,7 +3,7 @@ const router = express.Router();
 
 // Require controller modules.
 
-const item_controller = require('./../../controllers/itemController');
+const item_controller = require('../../controllers/ItemController');
 
 // @route GET api/items
 // @desc Get All items

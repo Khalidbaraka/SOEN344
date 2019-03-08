@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 //loading the model
-const patientController = require('./../../controllers/patientController');
+const patientController = require('../../controllers/PatientController');
 const decoder = require('../../middleware');
 
 // @route post api/patients/register

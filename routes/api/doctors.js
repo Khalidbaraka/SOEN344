@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 //loading the model
-const doctorController = require('../../controllers/doctorController');
+const doctorController = require('../../controllers/DoctorController');
 const decoder = require('../../middleware');
 
 
