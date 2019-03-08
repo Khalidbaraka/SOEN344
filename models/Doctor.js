@@ -36,10 +36,8 @@ const DoctorSchema = new Schema ({
     }],
     
     schedules: [{
-        timeslot: {
             type: Schema.Types.ObjectId, 
             ref: 'timeslot' 
-        }
     }]
 
 });

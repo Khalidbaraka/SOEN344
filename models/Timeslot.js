@@ -18,7 +18,6 @@ const timeslotSchema = new Schema ({
     },
     duration:{
         type: String,
-        required: true
     }
 });
 
