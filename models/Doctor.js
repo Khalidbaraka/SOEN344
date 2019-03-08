@@ -33,7 +33,15 @@ const DoctorSchema = new Schema ({
     appointments: [{
         type: Schema.Types.ObjectId, 
         ref: 'appointment' 
+    }],
+    
+    schedules: [{
+        timeslot: {
+            type: Schema.Types.ObjectId, 
+            ref: 'timeslot' 
+        }
     }]
+
 });
 
 module.exports = Doctor = mongoose.model('doctor', DoctorSchema);
