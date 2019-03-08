@@ -54,7 +54,7 @@ class AppCalender extends Component {
             defaultValue={moment().startOf('day')}
             disabledHours={this.disabledHours}
             disabledSeconds={this.disabledSeconds}
-            minuteStep={this.props.type == "Walk-in" ? 20 : 60}
+            minuteStep={this.props.type == "0" ? 20 : 60}
             />;
 
         // rc-calendar
@@ -80,7 +80,7 @@ class AppCalender extends Component {
                         return (
                             <Form>
                                 <Form.Row noGutters={true}>
-                                    <Col md={12}><Form.Label>Please select date and time of appointment'</Form.Label></Col>
+                                    <Col md={12}><Form.Label>Please select date and time of appointment</Form.Label></Col>
                                     <Col md={3}><Form.Control value={this.state.startTime.format("YYYY-MM-DD HH:mm")} /></Col>
                                     <Button variant="outline-info"><i className="fa fa-calendar-plus-o" aria-hidden="true"></i></Button>
                                 </Form.Row>
@@ -91,7 +91,11 @@ class AppCalender extends Component {
                 }</DatePicker>
 
                 <Alert variant="info" className="my-4">
-                    <div> Appointment Type: <span className="font-weight-bold">{this.props.type}</span> </div>
+                    <div> Appointment Type: 
+                        <span className="font-weight-bold">
+                            {this.props.type == 0 ? " Walk-in " : " Annual " }
+                        </span> 
+                    </div>
                     <div> For: <span className="font-weight-bold">{ startTime.toDate().toString() }</span> </div>
                 </Alert>
             </div>

@@ -10,7 +10,7 @@ class Identification extends Component {
         super(props);
         
         this.state = {
-            appointmentType: "Walk-in"
+            appointmentType: "0"
         }
     }
 
@@ -36,8 +36,8 @@ class Identification extends Component {
                                 <Form.Group as={Col} controlId="formGridState">
                                     <Form.Label>Select an appointment type</Form.Label>
                                     <Form.Control as="select" onChange={this.onAppointmentTypeHandler} value={appointmentType}>
-                                        <option value="Walk-in"> Walk-in </option>
-                                        <option value="Annual"> Annual </option>
+                                        <option value="0"> Walk-in </option>
+                                        <option value="1"> Annual </option>
                                     </Form.Control>
                                 </Form.Group>
                             </Form.Row>
