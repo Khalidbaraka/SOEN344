@@ -9,19 +9,19 @@ const config = require('./../config/keys');
 //Create / register
 exports.doctor_register = (req, res) => {
     Doctor.findOne({
-            permit_number: req.body.permit_number
+            permitNumber: req.body.permitNumber
         })
         .then(doctor => {
             if (doctor) {
                 return res.status(400).json({
-                    permit_number: 'Doctor with this permit number already exists'
+                    permitNumber: 'Doctor with this permit number already exists'
                 });
             } else {
                 const newDoctor = new Doctor({
-                    permit_number: req.body.permit_number,
+                    permitNumber: req.body.permitNumber,
                     password: req.body.password,
-                    first_name: req.body.first_name,
-                    last_name: req.body.last_name,
+                    firstName: req.body.firstName,
+                    lastName: req.body.lastName,
                     speciality: req.body.speciality,
                     city: req.body.city
                 });
@@ -47,7 +47,7 @@ exports.doctor_get_list = (req, res) => {
 //Read / get by permit number
 exports.doctor_get_by_permit = (req, res) => {
     Doctor.findOne({
-            permit_number: req.body.permit_number
+            permitNumber: req.body.permitNumber
         })
         .then(doctor => res.json(doctor))
 }
@@ -55,15 +55,15 @@ exports.doctor_get_by_permit = (req, res) => {
 //Login
 exports.doctor_login = (req, res) => {
     Doctor.findOne({
-            permit_number: req.body.permit_number
+            permitNumber: req.body.permitNumber
         })
         .then(doctor => {
             if (doctor) {
                 if (bcryptjs.compareSync(req.body.password, doctor.password)) {
                     const payload = {
-                        permit_number: doctor.permit_number,
-                        first_name: doctor.first_name,
-                        last_name: doctor.last_name,
+                        permitNumber: doctor.permitNumber,
+                        firstName: doctor.firstName,
+                        lastName: doctor.lastName,
                         speciality: doctor.speciality,
                     };
 
@@ -97,11 +97,11 @@ exports.doctor_update = (req, res) => {
     bcryptjs.hash(req.body.password, 10, (err, hash) => {
         //params is from the routes url, ex /api/doctor/:permit_number/update
         Doctor.findOneAndUpdate({
-                permit_number: req.params.permit_number
+                permitNumber: req.params.permit_number
             }, {
                 $set: {
-                    first_name: req.body.first_name,
-                    last_name: req.body.last_name,
+                    firstName: req.body.firstName,
+                    lastName: req.body.lastName,
                     password: hash,
                     speciality: req.body.speciality,
                     city: req.body.city
@@ -113,7 +113,7 @@ exports.doctor_update = (req, res) => {
 
 //Delete
 exports.doctor_delete = (req, res) => {
-    Doctor.findOne(req.params.permit_number)
+    Doctor.findOne({permitNumber: req.params.permit_number})
         .then(doctor => doctor.remove()
             .then(() => res.json({
                 success: true

@@ -24,6 +24,9 @@ class AppNavbar extends Component {
     render() {
         const { isOpen } = this.state; 
         const user = JSON.parse(localStorage.getItem('userToken'));
+        if(user){
+
+        }
       
         return (
             <div>
@@ -32,18 +35,29 @@ class AppNavbar extends Component {
                   <span className="navbar-toggler-icon"></span>
                 </button>
                 <div className={(!isOpen ? 'collapse' : '') + ' navbar-collapse'} id="navbarTogglerDemo01">
-                  <a className="navbar-brand" href="#">SOEN 344</a>
+                  <a className="navbar-brand" href="#"> Clinic </a>
                   <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
-                    <li className="nav-item active">
-                      <Link to={'/'} className="nav-link"> Home </Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link to={'/about'} className="nav-link"> About </Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link to={'/items'} className="nav-link"> Logs </Link>
-                    </li>
-                  </ul>
+                    { localStorage.getItem('userToken') ? (
+                      user.healthCardNumber ? (
+                        <li className="nav-item">
+                          <Link to={'/homepage/patient'} className="nav-link"> Home </Link>
+                        </li> 
+                      ) : user.accessID ? (
+                        <li className="nav-item">
+                          <Link to={'/homepage/nurse'} className="nav-link"> Home </Link>
+                        </li>  
+                      ) : user.permitNumber ? ( 
+                        <li className="nav-item">
+                          <Link to={'/homepage/doctor'} className="nav-link"> Home </Link>
+                        </li> 
+                      ) : (
+                        <li className="nav-item active">
+                          <Link to={'/'} className="nav-link"> Home </Link>
+                        </li>
+                      )
+                    ) : ''}
+
+                </ul>
                   { localStorage.getItem('userToken') ? (
                     <ul className="navbar-nav ml-auto mt-2 mt-lg-0">
                       <li className="nav-item">

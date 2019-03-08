@@ -12,7 +12,7 @@ class DoctorLogin extends Component{
         super();
 
         this.state = {
-            permit_number: '',
+            permitNumber: '',
             password: '',
             message: '',
             isAuthenticated: false
@@ -30,12 +30,12 @@ class DoctorLogin extends Component{
         e.preventDefault();
 
         const doctor = {
-            permit_number: this.state.permit_number,
+            permitNumber: this.state.permitNumber,
             password: this.state.password
         };
 
         axios.post('api/doctors/login', {
-                permit_number: doctor.permit_number,
+                permitNumber: doctor.permitNumber,
                 password: doctor.password
             })
             .then(res => {
@@ -50,7 +50,7 @@ class DoctorLogin extends Component{
                     });
                 } else {
                     this.setState({
-                        permit_number: '',
+                        permitNumber: '',
                         password: '',
                         message: res.data.message
                     });
@@ -88,7 +88,7 @@ class DoctorLogin extends Component{
                         : ''}
                         <Form.Group controlId="formBasicUsername">
                             <Form.Label>Permit Number</Form.Label>
-                            <Form.Control name="permit_number" type="text" placeholder="Enter 7-digits Permit Number" value = {this.state.permit_number} onChange={this.onChange}/>
+                            <Form.Control name="permitNumber" type="text" placeholder="Enter 7-digits Permit Number" value = {this.state.permitNumber} onChange={this.onChange}/>
                         </Form.Group>
     
                         <Form.Group controlId="formBasicPassword">
