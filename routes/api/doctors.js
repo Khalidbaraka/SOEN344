@@ -29,7 +29,7 @@ router.get('/getDoctorsList', doctorController.doctor_get_list);
 // @access Public
 router.get('/getDoctorByPermit', doctorController.doctor_get_by_permit);
 
-// @route GET api/doctors/permit_number/schedule/get
+// @route GET api/doctors/permit_number/schedule/get 
 // @desc Get schedule of doctor
 // @access Public
 router.get('/:permit_number/schedule/get', doctorController.doctor_get_schedule);
