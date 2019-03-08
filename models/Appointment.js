@@ -4,8 +4,8 @@ const Schema = mongoose.Schema;
 // Create Schema 
 const AppointmentSchema = new Schema ({
     dateCreated: {
-        required: true,
         type: Date,
+        Default: Date.now
     }, 
     type: {
         type: Number,
