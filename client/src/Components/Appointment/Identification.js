@@ -84,7 +84,13 @@ class Identification extends Component {
         const { appointmentType, startTime, onProceed } = this.state;
 
         if (onProceed) {
-            return <Redirect to="/homepage/patient/scheduleAppointment/list"/>;
+            return <Redirect to={{
+                pathname:"/homepage/patient/scheduleAppointment/list",
+                state: {
+                    appointmentType: this.state.appointmentType,
+                    startTime: this.state.startTime
+                }
+            }}/>;
         }
         
         return (
