@@ -23,7 +23,9 @@ exports.doctor_register = (req, res) => {
                     firstName: req.body.firstName,
                     lastName: req.body.lastName,
                     speciality: req.body.speciality,
-                    city: req.body.city
+                    city: req.body.city,
+                    appointments: [],
+                    schedules: []
                 });
 
                 bcryptjs.genSalt(10, (err, salt) => {
