@@ -1,6 +1,6 @@
 import 'rc-time-picker/assets/index.css';
 
-import { Alert, Button, Col, Form, Row } from 'react-bootstrap';
+import { Alert, Button, ButtonGroup, Col, Form, Row } from 'react-bootstrap';
 import React, { Component } from 'react';
 
 import Calender from 'rc-calendar';
@@ -11,49 +11,19 @@ import moment from 'moment';
 class AppCalender extends Component {
     constructor(props) {
         super(props);
-        
-        this.state = {
-            startTime: moment().startOf('day')
-        }
-    }
 
-    disabledHours = () => {
-        return [0, 1, 2, 3, 4, 5, 6, 7, 21, 22, 23];
-    }
-
-
-    disabledSeconds = (h, m) => {
-        const arraySeconds = [];
-        let i = 0;
-        while (i <= 60) {
-            arraySeconds.push(i);
-            i++;
-        }
-
-        return arraySeconds
-    }
-
-    onChange = (value) => {       
-        console.log("Moment", value.toDate());
-        
-        const nextState = {
-            ...this.state,
-            startTime: value
-        };
-        
-        this.setState(nextState);           
     }
     
     render() {
 
-        const { startTime } = this.state
+        const { startTime } = this.props
 
         // rc-time-picker Panel
         const timePickerElement = <TimePickerPanel 
             format='HH:mm'
             defaultValue={moment().startOf('day')}
-            disabledHours={this.disabledHours}
-            disabledSeconds={this.disabledSeconds}
+            disabledHours={this.props.disabledHours}
+            disabledSeconds={this.props.disabledSeconds}
             minuteStep={this.props.type == "0" ? 20 : 60}
             />;
 
@@ -66,29 +36,32 @@ class AppCalender extends Component {
             timePicker={timePickerElement}
             showOk={true}
             value={startTime}
-            onChange={this.onChange}
+            onChange={this.props.onDateSelectionHandler}
             />);
 
         return (
-            <div classNameName="my-4">
-                <DatePicker
-                    animation="slide-up"
-                    calendar={calendar}
-                >
-                {
-                    ({startTime}) => {
-                        return (
-                            <Form>
-                                <Form.Row noGutters={true}>
-                                    <Col md={12}><Form.Label>Please select date and time of appointment</Form.Label></Col>
-                                    <Col md={3}><Form.Control value={this.state.startTime.format("YYYY-MM-DD HH:mm")} /></Col>
-                                    <Button variant="outline-info"><i className="fa fa-calendar-plus-o" aria-hidden="true"></i></Button>
-                                </Form.Row>
-                            </Form>
-                                
-                        )
-                    }
-                }</DatePicker>
+            <div className="my-4">
+                <Form.Label>Please select date and time of appointment</Form.Label>
+                <Form.Row>
+                    <Col md={4}>
+                        <DatePicker
+                            animation="slide-up"
+                            calendar={calendar}
+                        >
+                            {
+                                ({startTime}) => {
+                                    return (
+                                        <ButtonGroup>
+                                            <Form.Control value={this.props.startTime.format("YYYY-MM-DD HH:mm")} />
+                                            <Button variant="outline-info"><i className="fa fa-calendar-plus-o" aria-hidden="true"></i></Button>
+                                        </ButtonGroup>      
+                                    )
+                                }
+                            }
+                        </DatePicker>
+                    </Col>
+                    <Button variant="outline-info" onClick={this.props.resetSelection}><i className="fa fa-times" aria-hidden="true"></i></Button>
+                </Form.Row>
 
                 <Alert variant="info" className="my-4">
                     <div> Appointment Type: 
@@ -96,7 +69,9 @@ class AppCalender extends Component {
                             {this.props.type == 0 ? " Walk-in " : " Annual " }
                         </span> 
                     </div>
-                    <div> For: <span className="font-weight-bold">{ startTime.toDate().toString() }</span> </div>
+                    <div> 
+                        For: <span className="font-weight-bold">{ startTime.toDate().toString() }</span> 
+                    </div>
                 </Alert>
             </div>
         );

@@ -2,6 +2,7 @@ import { Col, ListGroup, Row } from 'react-bootstrap';
 import React, { Component } from 'react';
 import {Route, Switch} from "react-router-dom";
 
+import AppointmentList from '../Appointment/AppointmentList';
 import Identification from '../Appointment/Identification';
 import { Link } from 'react-router-dom'
 
@@ -26,8 +27,9 @@ class PatientHomepage extends Component {
 
                     <Col md={9}>
                         <Switch>
-                            <Route path='/homepage/patient/myAppointment' component={''}/>
-                            <Route path='/homepage/patient/scheduleAppointment' component={ Identification }/>
+                            <Route exact path='/homepage/patient/myAppointment' component={''}/>
+                            <Route exact path='/homepage/patient/scheduleAppointment' component={ Identification }/>
+                            <Route exact path='/homepage/patient/scheduleAppointment/list' component={ AppointmentList }/>
                         </Switch>
                     </Col>
                 </Row>
