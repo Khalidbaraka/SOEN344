@@ -112,7 +112,6 @@ exports.doctor_update = (req, res) => {
 }
 
 exports.doctor_get_schedule = (req, res) =>{
-    let permitNumber = req.params.permit_number;
     Doctor.findOne({permitNumber: req.params.permit_number})
         .then(doctor =>{
             res.json(doctor.schedules);
