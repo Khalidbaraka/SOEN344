@@ -128,5 +128,10 @@ exports.patient_update = (req, res) => {
     }, {
         new: true
     }).then(patient => res.json(patient));
+}
 
+//Get list of appointments
+exports.patient_get_appointments = (req, res) =>{
+    Patient.findOne({healthCardNumber: req.params.health_card_num}).populate('appointments')
+        .then(patient => res.json(patient.appointments))
 }
