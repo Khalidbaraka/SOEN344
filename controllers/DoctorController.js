@@ -142,26 +142,29 @@ exports.doctor_create_timeslot= (req, res) => {
             answer = HelperController.overlaps(appStart, appEnd, start, end);
             
             if (answer == true){
-                res.status(400).json({
-                    success: false,
-                    message: 'Timeslot overlaps with an already existing timeslot',
-                });
                 break;
             }
         }
         
-        const newTimeslot = new Timeslot({
-            doctor: doctor._id,
-            start:  new Date(req.body.start),
-            end:  new Date(req.body.end),
-            duration: req.body.duration
-        });
+        if(answer == true){
+            res.status(400).json({
+                success: false,
+                message: 'Timeslot overlaps with an already existing timeslot'
+            });
+        }
+        else{
+            const newTimeslot = new Timeslot({
+                doctor: doctor._id,
+                start:  new Date(req.body.start),
+                end:  new Date(req.body.end),
+                duration: req.body.duration
+            });
 
-        newTimeslot.save().then(newTimeslot => res.json(newTimeslot));
-            
-        doctor.schedules.push(newTimeslot); 
-        doctor.save();
-        res.json(doctor);
-        
+            newTimeslot.save().then(newTimeslot => res.json(newTimeslot));
+                
+            doctor.schedules.push(newTimeslot); 
+            doctor.save();
+            res.json(doctor);
+    }
     }).catch(err => console.log(err));
 }
