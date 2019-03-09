@@ -16,6 +16,7 @@ import NurseHomepage from './Components/Homepage/NurseHomepage';
 import PatientHomepage from "./Components/Homepage/PatientHomepage";
 import PatientNavBar from "./Components/PatientNavBar";
 import SignUp from './Components/SignUp/SignUp'
+import UpdateSchedule from "./Components/Schedule/UpdateSchedule";
 
 class App extends Component {
   render() {
@@ -34,11 +35,17 @@ class App extends Component {
             <Route path='/items' component={ Items }/>
             <Route path='/login' component={ Login }/>
             <Route path='/signup' component={ SignUp }/>
-
             <Route path='/logout' component={ Logout }/>
-            <Route path='/homepage/nurse' component={ NurseHomepage }/>
-            <Route path='/homepage/doctor' component={ DoctorHomepage }/>
 
+            {/* Nurse Routes */}
+            <Route path='/homepage/nurse' component={ NurseHomepage }/>
+
+            {/* Doctor Routes */}
+            <Route path='/homepage/doctor' component={ DoctorHomepage }/>
+            {/* might be unneeded. TODO */}
+            {/*<Route path='/homepage/doctor/updateSchedule' component={ UpdateSchedule }/>*/}
+
+            {/* Patient Routes */}
             <Route path='/homepage/patient' component={ PatientHomepage }/>
             <Route exact path='/homepage/patient/scheduleAppointment' component={ PatientHomepage }/>
             <Route exact path='/homepage/patient/myAppointment' component={ PatientHomepage }/>
