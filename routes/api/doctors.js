@@ -16,6 +16,9 @@ router.post('/register', doctorController.doctor_register);
 // @access Public
 router.post('/login', doctorController.doctor_login);
 
+router.post('/:permit_number/schedule/create', doctorController.doctor_create_timeslot);
+
+
 // Protecting the routes below. The order is important
 router.use(decoder);
 
@@ -42,5 +45,5 @@ router.delete('/delete/:permit_number', doctorController.doctor_delete);
 // @route post api/doctors/:permit_number/schedule/create
 // @desc Create Timeslot
 // @access Public
-router.post('/:permit_number/schedule/create', doctorController.doctor_create_timeslot);
+
 module.exports = router;

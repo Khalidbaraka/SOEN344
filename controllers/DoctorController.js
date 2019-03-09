@@ -4,6 +4,7 @@ const Timeslot = require('./../models/Timeslot');
 var bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('./../config/keys');
+const HelperController = require('./HelperController');
 
 //  Callback functions for the routes
 
@@ -128,37 +129,39 @@ exports.doctor_delete = (req, res) => {
 //Create Timeslot
 exports.doctor_create_timeslot= (req, res) => {
     Doctor.findOne({
-        permitNumber: req.body.permitNumber
-    })
+        permitNumber: req.params.permit_number
+    }).populate('schedules') // To be removed
     .then(doctor => {
-        start = req.body.start;
-        end =req.body.end;
+        appStart = new Date(req.body.start);
+        appEnd = new Date(req.body.end);
+        let answer = false
+        for (var i=0; i<doctor.schedules.length; i++) {
+            let start = doctor.schedules[i].start;
+            let end = doctor.schedules[i].end;
 
-        for(timeslot in doctor.schedules)
-        {
-            answer = timeslot.overlaps(start, end)
-            if (answer == true)
-            {
-                res.json({
+            answer = HelperController.overlaps(appStart, appEnd, start, end);
+            
+            if (answer == true){
+                res.status(400).json({
                     success: false,
                     message: 'Timeslot overlaps with an already existing timeslot',
                 });
                 break;
             }
         }
-        if (answer) {
-            return res.status(400).json({
-                permitNumber: 'Timeslot overlaps with an already existing timeslot'
-            });
-        } else {
-            const newTimeslot = new Timeslot({
-                doctor: req.body.doctor,
-                start: req.body.start,
-                end: req.body.end,
-                duration: req.body.duration
-            });
+        
+        const newTimeslot = new Timeslot({
+            doctor: doctor._id,
+            start:  new Date(req.body.start),
+            end:  new Date(req.body.end),
+            duration: req.body.duration
+        });
+
+        newTimeslot.save().then(newTimeslot => res.json(newTimeslot));
             
-        doctor.schedules.add(newTimeslot);
-        }
-    });
+        doctor.schedules.push(newTimeslot); 
+        doctor.save();
+        res.json(doctor);
+        
+    }).catch(err => console.log(err));
 }
