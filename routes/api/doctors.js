@@ -17,7 +17,7 @@ router.post('/register', doctorController.doctor_register);
 router.post('/login', doctorController.doctor_login);
 
 // Protecting the routes below. The order is important
-router.use(decoder);
+//router.use(decoder);
 
 // @route GET api/doctors/getDoctorsList
 // @desc Get doctor by permit number

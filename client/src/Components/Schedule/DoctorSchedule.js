@@ -3,8 +3,43 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import moment from 'moment';
 import ReactTimeslotCalendar from 'react-timeslot-calendar';
+import DoctorHomepage from '../Homepage/DoctorHomepage';
 
 class DoctorSchedule extends Component {
+
+    constructor(props){
+        super(props);
+
+        this.state={
+            permitNumber: '',
+            appointments: '',
+            schedules: '',
+            isAuthenticated: true
+        }
+        this._updateTimeslotProps(this.props.timeslotProps);
+    }
+
+    //todo
+    componentDidMount() {
+        var string=  localStorage.getItem('userToken');
+        let t= JSON.parse(string);
+        const doctor = {
+            schedules: this.state.schedules,
+            appointments: this.state.appointments
+        };
+        const AuthStr = localStorage.getItem("userToken");
+        //console.log(doctor.permitNumber);
+        axios.get(`/api/doctors/${t['permitNumber']}/schedule/get`, {
+                headers: {Authorization: AuthStr},
+                schedules: doctor.schedules,
+                appointments: this.appointments
+            }
+        ).then(res =>
+            console.log(t['permitNumber'])
+        ).catch(err =>
+            console.log(AuthStr)
+        )
+    }
 
     render() {
         return (
@@ -15,11 +50,14 @@ class DoctorSchedule extends Component {
         );
     }
 
+   
+    
+
 
     _updateTimeslotProps(timeslotProps) {
         const defaultProps = {
-            format: 'h',
-            showFormat: 'h:mm A',
+            format: 'h:mm A',
+            showFormat: 'h:mm A'
         };
 
         this.timeslotProps = Object.assign({}, defaultProps, timeslotProps);
@@ -27,18 +65,20 @@ class DoctorSchedule extends Component {
 
     _customTimeslotForDoctor(){
         return(
-
           <div>
+
+              
+
               <ReactTimeslotCalendar
 
+                  timeslotProps = {this.timeslotProps}
                   initialDate={moment().format()}
 
                   timeslots = { [
-                      ['9:00 A', '9:20 A'],
-                      ['10', '11'],
-                      ['18'],
+                      ['9:00 AM', '9:20 AM'],
+                      ['10:00 AM', '12:20 AM'],
                   ] }
-                  maxTimeslots = { 3 }
+                  maxTimeslots = { 0 }
                   onSelectTimeslot = { (timeslots, lastSelected) => {
                       console.log('All Timeslots:');
                       console.log(timeslots);
@@ -47,6 +87,9 @@ class DoctorSchedule extends Component {
                       console.log(lastSelected);
                   } }
               />
+              
+
+              
           </div>
         );
     }
