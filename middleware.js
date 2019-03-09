@@ -1,4 +1,5 @@
 const config = require('./config/keys');
+const jwt = require('jsonwebtoken');
 
 module.exports = (function(req, res, next) {
     // check header or url parameters or post parameters for token
