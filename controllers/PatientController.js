@@ -1,5 +1,6 @@
 // Patient Model
 const Patient = require('./../models/Patient');
+const Appointment = require('./../models/Appointment');
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('./../config/keys');
@@ -132,6 +133,6 @@ exports.patient_update = (req, res) => {
 
 //Get list of appointments
 exports.patient_get_appointments = (req, res) =>{
-    Patient.findOne({healthCardNumber: req.params.health_card_num}).populate('appointments')
-        .then(patient => res.json(patient.appointments))
+    Patient.findOne({healthCardNumber: req.params.health_card_number}).populate('appointments')
+        .then(patient =>res.json(patient.appointments))
 }
