@@ -29,22 +29,22 @@ class DoctorHomepage extends Component {
         );
     }
 
-    async componentDidMount() {
+    componentDidMount() {
         const doctor = {
             permitNumber: this.state.permitNumber,
             schedules: this.state.schedules,
             appointments: this.state.appointments
         };
-        const AuthStr = 'Bearer '.concat(localStorage.getItem("userToken"));
-        await axios.get('/api/doctors/getDoctorsList', {
+        const AuthStr = 'Bearer '.concat(localStorage.getItem("token"));
+        axios.get(`/api/doctors/${3333333}/schedule/get`, {
                 headers: {Authorization: AuthStr},
                 schedules: doctor.schedules,
                 appointments: this.appointments
             }
         ).then(res =>
-            res.json()
+            console.log(AuthStr)
         ).catch(err =>
-            console.log(err)
+            console.log(AuthStr)
         )
     }
 }

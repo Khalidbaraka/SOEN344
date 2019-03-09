@@ -43,6 +43,7 @@ class DoctorLogin extends Component{
                     const decoded = jwt.decode(res.data.token, {
                         complete: true
                     });
+                    localStorage.setItem('token', res.data.token);
                     localStorage.setItem('userToken', JSON.stringify(decoded.payload));
 
                     this.setState({
