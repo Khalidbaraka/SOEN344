@@ -32,7 +32,8 @@ exports.patient_register = (req, res) => {
                     emailAddress: req.body.emailAddress,
                     firstName: req.body.firstName,
                     lastName: req.body.lastName,
-                    password: req.body.password
+                    password: req.body.password, 
+                    appointments: []
                 });
 
                 bcryptjs.genSalt(10, (err, salt) => {
