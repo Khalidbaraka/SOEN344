@@ -39,4 +39,8 @@ router.put('/update/:permit_number', doctorController.doctor_update);
 // @access Public
 router.delete('/delete/:permit_number', doctorController.doctor_delete);
 
+// @route post api/doctors/:permit_number/schedule/create
+// @desc Create Timeslot
+// @access Public
+router.post('/:permit_number/schedule/create', doctorController.doctor_create_timeslot);
 module.exports = router;

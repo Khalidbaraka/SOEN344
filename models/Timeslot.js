@@ -20,5 +20,11 @@ const timeslotSchema = new Schema ({
         type: String,
     }
 });
+//Method verifies if parameters (start, end) representing date for possible new timeslot overlaps with existing timeslot
+timeslotSchema.methods.overlaps = function overlaps (start, end) {
+    return ((start >= this.start && start <= this.end) || (end >= this.start && end <= this.end) 
+    || (start >= this.start && start <= this.end) || (end >= this.start && end <= this.end)
+)}
+
 
 module.exports = Timeslot = mongoose.model('timeslot', timeslotSchema);
