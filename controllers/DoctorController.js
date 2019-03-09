@@ -1,10 +1,12 @@
 //Doctor Model
 const Doctor = require('./../models/Doctor');
+const Timeslot = require('./../models/Timeslot');
 var bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('./../config/keys');
 
 //  Callback functions for the routes
+
 
 //Create / register
 exports.doctor_register = (req, res) => {
@@ -121,4 +123,42 @@ exports.doctor_delete = (req, res) => {
         ).catch(err => res.status(404).json({
             success: false
     }));
+}
+
+//Create Timeslot
+exports.doctor_create_timeslot= (req, res) => {
+    Doctor.findOne({
+        permitNumber: req.body.permitNumber
+    })
+    .then(doctor => {
+        start = req.body.start;
+        end =req.body.end;
+
+        for(timeslot in doctor.schedules)
+        {
+            answer = timeslot.overlaps(start, end)
+            if (answer == true)
+            {
+                res.json({
+                    success: false,
+                    message: 'Timeslot overlaps with an already existing timeslot',
+                });
+                break;
+            }
+        }
+        if (answer) {
+            return res.status(400).json({
+                permitNumber: 'Timeslot overlaps with an already existing timeslot'
+            });
+        } else {
+            const newTimeslot = new Timeslot({
+                doctor: req.body.doctor,
+                start: req.body.start,
+                end: req.body.end,
+                duration: req.body.duration
+            });
+            
+        doctor.schedules.add(newTimeslot);
+        }
+    });
 }
