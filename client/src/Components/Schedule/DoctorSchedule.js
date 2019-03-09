@@ -1,45 +1,54 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import moment from 'moment';
+import ReactTimeslotCalendar from 'react-timeslot-calendar';
 
 class DoctorSchedule extends Component {
-    constructor() {
-        super();
-
-        this.state = {
-            permitNumber: '',
-            password: '',
-            message: '',
-            schedules: '',
-            appointments: '',
-            isAuthenticated: false
-        }
-    }
 
     render() {
         return (
             <div>
-                <nav className="navbar-user navbar-expand-lg navbar-dark bg-dark">
-                    <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
-                        <li className="nav-item active">
-                            <Link to={'/homepage/doctor/schedule'} className="nav-link"> My Schedule </Link>
-                        </li>
-                    </ul>
-                </nav>
+                    {this._customTimeslotForDoctor()}
             </div>
+
         );
-        const doctor = {
-            schedules: this.state.schedules,
-            appointments: this.state.appointments
+    }
+
+
+    _updateTimeslotProps(timeslotProps) {
+        const defaultProps = {
+            format: 'h',
+            showFormat: 'h:mm A',
         };
 
-        axios.get('api/doctors/:permit_number/schedule/get', {
-            schedules: doctor.schedules,
-            appointments: this.appointments
+        this.timeslotProps = Object.assign({}, defaultProps, timeslotProps);
+    }
 
-        }).then(res => {
+    _customTimeslotForDoctor(){
+        return(
 
-        });
+          <div>
+              <ReactTimeslotCalendar
+
+                  initialDate={moment().format()}
+
+                  timeslots = { [
+                      ['9:00 A', '9:20 A'],
+                      ['10', '11'],
+                      ['18'],
+                  ] }
+                  maxTimeslots = { 3 }
+                  onSelectTimeslot = { (timeslots, lastSelected) => {
+                      console.log('All Timeslots:');
+                      console.log(timeslots);
+
+                      console.log('Last selected timeslot:');
+                      console.log(lastSelected);
+                  } }
+              />
+          </div>
+        );
     }
 }
 
