@@ -6,6 +6,17 @@ import ReactTimeslotCalendar from 'react-timeslot-calendar';
 
 class DoctorSchedule extends Component {
 
+    constructor(){
+        super();
+
+        this.state={
+            permitNumber: '',
+            appointments: '',
+            schedules: '',
+            isAuthenticated: true
+        }
+    }
+
     render() {
         return (
             <div>
@@ -49,6 +60,24 @@ class DoctorSchedule extends Component {
               />
           </div>
         );
+    }
+
+
+    componentDidMount() {
+        const doctor = {
+            permitNumber: this.state.permitNumber,
+            schedules: this.state.schedules,
+            appointments: this.state.appointments
+        };
+        const AuthStr = localStorage.getItem("token");
+        axios.get(`/api/doctors/${3333333}/schedule/get`, {
+                headers: {Authorization: `Bearer ${AuthStr}`},
+            }
+        ).then(res =>
+            console.log(AuthStr)
+        ).catch(err =>
+            console.log(AuthStr)
+        )
     }
 }
 
