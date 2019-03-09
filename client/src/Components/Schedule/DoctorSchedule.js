@@ -1,7 +1,20 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 class DoctorSchedule extends Component {
+    constructor() {
+        super();
+
+        this.state = {
+            permitNumber: '',
+            password: '',
+            message: '',
+            schedules: '',
+            appointments: '',
+            isAuthenticated: false
+        }
+    }
 
     render() {
         return (
@@ -15,6 +28,18 @@ class DoctorSchedule extends Component {
                 </nav>
             </div>
         );
+        const doctor = {
+            schedules: this.state.schedules,
+            appointments: this.state.appointments
+        };
+
+        axios.get('api/doctors/:permit_number/schedule/get', {
+            schedules: doctor.schedules,
+            appointments: this.appointments
+
+        }).then(res => {
+
+        });
     }
 }
 
