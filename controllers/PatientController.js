@@ -213,6 +213,7 @@ exports.patient_checkout_appointment = (req, res) =>{
                                         price = 20;
                                     }
                                     else if(duration == 60 || duration == 0){
+                                        duration = 60;
                                         type = 1;
                                         price = 60;
                                     }
