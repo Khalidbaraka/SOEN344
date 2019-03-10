@@ -9,6 +9,17 @@ const AppointmentList = (props) => {
 
     //Modifies type from numeric to string
     for(let i = 0; i < appointments.length; i++){
+
+        let d = new Date(appointments[i].start);
+
+        let date = ("0" + d.getDate().toString()).slice(-2);
+        let month = ("0" + (d.getMonth() + 1).toString()).slice(-2);
+        let year = d.getUTCFullYear().toString();
+        let hour = ("0" + d.getUTCHours().toString()).slice(-2);
+        let minute = ("0" + d.getUTCMinutes().toString()).slice(-2);
+        
+        appointments[i].start = date + "/" +  month + "/"+ year + "  at " + hour + ":" + minute;
+
         if(appointments[i].type === 0){
             appointments[i].type = "Walk-in";
         }
