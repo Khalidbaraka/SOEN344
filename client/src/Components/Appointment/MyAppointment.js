@@ -2,6 +2,8 @@ import 'rc-calendar/assets/index.css';
 
 import { Button, Card, Col, Dropdown, DropdownButton, Form, Row } from 'react-bootstrap';
 import React, { Component } from 'react';
+import axios from 'axios';
+
 
 
 class Identification extends Component {
@@ -9,34 +11,38 @@ class Identification extends Component {
         super(props);
 
         this.state = {
-            appointmentType: "0"
+            test: "",
+            appointments: ""
         }
     }
 
-    onAppointmentTypeHandler = (event) => {
-        this.setState({
-            appointmentType: event.target.value
-        })
+    getAppointments () {
+        const user = JSON.parse(localStorage.getItem('userToken'));
+        const healthCardNumber = encodeURI(user.healthCardNumber);
+        axios.get('/api/patients/'+ healthCardNumber+ '/appointment/get')
+            .then(res => {
+                if(res.data){
+                    this.setState({
+                        test: "blah",
+                        appointments: res.data
+                    })
+                }
+            })
+            .catch(err => console.log(err))
     }
 
 
     render() {
         const { appointmentType } = this.state;
-        const user = JSON.parse(localStorage.getItem('userToken'));
 
-        console.log(user.healthCardNumber);
+       /* const user = JSON.parse(localStorage.getItem('userToken'));
+        const healthCardNumber = encodeURI(user.healthCardNumber);
 
-        // getAppointments = () => {
-        //     axios.get('api/patients/health_card_number/appointment/get')
-        //     .then(res => {
-        //       if(res.data){
-        //         this.setState({
-        //           items: res.data
-        //         })
-        //       }
-        //     })
-        //     .catch(err => console.log(err))
-        // }
+
+        console.log('api/patients/'+ healthCardNumber+ '/appointment/get');*/
+        this.getAppointments();
+        console.log(this.state.appointments);
+        console.log(this.state.test);
 
         
         return (
