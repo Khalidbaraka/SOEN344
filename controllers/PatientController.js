@@ -1,5 +1,6 @@
 // Patient Model
 const Patient = require('./../models/Patient');
+const Clinic = require('./../models/Patient');
 const Appointment = require('./../models/Appointment');
 const Room = require('./../models/Room');
 const Timeslot = require('./../models/Timeslot');
@@ -142,15 +143,16 @@ exports.patient_get_appointments = (req, res) =>{
 
 //Checkout appointments from the cart.
 exports.patient_checkout_appointment = (req, res) =>{
+    Clinic.find
     Patient.findOne({healthCardNumber: req.params.health_card_number}).populate('cart')
         .then(patient => {
             var timeslot = req.body.timeslot;
-            //var start = timeslot.start;
-            //var end = timeslot.end;
-            //var start = req.body.start;
-            //var end = req.body.end
-            appStart = new Date(req.body.start);
-            appEnd = new Date(req.body.end);
+            var appStart = timeslot.start;
+            var appEnd = timeslot.end;
+            //Use these for local tests.
+            //appStart = new Date(req.body.start);
+            //appEnd = new Date(req.body.end);
+            let foundDoctorMatchRoom = false;
             let foundRoomNoDoctor = false;
             let roomOverlap = false; 
             let doctorAvailable = false;
@@ -159,10 +161,11 @@ exports.patient_checkout_appointment = (req, res) =>{
             var price =0; //price for Walk-in is 20 dollars, and anual checkup is 60 dollars
             //from https://stackoverflow.com/questions/21069813/mongoose-multiple-query-populate-in-a-single-call
             //var populateQuery = [{path:'room', select:''}]
-            Room.find().populate('appointments')
+            Room.find().sort({'_id': 1}).populate('appointments')
                 .then(rooms =>{
                     Doctor.find().populate('schedules')
                         .then(doctors =>{
+                            let doctorRoom ="0";
                             let i = 0; //room index
                             let j=0; // appointments index
                             let k=0; //doctor index
@@ -191,24 +194,25 @@ exports.patient_checkout_appointment = (req, res) =>{
                                         for (l=0;l<doctors[k].schedules.length; l++) {
                                         let doctorStart = doctors[k].schedules[l].start;
                                         let doctorEnd = doctors[k].schedules[l].end;
-
+                                        doctorRoom = doctors[k].schedules[l].room;
                                         doctorAvailable = HelperController.overlaps(appStart, appEnd, doctorStart, doctorEnd);
-                                            if (doctorAvailable == true){
+                                            if (doctorAvailable == true && doctorRoom.equals(rooms[i]._id)){
                                                 break;
                                             }
                                         }
-                                        if(doctorAvailable == true){
+                                        if(doctorAvailable == true && doctorRoom.equals(rooms[i]._id)){
                                             break;
                                         }
                                     }
                                   k++;   
                                 }
-                                if(doctorAvailable ==true ){
+                                if(doctorAvailable ==true && doctorRoom.equals(rooms[i]._id)){
+                                    console.log(duration)
                                     if(duration == 20){
                                         type = 0;
                                         price = 20;
                                     }
-                                    else if(duration == 60){
+                                    else if(duration == 60 || duration == 0){
                                         type = 1;
                                         price = 60;
                                     }
@@ -233,7 +237,13 @@ exports.patient_checkout_appointment = (req, res) =>{
                                     rooms[i].save();
                                     doctors[k].appointments.push(newAppointment);
                                     doctors[k].save();
+                                    patient.appointments.push(newAppointment);
+                                    patient.save();
                                     res.json(rooms[i]) 
+                                }
+                                else if(doctorAvailable ==true && doctorRoom.equals(rooms[i]._id) ){
+                                    console.log (" this.")
+
                                 }
                                 else{
                                     foundRoomNoDoctor =true;

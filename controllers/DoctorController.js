@@ -148,10 +148,10 @@ exports.doctor_create_timeslot= (req, res) => {
                 roomNumber = timeslot[i].room.number;
                 answer = HelperController.overlaps(appStart, appEnd, start, end); 
      
-               /* if(answer == true && timeslot[i].doctor.permitNumber==doctor.permitNumber){
+                if(answer == true && timeslot[i].doctor.permitNumber==doctor.permitNumber){
                     personalTimeConflict = true;
                     break;
-                } */
+                } 
 
                 if (answer == true && roomOccupied.length >= 5){
                     break;
@@ -169,13 +169,12 @@ exports.doctor_create_timeslot= (req, res) => {
                     message: 'The selected timeslot conflicts with your own schedule'
                 });
             }
-            if(roomOccupied.length >= 5){
+            else if(roomOccupied.length >= 5){
                 res.status(400).json({
                     success: false,
                     message: 'Timeslot overlaps with an already existing timeslot'
                 });
             }
-            
             else{
                 roomAvailable = 1;
                 for(var j = 0; j<=roomOccupied.length; j++){
@@ -196,13 +195,13 @@ exports.doctor_create_timeslot= (req, res) => {
                         room: room._id
                     });
 
-                    newTimeslot.save().then(newTimeslot => res.json(newTimeslot));
+                    newTimeslot.save();//.then(newTimeslot => res.json(newTimeslot)); It was sending two res.json() (check the one in the bottom), so its throwing me a warning in the terminal.
                     doctor.schedules.push(newTimeslot); 
                     doctor.save();
                     res.json(doctor);
                 })
-        }
-    })
+            }
+        })
     })
 }
 
