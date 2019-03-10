@@ -2,23 +2,30 @@ import 'rc-calendar/assets/index.css';
 
 import { Button, Card, Col, Dropdown, DropdownButton, Form, Row } from 'react-bootstrap';
 import React, { Component } from 'react';
+import AppointmentList from './AppointmentList';
 import axios from 'axios';
+import ItemInput from "../Items/Items";
 
 
 
-class Identification extends Component {
+class MyAppointment extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            test: "",
-            appointments: ""
+            test: "asd",
+            appointments: []
         }
+    }
+
+    componentDidMount() {
+        this.getAppointments();
     }
 
     getAppointments () {
         const user = JSON.parse(localStorage.getItem('userToken'));
         const healthCardNumber = encodeURI(user.healthCardNumber);
+
         axios.get('/api/patients/'+ healthCardNumber+ '/appointment/get')
             .then(res => {
                 if(res.data){
@@ -33,24 +40,19 @@ class Identification extends Component {
 
 
     render() {
-        const { appointmentType } = this.state;
 
-       /* const user = JSON.parse(localStorage.getItem('userToken'));
-        const healthCardNumber = encodeURI(user.healthCardNumber);
-
-
-        console.log('api/patients/'+ healthCardNumber+ '/appointment/get');*/
-        this.getAppointments();
+        const { appointments } = this.state;
         console.log(this.state.appointments);
         console.log(this.state.test);
 
         
         return (
             <div className="container">
-                <h1>Hello World</h1>
+                <h1 className="text-center my-4"> Appointments </h1>
+                <AppointmentList appointments={appointments} />
             </div>
         );
     }
 }
 
-export default Identification;
+export default MyAppointment;
