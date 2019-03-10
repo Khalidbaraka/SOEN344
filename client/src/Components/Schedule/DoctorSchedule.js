@@ -22,14 +22,14 @@ class DoctorSchedule extends Component {
     //todo
     componentDidMount() {
         var string=  localStorage.getItem('userToken');
-        let t= JSON.parse(string);
+        let jsonToken = JSON.parse(string);
         const doctor = {
             schedules: this.state.schedules,
             appointments: this.state.appointments
         };
         const AuthStr = localStorage.getItem("userToken");
         //console.log(doctor.permitNumber);
-        axios.get(`/api/doctors/${t['permitNumber']}/schedule/get`, {
+        axios.get(`/api/doctors/${jsonToken['permitNumber']}/schedule/get`, {
                 headers: {Authorization: AuthStr},
                 schedules: doctor.schedules,
                 appointments: this.appointments
@@ -50,10 +50,6 @@ class DoctorSchedule extends Component {
         );
     }
 
-   
-    
-
-
     _updateTimeslotProps(timeslotProps) {
         const defaultProps = {
             format: 'h:mm A',
@@ -66,8 +62,6 @@ class DoctorSchedule extends Component {
     _customTimeslotForDoctor(){
         return(
           <div>
-
-              
 
               <ReactTimeslotCalendar
 
@@ -87,9 +81,6 @@ class DoctorSchedule extends Component {
                       console.log(lastSelected);
                   } }
               />
-              
-
-              
           </div>
         );
     }
