@@ -68,12 +68,20 @@ class DoctorSchedule extends Component {
 
                
             }
+
+        let stylePosition ={
+            top: 0,
+            left: 0,
+            padding: 0,
+            verticalAlign: "top",
+            height: 100,
+        };
         return(
                 
           <div>
               <table>
                   <tr>
-                      <td>
+                      <td style={stylePosition}>
                           <nav className="navbar-user navbar-expand-lg navbar-dark bg-dark">
                               <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
                                   <li className="nav-item active">
@@ -82,10 +90,8 @@ class DoctorSchedule extends Component {
                               </ul>
                           </nav>
                       </td>
-                      <td>
-
+                      <td style={stylePosition}>
                           <ReactTimeslotCalendar
-
                               timeslotProps = {this.timeslotProps}
                               initialDate={moment().format()}
 
