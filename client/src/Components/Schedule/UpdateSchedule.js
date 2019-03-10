@@ -1,9 +1,10 @@
 import React from 'react';
 import Form from 'react-bootstrap/Form'
+import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
-import Button from "react-bootstrap/Button";
 
 import moment from 'moment';
+import TimeRangeSlider from 'react-time-range-slider';
 
 class UpdateSchedule extends React.Component {
     constructor(props) {
@@ -11,29 +12,47 @@ class UpdateSchedule extends React.Component {
 
         this.state = {
             date: "",
+            timeRange: {
+                start: "08:00",
+                end: "20:00"
+            },
         };
 
-        this.dateChange = this.dateChange.bind(this);
+        this.dateChangeHandler = this.dateChangeHandler.bind(this);
         this.onOpen = this.onOpen.bind(this);
+        this.timeChangeHandler = this.timeChangeHandler.bind(this);
+        this.submitForm = this.submitForm.bind(this);
     }
 
     onOpen() {
-        this.setState({date: moment(this.props.timeslot.start).format(moment.HTML5_FMT.DATE)});
+        let initialTimeRange = {
+            start: moment(this.props.timeslot.start).format("HH:mm"),
+            end: moment(this.props.timeslot.end).format("HH:mm"),
+        };
+
+        this.setState({
+            date: moment(this.props.timeslot.start).format(moment.HTML5_FMT.DATE),
+            timeRange: initialTimeRange,
+        });
     }
 
-    getDate() {
-        return moment(this.props.timeslot.start).format(moment.HTML5_FMT.DATE);
-    }
-
-    dateChange(event) {
+    dateChangeHandler(event) {
         this.setState({date: event.target.value});
+    }
+
+    timeChangeHandler(time){
+        this.setState({
+            timeRange: time
+        });
+    }
+
+    submitForm() {
+    //    TODO: submit the form
     }
 
     render() {
         return (
             <div>
-                {/*for test*/}
-                <div><pre>{JSON.stringify(this.props, null, 2) }</pre></div>
                 <Modal
                     show={this.props.show}
                     onHide={this.props.onHide}
@@ -52,14 +71,34 @@ class UpdateSchedule extends React.Component {
                                 required
                                 type="date"
                                 placeholder="Date"
+                                min={moment().format(moment.HTML5_FMT.DATE)}
                                 value={this.state.date}
-                                onChange={this.dateChange}
+                                onChange={this.dateChangeHandler}
                             />
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label>Start/End Time</Form.Label>
+                            <div className="time-range">
+                                {this.state.timeRange.start} - {this.state.timeRange.end}
+                            </div>
+                            <TimeRangeSlider
+                                format={24}
+                                minValue={"08:00"}
+                                maxValue={"20:00"}
+                                name={"time_range"}
+                                onChange={this.timeChangeHandler}
+                                step={20}
+                                value={this.state.timeRange}/>
                         </Form.Group>
                     </Modal.Body>
 
                     <Modal.Footer>
-                        Footer
+                        <Button
+                            type="submit"
+                            onClick={this.submitForm}
+                        >
+                            Submit
+                        </Button>
                     </Modal.Footer>
                     </Form>
                 </Modal>

@@ -23,8 +23,8 @@ class DoctorHomepage extends Component {
 
         let temp = {
             doctor: null,
-            start: moment().toDate(),
-            end: moment().add(2, "hours").toDate(),
+            start: moment().set("hours", 9).toDate(),
+            end: moment().set("hours", 17).toDate(),
         };
 
         this.setState({ timeslots: [...this.state.timeslots, temp] });
@@ -50,13 +50,10 @@ class DoctorHomepage extends Component {
     render() {
         return (
             <div>
-                {/*for test*/}
-                <div><pre>{JSON.stringify(this.state, null, 2) }</pre></div>
                 <h1> Doctor Homepage </h1>
 
-                {/* Many of these would exist, per timeslot and load the modal with the timeslot info */}
-                <Button variant="primary"
-                        onClick={this.openEdit}>
+                {/* TODO Many of these would exist, per timeslot and load the modal with the timeslot info */}
+                <Button onClick={this.openEdit}>
                     Edit
                 </Button>
 
