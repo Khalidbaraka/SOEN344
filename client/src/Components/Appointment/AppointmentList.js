@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Table } from 'react-bootstrap';
 
 const AppointmentList = (props) => {
     const appointments = props.appointments;
@@ -18,7 +19,7 @@ const AppointmentList = (props) => {
 
     // Displaying the list of items. _id is unique to MongoDB (Primary Key)
     return (
-        <table className="table">
+        <Table striped bordered hover variant="dark">
             <thead>
             <tr>
                 <th scope="col"> Doctor </th>
@@ -26,7 +27,6 @@ const AppointmentList = (props) => {
                 <th scope="col"> Date </th>
                 <th scope="col"> Duration </th>
                 <th scope="col"> Price </th>
-                <th scope="col"></th>
             </tr>
             </thead>
             <tbody>
@@ -51,7 +51,7 @@ const AppointmentList = (props) => {
             }
             </tbody>
 
-        </table>
+        </Table>
     )
 }
 

@@ -13,7 +13,6 @@ class MyAppointment extends Component {
         super(props);
 
         this.state = {
-            test: "asd",
             appointments: []
         }
     }
@@ -30,7 +29,6 @@ class MyAppointment extends Component {
             .then(res => {
                 if(res.data){
                     this.setState({
-                        test: "blah",
                         appointments: res.data
                     })
                 }
@@ -43,13 +41,17 @@ class MyAppointment extends Component {
 
         const { appointments } = this.state;
         console.log(this.state.appointments);
-        console.log(this.state.test);
 
         
         return (
             <div className="container">
-                <h1 className="text-center my-4"> Appointments </h1>
+            <Card className="my-5">
+                <Card.Header>
+                        <Card.Title className="text-center text-monospace">Your Appointments</Card.Title>
+                </Card.Header>
+
                 <AppointmentList appointments={appointments} />
+            </Card> 
             </div>
         );
     }
