@@ -19,12 +19,29 @@ class Identification extends Component {
         })
     }
 
+
     render() {
         const { appointmentType } = this.state;
+        const user = JSON.parse(localStorage.getItem('userToken'));
 
+        console.log(user.healthCardNumber);
+
+        // getAppointments = () => {
+        //     axios.get('api/patients/health_card_number/appointment/get')
+        //     .then(res => {
+        //       if(res.data){
+        //         this.setState({
+        //           items: res.data
+        //         })
+        //       }
+        //     })
+        //     .catch(err => console.log(err))
+        // }
+
+        
         return (
             <div className="container">
-                <h1>hello world</h1>
+                <h1>Hello World</h1>
             </div>
         );
     }
