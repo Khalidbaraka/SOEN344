@@ -20,7 +20,7 @@ class DoctorSchedule extends Component {
         }
         this._updateTimeslotProps(this.props.timeslotProps);
     }
-    
+
     componentDidMount() {
         let string=  localStorage.getItem('userToken');
         let jsonToken = JSON.parse(string);

@@ -17,7 +17,8 @@ const timeslotSchema = new Schema ({
         required: true
     },
     duration:{
-        type: String,
+        // In minutes
+        type: Number,
     }
 });
 
