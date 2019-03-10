@@ -4,6 +4,8 @@ const AppointmentList = (props) => {
     const appointments = props.appointments;
 
 
+    
+
     //Modifies type from numeric to string
     for(let i = 0; i < appointments.length; i++){
         if(appointments[i].type === 0){
