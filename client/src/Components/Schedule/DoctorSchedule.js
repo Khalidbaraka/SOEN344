@@ -67,9 +67,8 @@ class DoctorSchedule extends Component {
                 console.log("1st timeslot moment is "+ this.state.schedules[i]['start']);
 
                
-            }        
+            }
         return(
-            
                 
           <div>
               <table>
@@ -98,7 +97,7 @@ class DoctorSchedule extends Component {
 
                               maxTimeslots = { 0 }
                           />
-                          <Button type="submit">BUTTON</Button>
+                          <Button type="submit">Add Availability</Button>
                       </td>
                   </tr>
               </table>
