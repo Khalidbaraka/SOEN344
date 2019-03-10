@@ -12,14 +12,14 @@ class DoctorSchedule extends Component {
 
     constructor(props) {
         super(props);
-        let schedulerData = new SchedulerData(new moment().format(DATE_FORMAT), ViewTypes.Week);
+        let schedulerData = new SchedulerData(new moment().format(DATE_FORMAT), ViewTypes.Day);
 
 
         this.state = {
             permitNumber: '',
             appointments: '',
-            schedules: [],
-            timeslot: '',
+            schedules: '',
+            timeslot: [],
             isAuthenticated: true,
             viewModel: schedulerData
         };
@@ -33,21 +33,14 @@ class DoctorSchedule extends Component {
 
         schedulerData.setResources(resources);
 
-        let events = [
-            {
-                id: 1,
-                start: '2019-03-10 14:30:00',
-                end: '2019-03-10 15:30:00',
-                resourceId: 't',
-                title: 'I am finished',
-                bgColor: '#D9D9D9'
-            }
 
-        ];
-        schedulerData.setEvents(events);
+            
+
+        
     }
 
     componentDidMount() {
+
         let string = localStorage.getItem('userToken');
         let jsonToken = JSON.parse(string);
 
@@ -56,39 +49,107 @@ class DoctorSchedule extends Component {
             .then((res) => {
                 this.setState({
                     schedules: res.data
+
                 })
             }).catch(err =>
                 console.log(err)
             );
+       
+
+        
+
     }
 
     prevClick = (schedulerData) => {
+        console.log("prevclick");
         schedulerData.prev();
-        schedulerData.setEvents(schedulerData.events);
+        for(let i =0; i< this.state.schedules.length; i++)
+        {
+            var timeSlotObject = {
+                id: this.state.schedules[i]['_id'],
+                start: moment(this.state.schedules[i]['start']).format("YYYY-MM-D h:mm:ss A"),
+                end: moment(this.state.schedules[i]['end']).format("YYYY-MM-D h:mm:ss A"),
+                resourceId: 't',
+                title: 'Reserved',
+                bgColor: '#FF0000'
+            }
+            this.state.timeslot.push(timeSlotObject);
+        }
+        console.log(this.state.timeslot);
+        schedulerData.setEvents(this.state.timeslot);
+        this.state.timeslot = [];
         this.setState({
             viewModel: schedulerData
         })
     }
 
     nextClick = (schedulerData) => {
+        console.log("nextclick");
         schedulerData.next();
-        schedulerData.setEvents(schedulerData.events);
+        for(let i =0; i< this.state.schedules.length; i++)
+        {
+            var timeSlotObject = {
+                id: this.state.schedules[i]['_id'],
+                start: moment(this.state.schedules[i]['start']).format("YYYY-MM-D h:mm:ss A"),
+                end: moment(this.state.schedules[i]['end']).format("YYYY-MM-D h:mm:ss A"),
+                resourceId: 't',
+                title: 'Reserved',
+                bgColor: '#FF0000'
+            }
+            this.state.timeslot.push(timeSlotObject);
+        }
+        console.log(this.state.timeslot);
+        schedulerData.setEvents(this.state.timeslot);
+        this.state.timeslot = [];
         this.setState({
             viewModel: schedulerData
         })
     }
 
     onViewChange = (schedulerData, view) => {
+        console.log("onviewchange");
         schedulerData.setViewType(view.viewType, view.showAgenda, view.isEventPerspective);
-        schedulerData.setEvents(schedulerData.events);
+        //in for loop set timeslot object values
+        //push these objects to events array
+        console.log(this.state.schedules.length);
+        for(let i =0; i< this.state.schedules.length; i++)
+        {
+            var timeSlotObject = {
+                id: this.state.schedules[i]['_id'],
+                start: moment(this.state.schedules[i]['start']).format("YYYY-MM-D h:mm:ss A"),
+                end: moment(this.state.schedules[i]['end']).format("YYYY-MM-D h:mm:ss A"),
+                resourceId: 't',
+                title: 'Reserved',
+                bgColor: '#FF0000'
+            }
+            this.state.timeslot.push(timeSlotObject);
+        }
+        console.log(this.state.timeslot);
+        schedulerData.setEvents(this.state.timeslot);
+        this.state.timeslot = [];
         this.setState({
             viewModel: schedulerData
         })
     }
 
     onSelectDate = (schedulerData, date) => {
+        console.log("onselectdate");
         schedulerData.setDate(date);
-        schedulerData.setEvents(schedulerData.events);
+         for(let i =0; i< this.state.schedules.length; i++)
+        {
+            var timeSlotObject = {
+                id: this.state.schedules[i]['_id'],
+                start: moment(this.state.schedules[i]['start']).format("YYYY-MM-D h:mm:ss A"),
+                end: moment(this.state.schedules[i]['end']).format("YYYY-MM-D h:mm:ss A"),
+                resourceId: 't',
+                title: 'Reserved',
+                bgColor: '#FF0000'
+            }
+            this.state.timeslot.push(timeSlotObject);
+        }
+        console.log(this.state.timeslot);
+        schedulerData.setEvents(this.state.timeslot);
+        this.state.timeslot = [];
         this.setState({
             viewModel: schedulerData
         })
@@ -96,12 +157,14 @@ class DoctorSchedule extends Component {
 
 
     eventClicked = (schedulerData, event) => {
+        console.log("eventclick");
         alert(`You just clicked an event: {id: ${event.id}, title: ${event.title}}`);
     };
 
     render() {
+
+
         const { viewModel } = this.state;
-        console.log(viewModel);
 
         let stylePosition = {
             top: 0,
@@ -110,6 +173,26 @@ class DoctorSchedule extends Component {
             verticalAlign: "top",
             height: 100,
         };
+
+        //in for loop set timeslot object values
+        //push these objects to events array
+        let schedulerData = new SchedulerData(new moment().format(DATE_FORMAT), ViewTypes.Day);
+        console.log(this.state.schedules.length);
+        for(let i =0; i< this.state.schedules.length; i++)
+        {
+            var timeSlotObject = {
+                id: this.state.schedules[i]['_id'],
+                start: moment(this.state.schedules[i]['start']).format("YYYY-MM-D h:mm:ss A"),
+                end: moment(this.state.schedules[i]['end']).format("YYYY-MM-D h:mm:ss A"),
+                resourceId: 't',
+                title: 'Timeslot',
+                bgColor: '#FF0000'
+            }
+            this.state.timeslot.push(timeSlotObject);
+        }
+        console.log(this.state.timeslot);
+        schedulerData.setEvents(this.state.timeslot);
+        this.state.timeslot = [];
 
 
         return (
@@ -132,19 +215,6 @@ class DoctorSchedule extends Component {
                                  nextClick={this.nextClick}
                                  onSelectDate={this.onSelectDate}
                                  onViewChange={this.onViewChange}
-                                 eventItemClick={this.eventClicked}
-                                 viewEventClick={this.ops1}
-                                 viewEventText="Ops 1"
-                                 viewEvent2Text="Ops 2"
-                                 viewEvent2Click={this.ops2}
-                                 updateEventStart={this.updateEventStart}
-                                 updateEventEnd={this.updateEventEnd}
-                                 moveEvent={this.moveEvent}
-                                 newEvent={this.newEvent}
-                                 onScrollLeft={this.onScrollLeft}
-                                 onScrollRight={this.onScrollRight}
-                                 onScrollTop={this.onScrollTop}
-                                 onScrollBottom={this.onScrollBottom}
                             />
                             <Button type="submit">Add Availability</Button>
                         </td>
