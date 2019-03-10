@@ -4,6 +4,7 @@ import axios from 'axios';
 import moment from 'moment';
 import ReactTimeslotCalendar from 'react-timeslot-calendar';
 import DoctorHomepage from '../Homepage/DoctorHomepage';
+import Button from 'react-bootstrap/Button';
 
 class DoctorSchedule extends Component {
 
@@ -13,7 +14,8 @@ class DoctorSchedule extends Component {
         this.state={
             permitNumber: '',
             appointments: '',
-            schedules: '',
+            schedules: [],
+            timeslot: '',
             isAuthenticated: true
         }
         this._updateTimeslotProps(this.props.timeslotProps);
@@ -31,17 +33,27 @@ class DoctorSchedule extends Component {
         //console.log(doctor.permitNumber);
         axios.get(`/api/doctors/${jsonToken['permitNumber']}/schedule/get`, {
                 headers: {Authorization: AuthStr},
-                schedules: doctor.schedules,
                 appointments: this.appointments
             }
-        ).then(res =>
-            console.log(t['permitNumber'])
-        ).catch(err =>
+        ).then((res) =>{
+            this.setState({
+                schedules: res.data
+            })
+        })
+        .catch(err =>
             console.log(AuthStr)
         )
+        //store schedules in an array of timeslots that is compatible with timeslots below
+
+
     }
 
     render() {
+      
+        
+
+
+
         return (
             <div>
                     {this._customTimeslotForDoctor()}
@@ -52,34 +64,51 @@ class DoctorSchedule extends Component {
 
     _updateTimeslotProps(timeslotProps) {
         const defaultProps = {
-            format: 'h:mm A',
-            showFormat: 'h:mm A'
+            format: 'D/MM/YY h:mm A',
+            showFormat: 'D/MM/YY h:mm A'
         };
 
         this.timeslotProps = Object.assign({}, defaultProps, timeslotProps);
     }
 
     _customTimeslotForDoctor(){
+        const {
+            schedules
+        } = this.state;
+            for (let i = 0; i< schedules.length; i++) {
+                  //store these items in timeslot (Mongoose Date to moment format)
+                  console.log("mongoose date is " + schedules[i]['start']);
+                schedules[i]['start'] =  moment(schedules[i]['start']).format("D/MM/YY h:mm A");
+                schedules[i]['end'] = moment(schedules[i]['end']).format("D/MM/YY h:mm A");
+                console.log("1st timeslot moment is "+ this.state.schedules[i]['start']);
+
+               
+            }        
         return(
+            
+                
           <div>
+<<<<<<< Updated upstream
 
               <ReactTimeslotCalendar
+=======
+              <Button type="submit">BUTTON</Button>
+              <ReactTimeslotCalendar    
+              
+>>>>>>> Stashed changes
 
                   timeslotProps = {this.timeslotProps}
                   initialDate={moment().format()}
-
+            
+                      
                   timeslots = { [
-                      ['9:00 AM', '9:20 AM'],
-                      ['10:00 AM', '12:20 AM'],
+                       ['12/03/18 9:00 AM']
                   ] }
+                  
+                
+                
                   maxTimeslots = { 0 }
-                  onSelectTimeslot = { (timeslots, lastSelected) => {
-                      console.log('All Timeslots:');
-                      console.log(timeslots);
-
-                      console.log('Last selected timeslot:');
-                      console.log(lastSelected);
-                  } }
+                 
               />
           </div>
         );
