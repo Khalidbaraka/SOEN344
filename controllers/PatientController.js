@@ -145,12 +145,12 @@ exports.patient_checkout_appointment = (req, res) =>{
     Patient.findOne({healthCardNumber: req.params.health_card_number}).populate('cart')
         .then(patient => {
             var timeslot = req.body.timeslot;
-            //var start = timeslot.start;
-            //var end = timeslot.end;
-            //var start = req.body.start;
-            //var end = req.body.end
-            appStart = new Date(req.body.start);
-            appEnd = new Date(req.body.end);
+            var appStart = timeslot.start;
+            var appEnd = timeslot.end;
+
+            //this is for local test purpose, delete when cart is implemented.
+            //appStart = new Date(req.body.start);
+            //appEnd = new Date(req.body.end);
             let foundRoomNoDoctor = false;
             let roomOverlap = false; 
             let doctorAvailable = false;
@@ -167,9 +167,10 @@ exports.patient_checkout_appointment = (req, res) =>{
                             let j=0; // appointments index
                             let k=0; //doctor index
                             let l=0; // schedules index
+
+                            //First check, look for room overlap with start/end times
                            while(i<rooms.length){
                             if(rooms[i].appointments.length == 0){
-                                console.log("Im here")
                                 roomOverlap = false;
                             }
                             else{
@@ -183,6 +184,8 @@ exports.patient_checkout_appointment = (req, res) =>{
                                 }
                             }
                             if (roomOverlap == false){
+                                //If first check, returns no room overlap.
+                                //Second check look for overlap of start time and doctor's schedules
                                 while(k<doctors.length){
                                     if(doctors[k].schedules.length == 0){
                                         doctorAvailable = true;
@@ -203,6 +206,7 @@ exports.patient_checkout_appointment = (req, res) =>{
                                     }
                                   k++;   
                                 }
+                                //If first and second check ok, then create a new appointment.
                                 if(doctorAvailable ==true ){
                                     if(duration == 20){
                                         type = 0;
