@@ -72,21 +72,36 @@ class DoctorSchedule extends Component {
             
                 
           <div>
-              <Button type="submit">BUTTON</Button>
-              <ReactTimeslotCalendar
+              <table>
+                  <tr>
+                      <td>
+                          <nav className="navbar-user navbar-expand-lg navbar-dark bg-dark">
+                              <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
+                                  <li className="nav-item active">
+                                      <Link to={'/homepage/doctor/schedule'} className="nav-link"> My Schedule </Link>
+                                  </li>
+                              </ul>
+                          </nav>
+                      </td>
+                      <td>
+
+                          <ReactTimeslotCalendar
+
+                              timeslotProps = {this.timeslotProps}
+                              initialDate={moment().format()}
 
 
-                  timeslotProps = {this.timeslotProps}
-                  initialDate={moment().format()}
-            
-                      
-                  timeslots = { [
-                       ['12/03/18 9:00 AM']
-                  ] }
-                  
+                              timeslots = { [
+                                  ['12/03/18 9:00 AM']
+                              ] }
 
-                  maxTimeslots = { 0 }
-                  />
+
+                              maxTimeslots = { 0 }
+                          />
+                          <Button type="submit">BUTTON</Button>
+                      </td>
+                  </tr>
+              </table>
           </div>
         );
     }
