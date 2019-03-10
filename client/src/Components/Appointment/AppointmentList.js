@@ -3,6 +3,17 @@ import React, { Component } from 'react';
 const AppointmentList = (props) => {
     const appointments = props.appointments;
 
+
+    //Modifies type from numeric to string
+    for(let i = 0; i < appointments.length; i++){
+        if(appointments[i].type === 0){
+            appointments[i].type = "Walk-in";
+        }
+        else if(appointments[i].type === 1){
+            appointments[i].type = "Annual";
+        }
+    }
+
     // Displaying the list of items. _id is unique to MongoDB (Primary Key)
     return (
         <table className="table">
