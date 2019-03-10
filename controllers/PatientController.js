@@ -190,7 +190,14 @@ exports.patient_checkout_appointment = (req, res) =>{
             let foundRoomNoDoctor = false;
             let roomOverlap = false; 
             let doctorAvailable = false;
-            var duration = appEnd.getMinutes() - appStart.getMinutes();
+            let appEndMinutes = 0;
+            if(appEnd.getMinutes()==0){
+               appEndMinutes = 60;
+            }
+            else{
+               appEndMinutes = appEnd.getMinutes();
+            }
+            var duration = appEndMinutes - appStart.getMinutes();
             var type =0;
             var price =0; //price for Walk-in is 20 dollars, and anual checkup is 60 dollars
             //from https://stackoverflow.com/questions/21069813/mongoose-multiple-query-populate-in-a-single-call
