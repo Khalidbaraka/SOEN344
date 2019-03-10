@@ -20,40 +20,24 @@ class DoctorSchedule extends Component {
         }
         this._updateTimeslotProps(this.props.timeslotProps);
     }
-
-    //todo
+    
     componentDidMount() {
-        var string=  localStorage.getItem('userToken');
+        let string=  localStorage.getItem('userToken');
         let jsonToken = JSON.parse(string);
-        const doctor = {
-            schedules: this.state.schedules,
-            appointments: this.state.appointments
-        };
-        const AuthStr = localStorage.getItem("userToken");
-        //console.log(doctor.permitNumber);
-        axios.get(`/api/doctors/${jsonToken['permitNumber']}/schedule/get`, {
-                headers: {Authorization: AuthStr},
-                appointments: this.appointments
-            }
-        ).then((res) =>{
+
+        //store schedules in an array of timeslots that is compatible with timeslots below
+        axios.get(`/api/doctors/${jsonToken['permitNumber']}/schedule/get`)
+            .then((res) =>{
             this.setState({
                 schedules: res.data
             })
-        })
-        .catch(err =>
-            console.log(AuthStr)
-        )
-        //store schedules in an array of timeslots that is compatible with timeslots below
-
+        }).catch(err =>
+            console.log(err)
+        );
 
     }
 
     render() {
-      
-        
-
-
-
         return (
             <div>
                     {this._customTimeslotForDoctor()}
@@ -88,14 +72,9 @@ class DoctorSchedule extends Component {
             
                 
           <div>
-<<<<<<< Updated upstream
-
-              <ReactTimeslotCalendar
-=======
               <Button type="submit">BUTTON</Button>
-              <ReactTimeslotCalendar    
-              
->>>>>>> Stashed changes
+              <ReactTimeslotCalendar
+
 
                   timeslotProps = {this.timeslotProps}
                   initialDate={moment().format()}
@@ -105,11 +84,9 @@ class DoctorSchedule extends Component {
                        ['12/03/18 9:00 AM']
                   ] }
                   
-                
-                
+
                   maxTimeslots = { 0 }
-                 
-              />
+                  />
           </div>
         );
     }
