@@ -1,6 +1,8 @@
 // Patient Model
 const Patient = require('./../models/Patient');
 const Appointment = require('./../models/Appointment');
+const Room = require('./../models/Room');
+const Doctor = require('./../models/Doctor');
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('./../config/keys');
@@ -135,5 +137,39 @@ exports.patient_update = (req, res) => {
 //Get list of appointments
 exports.patient_get_appointments = (req, res) =>{
     Patient.findOne({healthCardNumber: req.params.health_card_number}).populate('appointments')
-        .then(patient =>res.json(patient.appointments))
+        .then(patient =>{
+            Appointment.find({patient:patient._id})
+                .then(appointments =>{
+                    let sendToFront = [];
+                    if(appointments.length == 0){
+                        res.json({
+                            message: 'You have no appointments'
+                        })
+                    }
+                    else{
+                        for(var i = 0; i< appointments.length; i++){
+                            let foundAppointments = new Appointment(appointments[i]);
+                            Doctor.findById(foundAppointments.doctor)
+                                .then(doctor =>{
+                                    Room.findById(foundAppointments.room)
+                                        .then(room =>{
+                                                sendToFront.push({
+                                                _id: foundAppointments._id,
+                                                type: foundAppointments.type,
+                                                clinic: foundAppointments.clinic,
+                                                doctor: doctor.firstName +" " + doctor.lastName,
+                                                room: room.number,
+                                                start: foundAppointments.start,
+                                                end: foundAppointments.end,
+                                                duration: foundAppointments.duration,
+                                                price: foundAppointments.price
+                                            })
+                                            if(sendToFront.length == appointments.length)
+                                                res.json(sendToFront)
+                                        })
+                                })
+                        }
+                    }        
+                })
+        })
 }
