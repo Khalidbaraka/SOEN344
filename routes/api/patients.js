@@ -34,4 +34,9 @@ router.delete('/delete/:id', patientController.patient_delete);
 // @access Public
 router.put('/update/:id', patientController.patient_update);
 
+// @route get api/patients/health_card_number/appointment/get
+// @desc  update patient
+// @access Public
+router.get('/:health_card_number/appointment/get', patientController.patient_get_appointments);
+
 module.exports = router;

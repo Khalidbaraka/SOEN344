@@ -43,7 +43,7 @@ const AppointmentSchema = new Schema ({
     },
     price:{
         type: Number,
-        require: true,
+        required: true,
         min: 0,
         max:1000
     }

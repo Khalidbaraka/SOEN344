@@ -1,5 +1,6 @@
 // Patient Model
 const Patient = require('./../models/Patient');
+const Appointment = require('./../models/Appointment');
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('./../config/keys');
@@ -32,7 +33,8 @@ exports.patient_register = (req, res) => {
                     emailAddress: req.body.emailAddress,
                     firstName: req.body.firstName,
                     lastName: req.body.lastName,
-                    password: req.body.password
+                    password: req.body.password, 
+                    appointments: []
                 });
 
                 bcryptjs.genSalt(10, (err, salt) => {
@@ -128,5 +130,10 @@ exports.patient_update = (req, res) => {
     }, {
         new: true
     }).then(patient => res.json(patient));
+}
 
+//Get list of appointments
+exports.patient_get_appointments = (req, res) =>{
+    Patient.findOne({healthCardNumber: req.params.health_card_number}).populate('appointments')
+        .then(patient =>res.json(patient.appointments))
 }
