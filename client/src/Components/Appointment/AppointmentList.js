@@ -7,8 +7,11 @@ const AppointmentList = (props) => {
 
     
 
-    //Modifies type from numeric to string
+    //formatting appointment data
     for(let i = 0; i < appointments.length; i++){
+
+        appointments[i].duration += " minutes";
+        appointments[i].price += "$";
 
         let d = new Date(appointments[i].start);
 
@@ -17,7 +20,7 @@ const AppointmentList = (props) => {
         let year = d.getUTCFullYear().toString();
         let hour = ("0" + d.getUTCHours().toString()).slice(-2);
         let minute = ("0" + d.getUTCMinutes().toString()).slice(-2);
-        
+
         appointments[i].start = date + "/" +  month + "/"+ year + "  at " + hour + ":" + minute;
 
         if(appointments[i].type === 0){
