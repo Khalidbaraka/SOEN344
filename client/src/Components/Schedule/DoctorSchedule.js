@@ -69,8 +69,8 @@ class DoctorSchedule extends Component {
             schedules: this.state.schedules,
             appointments: this.state.appointments
         };
-        const AuthStr = localStorage.getItem("token");
-        axios.get(`/api/doctors/${3333333}/schedule/get`, {
+        const AuthStr = localStorage.getItem("userToken");
+        axios.get(`/api/doctors/${doctor.permitNumber}/schedule/get`, {
                 headers: {Authorization: `Bearer ${AuthStr}`},
             }
         ).then(res =>
