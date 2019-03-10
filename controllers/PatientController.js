@@ -1,6 +1,8 @@
 // Patient Model
 const Patient = require('./../models/Patient');
 const Appointment = require('./../models/Appointment');
+const Room = require('./../models/Room');
+const Doctor = require('./../models/Doctor');
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('./../config/keys');
