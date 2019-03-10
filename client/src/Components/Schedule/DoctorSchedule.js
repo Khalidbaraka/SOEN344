@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import moment from 'moment';
-import Scheduler, { SchedulerData, ViewTypes, DATE_FORMAT, DemoData } from 'react-big-scheduler';
-import DoctorHomepage from '../Homepage/DoctorHomepage';
+import { DragDropContext } from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
+import Scheduler, { SchedulerData, ViewTypes, DATE_FORMAT } from 'react-big-scheduler';
 import 'react-big-scheduler/lib/css/style.css';
 import Button from 'react-bootstrap/Button';
 
@@ -21,11 +22,11 @@ class DoctorSchedule extends Component {
             timeslot: '',
             isAuthenticated: true,
             viewModel: schedulerData
-        }
+        };
 
         let resources = [
             {
-                id: 'r1',
+                id: 't',
                 name: 'Doctor'
             },
         ];
@@ -35,9 +36,9 @@ class DoctorSchedule extends Component {
         let events = [
             {
                 id: 1,
-                start: '2019-10-03 17:30:00',
-                end: '2019-10-03 23:30:00',
-                resourceId: 'r1',
+                start: '2019-03-10 14:30:00',
+                end: '2019-03-10 15:30:00',
+                resourceId: 't',
                 title: 'I am finished',
                 bgColor: '#D9D9D9'
             }
@@ -59,9 +60,7 @@ class DoctorSchedule extends Component {
             }).catch(err =>
                 console.log(err)
             );
-
     }
-
 
     prevClick = (schedulerData) => {
         schedulerData.prev();
@@ -114,8 +113,6 @@ class DoctorSchedule extends Component {
 
 
         return (
-
-
             <div>
                 <table>
                     <tbody>
@@ -153,14 +150,7 @@ class DoctorSchedule extends Component {
                         </td>
                     </tr>
                     </tbody>
-
-
-
-
-
-
                 </table>
-
             </div>
 
         );
@@ -175,4 +165,4 @@ class DoctorSchedule extends Component {
 
 
 
-export default DoctorSchedule;
+export default DragDropContext(HTML5Backend)(DoctorSchedule);
