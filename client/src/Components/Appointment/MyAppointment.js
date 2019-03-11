@@ -4,7 +4,7 @@ import { Button, Card, Col, Dropdown, DropdownButton, Form, Row } from 'react-bo
 import React, { Component } from 'react';
 import AppointmentList from './AppointmentList';
 import axios from 'axios';
-import ItemInput from "../Items/Items";
+
 
 
 
@@ -13,7 +13,8 @@ class MyAppointment extends Component {
         super(props);
 
         this.state = {
-            appointments: []
+            appointments: [],
+            message: ""
         }
     }
 
@@ -28,8 +29,10 @@ class MyAppointment extends Component {
         axios.get('/api/patients/'+ healthCardNumber+ '/appointment/get')
             .then(res => {
                 if(res.data){
+                    console.log(res.data);
                     this.setState({
-                        appointments: res.data
+                        appointments: res.data,
+                        message: res.data.message
                     })
                 }
             })
@@ -39,13 +42,17 @@ class MyAppointment extends Component {
 
     render() {
 
-        const { appointments } = this.state;
-        console.log(this.state.appointments);
-
-        
+        const { appointments,message} = this.state;
         return (
             <div className="container">
             <Card className="my-5">
+                { message ?
+                    <Card border="danger" className="text-center my-3">
+                        <Card.Body>
+                            <Card.Title><div className="text-monospace">{ message }</div> </Card.Title>
+                        </Card.Body>
+                    </Card>
+                    : ''}
                 <Card.Header>
                         <Card.Title className="text-center text-monospace">Your Appointments</Card.Title>
                 </Card.Header>
