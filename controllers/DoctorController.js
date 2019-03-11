@@ -134,8 +134,9 @@ exports.doctor_create_timeslot= (req, res) => {
         permitNumber: req.params.permit_number
     }).populate('schedules')
     .then(doctor => {
-        appStart = new Date(req.body.start);
-        appEnd = new Date(req.body.end);
+        appStart = new Date(req.body.start + " GMT-0400");
+        appEnd = new Date(req.body.end + " GMT-0400");
+        durationTime = (appEnd.getHours() - appStart.getHours()) * 60 + appEnd.getMinutes() - appStart.getMinutes();
         let answer = false
         let roomOccupied = [];
         let personalTimeConflict = false;
@@ -189,9 +190,9 @@ exports.doctor_create_timeslot= (req, res) => {
 
                     const newTimeslot = new Timeslot({
                         doctor: doctor._id,
-                        start:  new Date(req.body.start),
-                        end:  new Date(req.body.end),
-                        duration: req.body.duration,
+                        start: new Date(req.body.start + " GMT-0400"),
+                        end:  new Date(req.body.end + " GMT-0400"),
+                        duration : durationTime.toString(),
                         room: room._id
                     });
 
