@@ -42,7 +42,7 @@ class Cart extends Component {
                     duration : "40",
                     price : 60}
             ],
-            appointment:[],
+            appointment:'',
             show: false
         }
 
@@ -52,22 +52,23 @@ class Cart extends Component {
 
     }
 
-    getCheckoutItem = (app) => {
+    getCheckoutItem = () => {
 
         // const appointment = {
         //     healthCardNumber: this.state.healthCardNumber,
         //     password: this.state.password
         // }
 
-        console.log("APPOINTMENT", app);
+        console.log(this.state.appointment);
     }
 
     handleClose() {
         this.setState({ show: false });
     }
 
-    handleShow() {
-        this.setState({ show: true });
+    handleShow(appointment) {
+        this.setState({ show: true, appointment: appointment });
+        
     }
 
     formatAppointments(){
@@ -102,9 +103,11 @@ class Cart extends Component {
     }
 
 
+
+
     render() {
         //this.formatAppointments();
-        const { appointments, message} = this.state;
+        const { appointments, message, appointment} = this.state;
         return (
                     <div className="container">
                         <Modal show={this.state.show} onHide={this.handleClose}>
@@ -116,8 +119,8 @@ class Cart extends Component {
                                 <Button variant="secondary" onClick={this.handleClose}>
                                     Close
                                 </Button>
-                                <Button variant="primary" onClick={this.handleClose}>
-                                    Save Changes
+                                <Button variant="primary" onClick={this.getCheckoutItem}>
+                                    Submit
                                 </Button>
                             </Modal.Footer>
                         </Modal>
