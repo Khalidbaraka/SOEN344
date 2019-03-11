@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Table } from 'react-bootstrap';
-import {Link, Route, Switch} from "react-router-dom";
+import {Link, Redirect, Route, Switch} from "react-router-dom";
 import AppointmentsView from "./MyAppointment";
 import ModifyAppointment from "./ModifyAppointment";
 
@@ -61,7 +61,12 @@ const AppointmentList = (props) => {
                                     <td> {appointment.start} </td>
                                     <td> {appointment.duration} </td>
                                     <td> {appointment.price} </td>
-                                   { <td> <Link to={"/modifyAppointment/:appointment"}> Update </Link> </td>}
+                                   { <td> <Redirect to={{
+                                       pathname: '/modifyAppointment',
+                                       state: { appointment: appointment}
+                                   }}/>
+
+                                   />  Update  </td>}
                                    { <td> <button onClick={{/*LINK ACCORDINGLY() => props.deleteItem(appointment._id)*/}} type="button" className="btn btn-outline-danger">Delete</button> </td>}
                                 </tr>
                                 </div>

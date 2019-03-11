@@ -13,7 +13,7 @@ class ModifyAppointment extends Component {
         console.log(this.props);
 
         this.state = {
-            appointment: "hello",
+            appointment: '',
             dateCreated: "12-01-2019",
             type: "60 mins",
             clinic: "yoyo",
@@ -40,7 +40,7 @@ class ModifyAppointment extends Component {
         e.preventDefault();
 
         const updatedAppointment = {
-            dateCreated: this.props.dateCreated,
+            dateCreated: this.state.appointment.dateCreated,
             type: this.state.type,
             clinic: this.state.clinic,
             doctor: this.state.doctor,
