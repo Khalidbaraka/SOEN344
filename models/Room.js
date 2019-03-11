@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 // Create Schema 
 const RoomSchema = new Schema ({
     number: {
-        type: String,
+        type: Number,
         required: true
     },
     appointments: [{
