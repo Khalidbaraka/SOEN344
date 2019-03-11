@@ -7,12 +7,16 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import Scheduler, { SchedulerData, ViewTypes, DATE_FORMAT } from 'react-big-scheduler';
 import 'react-big-scheduler/lib/css/style.css';
 import Button from 'react-bootstrap/Button';
+import { Redirect } from 'react-router-dom';
 
 class DoctorSchedule extends Component {
 
     constructor(props) {
         super(props);
         let schedulerData = new SchedulerData(new moment().format(DATE_FORMAT), ViewTypes.Day);
+
+        this.routeChange = this.routeChange.bind(this);
+        this.eventClicked = this.eventClicked.bind(this);
 
 
         this.state = {
@@ -70,7 +74,7 @@ class DoctorSchedule extends Component {
                 start: moment(this.state.schedules[i]['start']).format("YYYY-MM-D h:mm:ss A"),
                 end: moment(this.state.schedules[i]['end']).format("YYYY-MM-D h:mm:ss A"),
                 resourceId: 't',
-                title: 'Reserved',
+                title: 'Reserved (click timeslot to modify)',
                 bgColor: '#FF0000'
             }
             this.state.timeslot.push(timeSlotObject);
@@ -93,7 +97,7 @@ class DoctorSchedule extends Component {
                 start: moment(this.state.schedules[i]['start']).format("YYYY-MM-D h:mm:ss A"),
                 end: moment(this.state.schedules[i]['end']).format("YYYY-MM-D h:mm:ss A"),
                 resourceId: 't',
-                title: 'Reserved',
+                title: 'Reserved (click timeslot to modify)',
                 bgColor: '#FF0000'
             }
             this.state.timeslot.push(timeSlotObject);
@@ -105,6 +109,8 @@ class DoctorSchedule extends Component {
             viewModel: schedulerData
         })
     }
+
+    
 
     onViewChange = (schedulerData, view) => {
         console.log("onviewchange");
@@ -119,7 +125,7 @@ class DoctorSchedule extends Component {
                 start: moment(this.state.schedules[i]['start']).format("YYYY-MM-D h:mm:ss A"),
                 end: moment(this.state.schedules[i]['end']).format("YYYY-MM-D h:mm:ss A"),
                 resourceId: 't',
-                title: 'Reserved',
+                title: 'Reserved (click timeslot to modify)',
                 bgColor: '#FF0000'
             }
             this.state.timeslot.push(timeSlotObject);
@@ -142,7 +148,7 @@ class DoctorSchedule extends Component {
                 start: moment(this.state.schedules[i]['start']).format("YYYY-MM-D h:mm:ss A"),
                 end: moment(this.state.schedules[i]['end']).format("YYYY-MM-D h:mm:ss A"),
                 resourceId: 't',
-                title: 'Reserved',
+                title: 'Reserved (click timeslot to modify)',
                 bgColor: '#FF0000'
             }
             this.state.timeslot.push(timeSlotObject);
@@ -155,11 +161,23 @@ class DoctorSchedule extends Component {
         })
     }
 
+    //should redirect to add timeslot component
+    routeChange() {
+        let path = `/homepage/doctor`;
+        this.props.history.push(path);
+      }
 
-    eventClicked = (schedulerData, event) => {
-        console.log("eventclick");
-        alert(`You just clicked an event: {id: ${event.id}, title: ${event.title}}`);
+   
+
+
+    eventClicked() {
+        let path = `/homepage/doctor/`;
+        this.props.history.push(path);
+        
     };
+
+    
+
 
     render() {
 
@@ -215,8 +233,10 @@ class DoctorSchedule extends Component {
                                  nextClick={this.nextClick}
                                  onSelectDate={this.onSelectDate}
                                  onViewChange={this.onViewChange}
+                                 eventItemClick={this.eventClicked}
                             />
-                            <Button type="submit">Add Availability</Button>
+                            <Button onClick={this.routeChange} type="submit">Add Availability</Button>
+                            
                         </td>
                     </tr>
                     </tbody>
