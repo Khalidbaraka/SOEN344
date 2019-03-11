@@ -74,7 +74,8 @@ class MyAppointment extends Component {
                     <Modal.Body>
                         {this.state.appointment ? this.state.appointment.start : ''}
 
-                        
+                        <ModifyAppoinment />
+                        <AppointmentList appointments={appointments} handleShow={this.handleShow}/>
 
 
                     </Modal.Body>
