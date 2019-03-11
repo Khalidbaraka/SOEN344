@@ -1,18 +1,21 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import {Button, Card, Form} from "react-bootstrap";
+import 'rc-calendar/assets/index.css';
+import AppCalenderNewTimeslotEnd from "../Timeslots/AppCalenderNewTimeslotEnd";
+import AppCalenderNewTimeslotStart from "../Timeslots/AppCalenderNewTimeslotStart";
 
 class DoctorHomepage extends Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
         this.state = {
             doctor: '',
             start: '',
             end: '',
             duration: '',
-            message: '',
+            message: ''
         }
     }
 
@@ -22,15 +25,41 @@ class DoctorHomepage extends Component {
         })
     }
 
+    onChangeStart = (value) => {
+        console.log("Moment END", value.toDate());
+
+        const nextState = {
+            ...this.state,
+            end: value
+        };
+
+        this.setState(nextState);
+    }
+
+    onChangeEnd = (value) => {
+        console.log("Moment Start:" + value.toDate());
+
+
+        const nextState = {
+            ...this.state,
+            start: value
+        };
+
+        this.setState(nextState);
+    }
+
     onSubmit = (e) => {
         e.preventDefault();
 
         const timeslot = {
             doctor: this.state.doctor,
-            start: this.state.start,
-            end: this.state.end,
+            start: this.state.start.toDate(),
+            end: this.state.end.toDate(),
             duration: this.state.duration
         };
+
+
+        // alert("Start: " + timeslot.start + " End: " + timeslot.end);
 
         axios.post("api/doctors/permitNumber/schedule/create", {
                 doctor: timeslot.doctor,
@@ -70,15 +99,15 @@ class DoctorHomepage extends Component {
                             </Card.Body>
                         </Card>
                         : ''}
-                    <Form.Group controlId="formBasicUsername">
-                        <Form.Label>Start Time</Form.Label>
-                        <Form.Control name="start" type="text" placeholder="Enter Start Time" value = {this.state.start} onChange={this.onChange}/>
-                    </Form.Group>
+                    <AppCalenderNewTimeslotStart
+                        value = { this.state.start}
+                        onChange = { this.onChangeStart }
+                    />
 
-                    <Form.Group controlId="formBasicUsername">
-                        <Form.Label>End Time</Form.Label>
-                        <Form.Control name="end" type="text" placeholder="Enter End Time" value = {this.state.end} onChange={this.onChange}/>
-                    </Form.Group>
+                    <AppCalenderNewTimeslotEnd
+                        value = { this.state.end }
+                        onChange = { this.onChangeEnd }
+                    />
 
                     <Form.Group controlId="formBasicUsername">
                         <Form.Label>Doctor ID Number</Form.Label>
