@@ -43,6 +43,10 @@ const PatientSchema = new Schema ({
     appointments: [{
         type: Schema.Types.ObjectId, 
         ref: 'appointment' 
+    }],
+    cart: [{
+        type: Schema.Types.ObjectId, 
+        ref: 'timeslot' 
     }]
 });
 

@@ -17,8 +17,11 @@ const timeslotSchema = new Schema ({
         required: true
     },
     duration:{
-        // In minutes
-        type: Number,
+        type: String,
+    },
+    room:{
+        required: true,
+        type: Schema.Types.ObjectId, ref: 'room' 
     }
 });
 
