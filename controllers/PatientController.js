@@ -350,9 +350,9 @@ exports.patient_cart_save = (req,res)=>{
                             if(annualCheckUpFound == false){
                                 //second check, check if a timeslot with same startTime is in the cart
                                 if(patient.cart.length == 0){
-                                    isInCart == false;
+                                    isInCart = false;
                                 }
-
+                                else{
                                     for(let n = 0; n<patient.cart.length; n++){
                                         let cartStart = patient.cart[n].start;
                                         let cartEnd = patient.cart[n].end;
@@ -366,7 +366,7 @@ exports.patient_cart_save = (req,res)=>{
                                     if(isInCart == false){
                                         //Third check, check if patient already has an appointment at the selected startTime
                                         if(patient.appointments.length == 0){
-                                            personalAppointmentOverlap == false;
+                                            personalAppointmentOverlap = false;
                                         }
                                         else{
                                             for(let m=0; m<patient.appointments.length; m++){
@@ -400,7 +400,7 @@ exports.patient_cart_save = (req,res)=>{
                                                     //Fifth check, checking for available doctor at the selected time
                                                     while(k<doctors.length){
                                                         if(doctors[k].schedules.length == 0){
-                                                            doctorAvailable = true;
+                                                            doctorAvailable = false;
                                                         }
                                                         else{
                                                             for (l=0;l<doctors[k].schedules.length; l++) {
@@ -439,7 +439,8 @@ exports.patient_cart_save = (req,res)=>{
                                              i++;
                                             }
                                         }
-                                    } 
+                                    }
+                                } 
                             }
 
                             //Handling the reponse from the checks
