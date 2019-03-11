@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import { Button, Card, Col, Dropdown, DropdownButton, Form, Row } from 'react-bootstrap';
 import Table from "react-bootstrap/Table";
 import AppointmentList from "../Appointment/AppointmentList";
+import Axios from 'axios';
+
+import CartList from './CartList';
 
 class Cart extends Component {
 
@@ -38,13 +41,28 @@ class Cart extends Component {
                     end : "2019-03-20T22:00:00.000Z",
                     duration : "40",
                     price : 60}
-            ]
-
-
-
+            ],
+            appointment:[]
         }
 
+        this.getCheckoutItem = this.getCheckoutItem.bind(this)
+
     }
+
+    getCheckoutItem = (app) => {
+
+        // const appointment = {
+        //     healthCardNumber: this.state.healthCardNumber,
+        //     password: this.state.password
+        // }
+
+        console.log("APPOINTMENT", app);
+        
+
+        
+    }
+
+
 
     render() {
         const { appointments, message} = this.state;
@@ -62,7 +80,7 @@ class Cart extends Component {
                                 <Card.Title className="text-center text-monospace"> Appointments</Card.Title>
                             </Card.Header>
 
-                            <AppointmentList appointments={appointments} />
+                            <CartList getCheckoutItem={this.getCheckoutItem(app)} appointments={appointments} />
                         </Card>
                     </div>
 

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Table } from 'react-bootstrap';
 
 const CartList = (props) => {
+    
     const appointments = props.appointments;
 
     //formatting cart data
@@ -54,7 +55,7 @@ const CartList = (props) => {
                                     <td> {appointment.start} </td>
                                     <td> {appointment.duration} </td>
                                     <td> {appointment.price} </td>
-                                    { <td> <button onClick={{ /*LINK ACCORDINGLY() => props.checkoutItem(appointment._id)*/}} type="button" className="btn btn-outline-warning">Update</button> </td>}
+                                    { <td> <button onClick={props.getCheckoutItem(appointment)} type="button" className="btn btn-outline-warning">Checkout</button> </td>}
                                     { <td> <button onClick={{/*LINK ACCORDINGLY() => props.deleteItem(appointment._id)*/}} type="button" className="btn btn-outline-danger">Delete</button> </td>}
                                 </tr>
                             )
