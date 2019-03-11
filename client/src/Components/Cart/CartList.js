@@ -8,8 +8,14 @@ const CartList = (props) => {
     //formatting cart data
     for(let i = 0; i < appointments.length; i++){
 
-        appointments[i].duration += " minutes";
-        appointments[i].price += "$";
+        if(!(appointments[i].duration.includes("minutes"))){
+            appointments[i].duration += " minutes";
+        }
+
+        if(!(appointments[i].price.toString().includes("$"))){
+            appointments[i].price += "$";
+        }
+
 
         let d = new Date(appointments[i].start);
 
@@ -19,6 +25,7 @@ const CartList = (props) => {
         let hour = ("0" + (d.getUTCHours() - 4).toString()).slice(-2);
         let minute = ("0" + d.getUTCMinutes().toString()).slice(-2);
 
+        if(!(isNaN(date)))
         appointments[i].start = date + "/" +  month + "/"+ year + "  at " + hour + ":" + minute;
 
         if(appointments[i].type === 0){
@@ -55,7 +62,7 @@ const CartList = (props) => {
                                     <td> {appointment.start} </td>
                                     <td> {appointment.duration} </td>
                                     <td> {appointment.price} </td>
-                                    { <td> <button onClick={props.getCheckoutItem(appointment)} type="button" className="btn btn-outline-warning">Checkout</button> </td>}
+                                    { <td> <button onClick={() => props.handleShow()} type="button" className="btn btn-outline-success">Checkout</button> </td>}
                                     { <td> <button onClick={{/*LINK ACCORDINGLY() => props.deleteItem(appointment._id)*/}} type="button" className="btn btn-outline-danger">Delete</button> </td>}
                                 </tr>
                             )

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Card, Col, Dropdown, DropdownButton, Form, Row } from 'react-bootstrap';
+import { Button, Card, Col, Dropdown, DropdownButton, Form, Row, Modal } from 'react-bootstrap';
 import Table from "react-bootstrap/Table";
 import AppointmentList from "../Appointment/AppointmentList";
 import Axios from 'axios';
@@ -42,9 +42,12 @@ class Cart extends Component {
                     duration : "40",
                     price : 60}
             ],
-            appointment:[]
+            appointment:[],
+            show: false
         }
 
+        this.handleShow = this.handleShow.bind(this);
+        this.handleClose = this.handleClose.bind(this);
         this.getCheckoutItem = this.getCheckoutItem.bind(this)
 
     }
@@ -57,17 +60,67 @@ class Cart extends Component {
         // }
 
         console.log("APPOINTMENT", app);
-        
+    }
 
-        
+    handleClose() {
+        this.setState({ show: false });
+    }
+
+    handleShow() {
+        this.setState({ show: true });
+    }
+
+    formatAppointments(){
+
+        let {appointments} = this.state;
+        //formatting cart data
+        for(let i = 0; i < appointments.length; i++){
+
+            appointments[i].duration += " minutes";
+            appointments[i].price += "$";
+
+            let d = new Date(appointments[i].start);
+
+            let date = ("0" + d.getDate().toString()).slice(-2);
+            let month = ("0" + (d.getMonth() + 1).toString()).slice(-2);
+            let year = d.getUTCFullYear().toString();
+            let hour = ("0" + (d.getUTCHours() - 4).toString()).slice(-2);
+            let minute = ("0" + d.getUTCMinutes().toString()).slice(-2);
+
+            appointments[i].start = date + "/" +  month + "/"+ year + "  at " + hour + ":" + minute;
+
+            if(appointments[i].type === 0){
+                appointments[i].type = "Walk-in";
+            }
+            else if(appointments[i].type === 1){
+                appointments[i].type = "Annual";
+            }
+        }
+
+        this.setState({ appointments: appointments });
+
     }
 
 
-
     render() {
+        //this.formatAppointments();
         const { appointments, message} = this.state;
         return (
                     <div className="container">
+                        <Modal show={this.state.show} onHide={this.handleClose}>
+                            <Modal.Header closeButton>
+                                <Modal.Title>Modal heading</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+                            <Modal.Footer>
+                                <Button variant="secondary" onClick={this.handleClose}>
+                                    Close
+                                </Button>
+                                <Button variant="primary" onClick={this.handleClose}>
+                                    Save Changes
+                                </Button>
+                            </Modal.Footer>
+                        </Modal>
                         { message ?
                             <Card border="danger" className="text-center my-3">
                                 <Card.Body>
@@ -79,8 +132,7 @@ class Cart extends Component {
                             <Card.Header>
                                 <Card.Title className="text-center text-monospace"> Appointments</Card.Title>
                             </Card.Header>
-
-                            <CartList getCheckoutItem={this.getCheckoutItem(app)} appointments={appointments} />
+                            <CartList handleShow = {this.handleShow} appointments={appointments} />
                         </Card>
                     </div>
 
