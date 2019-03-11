@@ -208,7 +208,13 @@ exports.doctor_create_timeslot= (req, res) => {
 }
 
 exports.doctor_delete_timeslot = (req, res) => {
-    Timeslot.findById(req.body.id).populate('doctor').populate('appointments')
+    Timeslot.findById(req.body.id).populate({
+        path: 'doctor',
+        populate: {
+            path: 'appointments',
+            model: 'Appointment'
+        }
+    })
         .then(timeslot => {
             // check if the doctor has an appointment at the time
             timeslot.doctor.appointments.forEach(appointment => {
@@ -235,12 +241,19 @@ exports.doctor_delete_timeslot = (req, res) => {
 }
 
 exports.doctor_edit_timeslot = (req, res) => {
-
     let newStart = req.body.start;
     let newEnd = req.body.end;
 
-    Timeslot.findById(req.body.id).populate('doctor').populate('appointments')
+    Timeslot.findById(req.body.id).populate({
+        path: 'doctor',
+        populate: {
+            path: 'appointments schedules'
+        }
+    })
         .then(timeslot => {
+            // check that new timeslot doesnt overlap an exiting one
+
+
             // check if the doctor has an appointment at the time
             timeslot.doctor.appointments.forEach(appointment => {
                 if (HelperController.overlaps(appointment.start, appointment.end, timeslot.start, timeslot.end)) {
