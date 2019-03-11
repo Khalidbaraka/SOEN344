@@ -18,6 +18,10 @@ const timeslotSchema = new Schema ({
     },
     duration:{
         type: String,
+    },
+    room:{
+        required: true,
+        type: Schema.Types.ObjectId, ref: 'room' 
     }
 });
 
