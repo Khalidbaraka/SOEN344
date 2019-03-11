@@ -57,7 +57,7 @@ const AppointmentList = (props) => {
                                     <td> {appointment.start} </td>
                                     <td> {appointment.duration} </td>
                                     <td> {appointment.price} </td>
-                                   { <td> <button onClick={{ /*LINK ACCORDINGLY() => props.deleteItem(appointment._id)*/}} type="button" className="btn btn-outline-warning">Update</button> </td>}
+                                   { <td> <button onClick={() => props.handleShow(appointment)} type="button" className="btn btn-outline-warning">Update</button> </td>}
                                    { <td> <button onClick={{/*LINK ACCORDINGLY() => props.deleteItem(appointment._id)*/}} type="button" className="btn btn-outline-danger">Delete</button> </td>}
                                 </tr>
                             )
