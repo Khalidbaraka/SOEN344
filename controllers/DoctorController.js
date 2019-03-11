@@ -207,7 +207,7 @@ exports.doctor_create_timeslot= (req, res) => {
     })
 }
 
-exports.doctor_delete_timeslot= (req, res) => {
+exports.doctor_delete_timeslot = (req, res) => {
     Timeslot.findById(req.body.id).populate('doctor').populate('appointments')
         .then(timeslot => {
             // check if the doctor has an appointment at the time
@@ -223,10 +223,10 @@ exports.doctor_delete_timeslot= (req, res) => {
             timeslot.remove().then(() => {
                 res.json({
                     success: true,
-                    message: 'The timeslot has been removed',
+                    message: 'The scheduled time has been removed',
                 });
             });
-    }).catch(() => {
+        }).catch(() => {
         res.status(404).json({
             success: false,
             message: 'The timeslot you wanted to remove was not found',
@@ -234,3 +234,33 @@ exports.doctor_delete_timeslot= (req, res) => {
     })
 }
 
+exports.doctor_edit_timeslot = (req, res) => {
+
+    let newStart = req.body.start;
+    let newEnd = req.body.end;
+
+    Timeslot.findById(req.body.id).populate('doctor').populate('appointments')
+        .then(timeslot => {
+            // check if the doctor has an appointment at the time
+            timeslot.doctor.appointments.forEach(appointment => {
+                if (HelperController.overlaps(appointment.start, appointment.end, timeslot.start, timeslot.end)) {
+                    return res.status(400).json({
+                        success: false,
+                        message: 'You have an appointment during this time',
+                    });
+                }
+            });
+            // if reach here, delete the timeslot
+            timeslot.remove().then(() => {
+                res.json({
+                    success: true,
+                    message: 'The scheduled time has been removed',
+                });
+            });
+        }).catch(() => {
+        res.status(404).json({
+            success: false,
+            message: 'The timeslot you wanted to remove was not found',
+        });
+    })
+}
