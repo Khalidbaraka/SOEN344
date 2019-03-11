@@ -64,11 +64,10 @@ class CreateTimeslot extends Component {
         };
 
 
-        // alert("Start: " + timeslot.start + " End: " + timeslot.end);
+        let string = localStorage.getItem('userToken');
+        let jsonToken = JSON.parse(string);
 
-        console.log("calling add timeslot post");
-        console.log("doctor: " + timeslot.doctor);
-        axios.post('/api/doctors/1111111/schedule/create', {
+        axios.post(`/api/doctors/${jsonToken['permitNumber']}/schedule/create`, {
                 doctor: timeslot.doctor,
                 start: timeslot.start,
                 end: timeslot.end
