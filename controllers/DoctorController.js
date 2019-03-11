@@ -1,5 +1,6 @@
 //Doctor Model
 const Doctor = require('./../models/Doctor');
+const Room = require('./../models/Room');
 const Timeslot = require('./../models/Timeslot');
 var bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -204,5 +205,8 @@ exports.doctor_create_timeslot= (req, res) => {
             }
         })
     })
+}
+
+exports.doctor_delete_timeslot= (req, res) => {
 }
 
