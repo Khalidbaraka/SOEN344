@@ -48,16 +48,11 @@ class Cart extends Component {
 
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
-        this.getCheckoutItem = this.getCheckoutItem.bind(this)
+        this.checkoutAppointment = this.checkoutAppointment.bind(this)
 
     }
 
-    getCheckoutItem = () => {
-
-        // const appointment = {
-        //     healthCardNumber: this.state.healthCardNumber,
-        //     password: this.state.password
-        // }
+    checkoutAppointment = () => {
 
         console.log(this.state.appointment);
     }
@@ -68,58 +63,50 @@ class Cart extends Component {
 
     handleShow(appointment) {
         this.setState({ show: true, appointment: appointment });
-        
     }
-
-    formatAppointments(){
-
-        let {appointments} = this.state;
-        //formatting cart data
-        for(let i = 0; i < appointments.length; i++){
-
-            appointments[i].duration += " minutes";
-            appointments[i].price += "$";
-
-            let d = new Date(appointments[i].start);
-
-            let date = ("0" + d.getDate().toString()).slice(-2);
-            let month = ("0" + (d.getMonth() + 1).toString()).slice(-2);
-            let year = d.getUTCFullYear().toString();
-            let hour = ("0" + (d.getUTCHours() - 4).toString()).slice(-2);
-            let minute = ("0" + d.getUTCMinutes().toString()).slice(-2);
-
-            appointments[i].start = date + "/" +  month + "/"+ year + "  at " + hour + ":" + minute;
-
-            if(appointments[i].type === 0){
-                appointments[i].type = "Walk-in";
-            }
-            else if(appointments[i].type === 1){
-                appointments[i].type = "Annual";
-            }
-        }
-
-        this.setState({ appointments: appointments });
-
-    }
-
-
-
 
     render() {
         //this.formatAppointments();
-        const { appointments, message, appointment} = this.state;
+        const { appointments, message} = this.state;
         return (
                     <div className="container">
                         <Modal show={this.state.show} onHide={this.handleClose}>
                             <Modal.Header closeButton>
-                                <Modal.Title>Modal heading</Modal.Title>
+                                <Modal.Title>Appointment Checkout </Modal.Title>
                             </Modal.Header>
-                            <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+                            <Modal.Body>
+                                Your total amount is : {this.state.appointment.price}
+
+                                    <Form noValidate onSubmit = {this.onSubmit} className="font-weight-bold">
+                                        <Form.Group controlId="credit_card">
+                                            <Form.Label>Credit Card Number</Form.Label>
+                                            <Form.Control maxLength={16} name="credit_card" type="text" placeholder="Enter Credit Card Number"/>
+                                            <Form.Text className="text-muted">
+                                                ex: 1111 2222 3333 4444
+                                            </Form.Text>
+                                        </Form.Group>
+                                        <Form.Group controlId="exp_datae">
+                                            <Form.Label>Expiration Date</Form.Label>
+                                            <Form.Control maxLength={4} name="exp_date" type="text" placeholder="Enter Expiration date"/>
+                                            <Form.Text className="text-muted">
+                                                ex: 0820 for August 2020
+                                            </Form.Text>
+                                        </Form.Group>
+                                        <Form.Group controlId="cvv">
+                                            <Form.Label>CVV</Form.Label>
+                                            <Form.Control maxLength={3} name="cvv" type="text" placeholder="Enter CVV"/>
+                                            <Form.Text className="text-muted">
+                                                ex: 567
+                                            </Form.Text>
+                                        </Form.Group>
+                                    </Form>
+
+                            </Modal.Body>
                             <Modal.Footer>
                                 <Button variant="secondary" onClick={this.handleClose}>
                                     Close
                                 </Button>
-                                <Button variant="primary" onClick={this.getCheckoutItem}>
+                                <Button variant="primary" onClick={this.checkoutAppointment}>
                                     Submit
                                 </Button>
                             </Modal.Footer>
