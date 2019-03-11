@@ -5,7 +5,7 @@ import 'rc-calendar/assets/index.css';
 import AppCalenderNewTimeslotEnd from "../Timeslots/AppCalenderNewTimeslotEnd";
 import AppCalenderNewTimeslotStart from "../Timeslots/AppCalenderNewTimeslotStart";
 
-class DoctorHomepage extends Component {
+class CreateTimeslot extends Component {
 
     constructor(props) {
         super(props);
@@ -48,6 +48,11 @@ class DoctorHomepage extends Component {
         this.setState(nextState);
     }
 
+    routeChange = () => {
+        let path = '/homepage/doctor'
+        this.props.history.push(path);
+    }
+
     onSubmit = (e) => {
         e.preventDefault();
 
@@ -71,6 +76,7 @@ class DoctorHomepage extends Component {
             .then(res => {
                 if(res.status == 200) {
                     console.log("Timeslot successfully added!");
+                    this.routeChange();
                 } else {
                     console.log("Unable to add timeslot");
                     console.log(res);
@@ -88,9 +94,42 @@ class DoctorHomepage extends Component {
         } = this.state;
 
         return (
+            <div>
                 <h1> Doctor Homepage </h1>
+                <br />
+                <h3> Enter Details for creating your schedule below: </h3>
+
+                <Form noValidate onSubmit = {this.onSubmit} className="font-weight-bold">
+                    { message ?
+                        <Card border="danger" className="text-center my-3">
+                            <Card.Body>
+                                <Card.Title><div className="text-monospace">{ message }</div> </Card.Title>
+                            </Card.Body>
+                        </Card>
+                        : ''}
+                    <AppCalenderNewTimeslotStart
+                        value = { this.state.start}
+                        onChange = { this.onChangeStart }
+                    />
+
+                    <AppCalenderNewTimeslotEnd
+                        value = { this.state.end }
+                        onChange = { this.onChangeEnd }
+                    />
+
+                    <Form.Group controlId="formBasicUsername">
+                        <Form.Label>Doctor ID Number</Form.Label>
+                        <Form.Control name="doctor" type="text" placeholder="Enter Doctor ID Number" value = {this.state.doctor} onChange={this.onChange}/>
+                    </Form.Group>
+
+                    <Button variant="outline-info" type="submit" className="float-right mt-3">
+                        Submit
+                    </Button>
+                </Form>
+
+            </div>
         );
     }
 }
 
-export default DoctorHomepage;
+export default CreateTimeslot;
