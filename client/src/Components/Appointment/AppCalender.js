@@ -21,6 +21,12 @@ class AppCalender extends Component {
         return [0, 1, 2, 3, 4, 5, 6, 7, 21, 22, 23];
     }
 
+    disabledMinutes = () => {
+        
+        if (this.state.startTime.toDate().getHours() == 0) {
+            return [0, 20, 40];
+        }
+    }
 
     disabledSeconds = (h, m) => {
         const arraySeconds = [];
@@ -31,6 +37,13 @@ class AppCalender extends Component {
         }
 
         return arraySeconds
+    }
+
+    disabledDate = (current) => {
+        const date = new Date();
+        
+        // Can not select days before today
+        return current.isBefore(date.setDate(date.getDate() - 1));
     }
 
     onChange = (value) => {       
@@ -53,6 +66,7 @@ class AppCalender extends Component {
             format='HH:mm'
             defaultValue={moment().startOf('day')}
             disabledHours={this.disabledHours}
+            disabledMinutes={this.disabledMinutes}
             disabledSeconds={this.disabledSeconds}
             minuteStep={this.props.type == "0" ? 20 : 60}
             />;
@@ -61,8 +75,8 @@ class AppCalender extends Component {
         const calendar = (<Calender
             showWeekNumber={false}
             disabledTime={false}
+            disabledDate={this.disabledDate}
             format='YYYY-MM-DD HH:mm'
-            showToday={true}
             timePicker={timePickerElement}
             showOk={true}
             value={startTime}
@@ -81,7 +95,7 @@ class AppCalender extends Component {
                             <Form>
                                 <Form.Row noGutters={true}>
                                     <Col md={12}><Form.Label>Please select date and time of appointment</Form.Label></Col>
-                                    <Col md={3}><Form.Control value={this.state.startTime.format("YYYY-MM-DD HH:mm")} /></Col>
+                                    <Col md={3}><Form.Control disabled={true} value={this.state.startTime.format("YYYY-MM-DD HH:mm")} /></Col>
                                     <Button variant="outline-info"><i className="fa fa-calendar-plus-o" aria-hidden="true"></i></Button>
                                 </Form.Row>
                             </Form>
