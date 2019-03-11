@@ -65,7 +65,6 @@ class DoctorSchedule extends Component {
     }
 
     prevClick = (schedulerData) => {
-        console.log("prevclick");
         schedulerData.prev();
         for(let i =0; i< this.state.schedules.length; i++)
         {
@@ -79,7 +78,6 @@ class DoctorSchedule extends Component {
             }
             this.state.timeslot.push(timeSlotObject);
         }
-        console.log(this.state.timeslot);
         schedulerData.setEvents(this.state.timeslot);
         this.state.timeslot = [];
         this.setState({
@@ -88,7 +86,6 @@ class DoctorSchedule extends Component {
     }
 
     nextClick = (schedulerData) => {
-        console.log("nextclick");
         schedulerData.next();
         for(let i =0; i< this.state.schedules.length; i++)
         {
@@ -102,7 +99,6 @@ class DoctorSchedule extends Component {
             }
             this.state.timeslot.push(timeSlotObject);
         }
-        console.log(this.state.timeslot);
         schedulerData.setEvents(this.state.timeslot);
         this.state.timeslot = [];
         this.setState({
@@ -113,11 +109,9 @@ class DoctorSchedule extends Component {
     
 
     onViewChange = (schedulerData, view) => {
-        console.log("onviewchange");
         schedulerData.setViewType(view.viewType, view.showAgenda, view.isEventPerspective);
         //in for loop set timeslot object values
         //push these objects to events array
-        console.log(this.state.schedules.length);
         for(let i =0; i< this.state.schedules.length; i++)
         {
             var timeSlotObject = {
@@ -130,7 +124,6 @@ class DoctorSchedule extends Component {
             }
             this.state.timeslot.push(timeSlotObject);
         }
-        console.log(this.state.timeslot);
         schedulerData.setEvents(this.state.timeslot);
         this.state.timeslot = [];
         this.setState({
@@ -139,7 +132,6 @@ class DoctorSchedule extends Component {
     }
 
     onSelectDate = (schedulerData, date) => {
-        console.log("onselectdate");
         schedulerData.setDate(date);
          for(let i =0; i< this.state.schedules.length; i++)
         {
@@ -153,7 +145,6 @@ class DoctorSchedule extends Component {
             }
             this.state.timeslot.push(timeSlotObject);
         }
-        console.log(this.state.timeslot);
         schedulerData.setEvents(this.state.timeslot);
         this.state.timeslot = [];
         this.setState({
@@ -161,7 +152,7 @@ class DoctorSchedule extends Component {
         })
     }
 
-    //should redirect to add timeslot component
+    //should redirect to add timeslot page here 
     routeChange() {
         let path = `/homepage/doctor`;
         this.props.history.push(path);
@@ -169,7 +160,7 @@ class DoctorSchedule extends Component {
 
    
 
-
+      //open a modal, remove this function and use eventItemClick to open a modal in render function once clicked
     eventClicked() {
         let path = `/homepage/doctor/`;
         this.props.history.push(path);
@@ -195,7 +186,6 @@ class DoctorSchedule extends Component {
         //in for loop set timeslot object values
         //push these objects to events array
         let schedulerData = new SchedulerData(new moment().format(DATE_FORMAT), ViewTypes.Day);
-        console.log(this.state.schedules.length);
         for(let i =0; i< this.state.schedules.length; i++)
         {
             var timeSlotObject = {
@@ -208,7 +198,6 @@ class DoctorSchedule extends Component {
             }
             this.state.timeslot.push(timeSlotObject);
         }
-        console.log(this.state.timeslot);
         schedulerData.setEvents(this.state.timeslot);
         this.state.timeslot = [];
 
