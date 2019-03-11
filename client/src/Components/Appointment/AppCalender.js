@@ -81,6 +81,7 @@ class AppCalender extends Component {
             showOk={true}
             value={startTime}
             onChange={this.onChange}
+            showDateInput={false}
             />);
 
         return (
