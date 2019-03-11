@@ -45,7 +45,6 @@ class MyAppointment extends Component {
         const { appointments,message} = this.state;
         return (
             <div className="container">
-            <Card className="my-5">
                 { message ?
                     <Card border="danger" className="text-center my-3">
                         <Card.Body>
@@ -53,6 +52,8 @@ class MyAppointment extends Component {
                         </Card.Body>
                     </Card>
                     : ''}
+            <Card className="my-5">
+
                 <Card.Header>
                         <Card.Title className="text-center text-monospace">Your Appointments</Card.Title>
                 </Card.Header>
