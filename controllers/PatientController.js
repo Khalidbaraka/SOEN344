@@ -143,7 +143,7 @@ exports.patient_get_appointments = (req, res) =>{
             Appointment.find({patient:patient._id})
                 .then(appointments =>{
                     let sendToFront = [];
-                    if(appointments.length == 0){
+                    if(appointments.length === 0){
                         res.json({
                             message: 'You have no appointments'
                         })
