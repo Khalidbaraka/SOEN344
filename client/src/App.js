@@ -16,6 +16,7 @@ import NurseHomepage from './Components/Homepage/NurseHomepage';
 import PatientHomepage from "./Components/Homepage/PatientHomepage";
 import PatientNavBar from "./Components/PatientNavBar";
 import SignUp from './Components/SignUp/SignUp'
+import ModifyAppointment from "./Components/Appointment/ModifyAppointment";
 
 class App extends Component {
   render() {
@@ -34,6 +35,7 @@ class App extends Component {
             <Route path='/items' component={ Items }/>
             <Route path='/login' component={ Login }/>
             <Route path='/signup' component={ SignUp }/>
+           <Route exact path='/modifyAppointment/:appointment' component={ModifyAppointment}/>
 
             <Route path='/logout' component={ Logout }/>
             <Route path='/homepage/nurse' component={ NurseHomepage }/>

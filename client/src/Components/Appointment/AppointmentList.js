@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import { Table } from 'react-bootstrap';
+import {Link, Route, Switch} from "react-router-dom";
+import AppointmentsView from "./MyAppointment";
+import ModifyAppointment from "./ModifyAppointment";
 
 const AppointmentList = (props) => {
     const appointments = props.appointments;
 
 
-    
+    //{ /*LINK ACCORDINGLY() => props.deleteItem(appointment._id)
 
     //formatting appointment data
     for(let i = 0; i < appointments.length; i++){
@@ -51,16 +54,18 @@ const AppointmentList = (props) => {
                     (
                         appointments.map(appointment => {
                             return (
+                                <div>
                                 <tr key={appointment._id}>
                                     <th> {appointment.doctor } </th>
                                     <td> {appointment.type} </td>
                                     <td> {appointment.start} </td>
                                     <td> {appointment.duration} </td>
                                     <td> {appointment.price} </td>
-                                   { <td> <button onClick={{ /*LINK ACCORDINGLY() => props.deleteItem(appointment._id)*/}} type="button" className="btn btn-outline-warning">Update</button> </td>}
+                                   { <td> <Link to={"/modifyAppointment/:appointment"}> Update </Link> </td>}
                                    { <td> <button onClick={{/*LINK ACCORDINGLY() => props.deleteItem(appointment._id)*/}} type="button" className="btn btn-outline-danger">Delete</button> </td>}
                                 </tr>
-                            )
+                                </div>
+                        )
                         })
                     ) : (
                         <li> No appointments</li>

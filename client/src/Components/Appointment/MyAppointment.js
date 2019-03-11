@@ -4,6 +4,9 @@ import { Button, Card, Col, Dropdown, DropdownButton, Form, Row } from 'react-bo
 import React, { Component } from 'react';
 import AppointmentList from './AppointmentList';
 import axios from 'axios';
+import ModifyAppointment from './ModifyAppointment';
+
+
 
 
 
@@ -14,8 +17,16 @@ class MyAppointment extends Component {
 
         this.state = {
             appointments: [],
-            message: ""
+            message: "",
+            show: false
         }
+    }
+
+    showModal= ()=>{
+        this.setState({
+            ... this.state,
+            show: !this.state.show
+        })
     }
 
     componentDidMount() {
@@ -44,6 +55,7 @@ class MyAppointment extends Component {
 
         const { appointments,message} = this.state;
         return (
+            <div>
             <div className="container">
                 { message ?
                     <Card border="danger" className="text-center my-3">
@@ -57,11 +69,15 @@ class MyAppointment extends Component {
                 <Card.Header>
                         <Card.Title className="text-center text-monospace">Your Appointments</Card.Title>
                 </Card.Header>
-
                 <AppointmentList appointments={appointments} />
+
             </Card> 
             </div>
         );
+
+
+
+            </div>)
     }
 }
 

@@ -3,15 +3,18 @@ import axios from 'axios';
 /* Import Components */
 import Input from '../Input';
 import Button from '../Button';
-import Form from "react-bootstrap/es/Form";
+import {Route, Switch} from "react-router-dom";
+import AppointmentsView from "./MyAppointment";
+import Identification from "./Identification";
 
-class FormContainer extends Component {
+class ModifyAppointment extends Component {
     constructor(props) {
         super(props);
+        console.log(this.props);
 
         this.state = {
-            appointment: this.props.appointment,
-            dateCreated: "2019-03-10",
+            appointment: "hello",
+            dateCreated: "12-01-2019",
             type: "60 mins",
             clinic: "yoyo",
             doctor: "Jason",
@@ -22,6 +25,7 @@ class FormContainer extends Component {
             end: "2019-03-01-1:00",
             price: "12"
         };
+
 
 
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
@@ -36,7 +40,7 @@ class FormContainer extends Component {
         e.preventDefault();
 
         const updatedAppointment = {
-            dateCreated: this.state.dateCreated,
+            dateCreated: this.props.dateCreated,
             type: this.state.type,
             clinic: this.state.clinic,
             doctor: this.state.doctor,
@@ -128,13 +132,18 @@ class FormContainer extends Component {
                         onChange={this.onChange} required
                     />{" "}
                 </form>
+
+                <Switch>
+                    <Route path='/homepage/patient/myAppointment' component={AppointmentsView}/>
+                    <Route path='/homepage/patient/scheduleAppointment' component={ Identification }/>
+                </Switch>
             </div>
 
         );
 
     }}
 
-export default FormContainer;
+export default ModifyAppointment;
 const buttonStyle = {
     margin: "10px 10px 10px 10px"
 };
