@@ -217,32 +217,35 @@ exports.doctor_delete_timeslot = (req, res) => {
     })
         .then(timeslot => {
             // check if the doctor has an appointment at the time
-            timeslot.doctor.appointments.forEach(appointment => {
+            for (let appointment of timeslot.doctor.appointments) { // NOTE: Using array Iterator
                 if (HelperController.overlaps(appointment.start, appointment.end, timeslot.start, timeslot.end)) {
                     return res.status(400).json({
                         success: false,
                         message: 'You have an appointment during this time',
                     });
                 }
-            });
-            // if reach here, delete the timeslot
+            }
+
+            // if reach here, delete the timeslot (Note: pre is set in Timeslot.js to auto delete doctors refrence to the timeslot)
             timeslot.remove().then(() => {
                 res.json({
                     success: true,
                     message: 'The scheduled time has been removed',
                 });
             });
+
         }).catch(() => {
-        res.status(404).json({
-            success: false,
-            message: 'The timeslot you wanted to remove was not found',
-        });
+            // unexpected error
+            res.status(404).json({
+                success: false,
+                message: 'The timeslot you wanted to remove was not found',
+            });
     })
 }
 
 exports.doctor_edit_timeslot = (req, res) => {
-    let newStart = req.body.start;
-    let newEnd = req.body.end;
+    let newStart = new Date(req.body.start);
+    let newEnd = new Date(req.body.end);
 
     Timeslot.findById(req.body.id).populate({
         path: 'doctor',
@@ -250,13 +253,22 @@ exports.doctor_edit_timeslot = (req, res) => {
             path: 'appointments schedules'
         }
     })
-        .then(timeslot => {
-            // check that new timeslot doesnt overlap an exiting one
+        .then(timeslotToModify => {
+            let doctor = timeslotToModify.doctor;
 
+            // check that new timeslot doesnt overlap an exiting one
+            doctor.schedules.forEach(scheduledTimeslot => {
+                if (HelperController.overlaps(newStart, newEnd, scheduledTimeslot.start, scheduledTimeslot.end)) {
+                    return res.status(400).json({
+                        success: false,
+                        message: 'The schedulded time conflicts with the',
+                    });
+                }
+            });
 
             // check if the doctor has an appointment at the time
-            timeslot.doctor.appointments.forEach(appointment => {
-                if (HelperController.overlaps(appointment.start, appointment.end, timeslot.start, timeslot.end)) {
+            timeslotToModify.doctor.appointments.forEach(appointment => {
+                if (HelperController.overlaps(appointment.start, appointment.end, timeslotToModify.start, timeslotToModify.end)) {
                     return res.status(400).json({
                         success: false,
                         message: 'You have an appointment during this time',
@@ -264,7 +276,7 @@ exports.doctor_edit_timeslot = (req, res) => {
                 }
             });
             // if reach here, delete the timeslot
-            timeslot.remove().then(() => {
+            timeslotToModify.remove().then(() => {
                 res.json({
                     success: true,
                     message: 'The scheduled time has been removed',
