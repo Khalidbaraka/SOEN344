@@ -73,11 +73,11 @@ class DoctorLogin extends Component{
 
         if (isAuthenticated) {
             //direct to doctor homepage
-            return <Redirect to = '/homepage/doctor' / > ;
+            return <Redirect to = '/homepage/doctor' /> ;
         }
 
 		return(
-            <div>
+            <div>t
                 <Card className="p-4">
                     <Form noValidate onSubmit = {this.onSubmit} className="font-weight-bold">
                         { message ? 

@@ -73,7 +73,7 @@ class NurseLogin extends Component {
 
         if (isAuthenticated) {
             //direct to nurse homepage
-            return <Redirect to = '/homepage/nurse' / > ;
+            return <Redirect to = '/homepage/nurse' /> ;
         }
 
 		return (

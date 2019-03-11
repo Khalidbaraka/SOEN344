@@ -69,7 +69,7 @@ class PatientLogin extends Component{
 
         if (isAuthenticated) {
             //direct to patient homepage
-            return <Redirect to = '/homepage/patient' / > ;
+            return <Redirect to = '/homepage/patient' /> ;
         }
 
 		return (

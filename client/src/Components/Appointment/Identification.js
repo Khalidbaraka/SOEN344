@@ -43,7 +43,7 @@ class Identification extends Component {
                             </Form.Row>
                         </Form>
                         <hr/>
-                        <AppCalender type={appointmentType} />  
+                        <AppCalender type = { appointmentType } />
                         <hr/>
                         <Button variant="outline-info float-right"> Proceed </Button>
                     </Card.Body>
