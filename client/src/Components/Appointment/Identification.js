@@ -30,6 +30,13 @@ class Identification extends Component {
         return [0, 1, 2, 3, 4, 5, 6, 7, 21, 22, 23];
     }
 
+    disabledMinutes = () => {
+        
+        if (this.state.startTime.toDate().getHours() == 0) {
+            return [0, 20, 40];
+        }
+    }
+
     disabledSeconds = (h, m) => {
         const arraySeconds = [];
         let i = 0;
@@ -39,6 +46,13 @@ class Identification extends Component {
         }
 
         return arraySeconds
+    }
+
+    disabledDate = (current) => {
+        const date = new Date();
+        
+        // Can not select days before today
+        return current.isBefore(date.setDate(date.getDate() - 1));
     }
 
     onChange = (value) => {       
@@ -125,7 +139,10 @@ class Identification extends Component {
                             startTime={startTime}
                             onChange={this.onChange}
                             disabledHours={this.disabledHours}
-                            disabledSeconds={this.disabledSeconds} />  
+                            disabledMinutes={this.disabledMinutes}
+                            disabledSeconds={this.disabledSeconds}
+                            disabledDate={this.disabledDate}
+                            onSubmit={this.onSubmit} />  
                         <hr/>
                         <Button variant="outline-info float-right" onClick={this.onSubmit}> Proceed </Button>
                     </Card.Body>
