@@ -132,41 +132,77 @@ exports.doctor_delete = (req, res) => {
 exports.doctor_create_timeslot= (req, res) => {
     Doctor.findOne({
         permitNumber: req.params.permit_number
-    }).populate('schedules') // To be removed
+    }).populate('schedules')
     .then(doctor => {
         appStart = new Date(req.body.start);
         appEnd = new Date(req.body.end);
+        durationTime = (appEnd.getHours() - appStart.getHours()) * 60 + appEnd.getMinutes() - appStart.getMinutes();
         let answer = false
-        for (var i=0; i<doctor.schedules.length; i++) {
-            let start = doctor.schedules[i].start;
-            let end = doctor.schedules[i].end;
+        let roomOccupied = [];
+        let personalTimeConflict = false;
 
-            answer = HelperController.overlaps(appStart, appEnd, start, end);
-            
-            if (answer == true){
-                break;
-            }
-        }
-        
-        if(answer == true){
-            res.status(400).json({
-                success: false,
-                message: 'Timeslot overlaps with an already existing timeslot'
-            });
-        }
-        else{
-            const newTimeslot = new Timeslot({
-                doctor: doctor._id,
-                start:  new Date(req.body.start),
-                end:  new Date(req.body.end),
-                duration: req.body.duration
-            });
+        Timeslot.find().populate('doctor').populate('room')
+        .then(timeslot => {
+            for (var i=0; i<timeslot.length; i++) {
+                let start = timeslot[i].start;
+                let end = timeslot[i].end;
+                roomNumber = timeslot[i].room.number;
+                answer = HelperController.overlaps(appStart, appEnd, start, end); 
+     
+                if(answer == true && timeslot[i].doctor.permitNumber==doctor.permitNumber){
+                    personalTimeConflict = true;
+                    break;
+                } 
 
-            newTimeslot.save().then(newTimeslot => res.json(newTimeslot));
+                if (answer == true && roomOccupied.length >= 5){
+                    break;
+                }
                 
-            doctor.schedules.push(newTimeslot); 
-            doctor.save();
-            res.json(doctor);
-    }
-    }).catch(err => console.log(err));
+                if (answer == true && roomOccupied.length < 5){
+                    roomOccupied.push(roomNumber);
+                }
+
+            }
+
+            if (personalTimeConflict == true){
+                res.status(400).json({
+                    success: false,
+                    message: 'The selected timeslot conflicts with your own schedule'
+                });
+            }
+            else if(roomOccupied.length >= 5){
+                res.status(400).json({
+                    success: false,
+                    message: 'Timeslot overlaps with an already existing timeslot'
+                });
+            }
+            else{
+                roomAvailable = 1;
+                for(var j = 0; j<=roomOccupied.length; j++){
+                    if(!roomOccupied.includes(j+1)){
+                        roomAvailable = j+1
+                        break;
+                    }    
+                    }
+                Room.findOne({
+                    number : roomAvailable
+                }).then( room => { 
+
+                    const newTimeslot = new Timeslot({
+                        doctor: doctor._id,
+                        start: appStart,
+                        end: appEnd,
+                        duration : durationTime.toString(),
+                        room: room._id
+                    });
+
+                    newTimeslot.save();//.then(newTimeslot => res.json(newTimeslot)); It was sending two res.json() (check the one in the bottom), so its throwing me a warning in the terminal.
+                    doctor.schedules.push(newTimeslot); 
+                    doctor.save();
+                    res.json(doctor);
+                })
+            }
+        })
+    })
 }
+
