@@ -338,11 +338,8 @@ exports.patient_cart_save = (req,res)=>{
                             //Check if patient already has annual check up appointment
                             if(type == 1){
                                  while(h<patient.appointments.length){
-                                    console.log("here")
                                         let ptAppointmentType = patient.appointments[h].type;
                                         let ptAppointmentStart = patient.appointments[h].start;
-                                        console.log(ptAppointmentType == type)
-                                        console.log(ptAppointmentType == type && ptAppointmentStart.getYear() == startTime.getYear())
                                     if(ptAppointmentType == type && ptAppointmentStart.getYear() == startTime.getYear()){
                                         annualCheckUpFound = true;
                                         break;
@@ -353,7 +350,6 @@ exports.patient_cart_save = (req,res)=>{
                             if(annualCheckUpFound == false){
                                 //second check, check if a timeslot with same startTime is in the cart
                                 if(patient.cart.length == 0){
-                                     console.log(startTime + " her 2starttime")
                                     isInCart == false;
                                 }
 
