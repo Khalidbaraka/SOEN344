@@ -124,6 +124,7 @@ class DoctorSchedule extends Component {
             }
             this.state.timeslot.push(timeSlotObject);
         }
+        console.log(this.state.timeslot);
         schedulerData.setEvents(this.state.timeslot);
         this.state.timeslot = [];
         this.setState({
