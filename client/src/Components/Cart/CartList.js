@@ -5,35 +5,28 @@ const CartList = (props) => {
     
     const appointments = props.appointments;
 
-    //formatting cart data
-    for(let i = 0; i < appointments.length; i++){
+    function formatType(type) {
 
-        if(!(appointments[i].duration.includes("minutes"))){
-            appointments[i].duration += " minutes";
+        if (type === 0) {
+            type = "Walk-in";
+        } else if (type === 1) {
+            type = "Annual";
         }
+        return type;
+    }
 
-        if(!(appointments[i].price.toString().includes("$"))){
-            appointments[i].price += "$";
-        }
+    function formatDate(date) {
+            let d = new Date(date);
 
+            let fdate = ("0" + d.getDate().toString()).slice(-2);
+            let month = ("0" + (d.getMonth() + 1).toString()).slice(-2);
+            let year = d.getUTCFullYear().toString();
+            let hour = ("0" + (d.getUTCHours() - 4).toString()).slice(-2);
+            let minute = ("0" + d.getUTCMinutes().toString()).slice(-2);
 
-        let d = new Date(appointments[i].start);
+            date = fdate + "/" +  month + "/"+ year + "  at " + hour + ":" + minute;
 
-        let date = ("0" + d.getDate().toString()).slice(-2);
-        let month = ("0" + (d.getMonth() + 1).toString()).slice(-2);
-        let year = d.getUTCFullYear().toString();
-        let hour = ("0" + (d.getUTCHours() - 4).toString()).slice(-2);
-        let minute = ("0" + d.getUTCMinutes().toString()).slice(-2);
-
-        if(!(isNaN(date)))
-        appointments[i].start = date + "/" +  month + "/"+ year + "  at " + hour + ":" + minute;
-
-        if(appointments[i].type === 0){
-            appointments[i].type = "Walk-in";
-        }
-        else if(appointments[i].type === 1){
-            appointments[i].type = "Annual";
-        }
+        return  date;
     }
 
     // Displaying the list of items. _id is unique to MongoDB (Primary Key)
@@ -58,10 +51,10 @@ const CartList = (props) => {
                             return (
                                 <tr key={appointment._id}>
                                     <th> {appointment.doctor } </th>
-                                    <td> {appointment.type} </td>
-                                    <td> {appointment.start} </td>
-                                    <td> {appointment.duration} </td>
-                                    <td> {appointment.price} </td>
+                                    <td> {formatType(appointment.type)} </td>
+                                    <td> {formatDate(appointment.start)} </td>
+                                    <td> {appointment.duration + " minutes"} </td>
+                                    <td> {appointment.price+ "$"} </td>
                                     { <td> <button onClick={() => props.handleShow(appointment)} type="button" className="btn btn-outline-success">Checkout</button> </td>}
                                     { <td> <button onClick={{/*LINK ACCORDINGLY() => props.deleteItem(appointment._id)*/}} type="button" className="btn btn-outline-danger">Delete</button> </td>}
                                 </tr>

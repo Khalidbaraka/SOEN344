@@ -14,7 +14,7 @@ class Cart extends Component {
         this.state = {
             message: "Your Cart",
             appointments:[
-                {type: "Annual",
+                {type: 0,
                     clinic: null,
                     doctor: "James",
                     room: "2",
@@ -23,7 +23,7 @@ class Cart extends Component {
                     end : "2019-03-20T22:00:00.000Z",
                     duration : "40",
                     price : 60},
-                {type: "Walk-In",
+                {type: 1,
                     clinic: null,
                     doctor: "Jenny",
                     room: "2",
@@ -32,7 +32,7 @@ class Cart extends Component {
                     end : "2019-10-20T22:00:00.000Z",
                     duration : "40",
                     price : 60},
-                {type: "Annual",
+                {type: 1,
                     clinic: null,
                     doctor: "James",
                     room: "2",
@@ -53,6 +53,7 @@ class Cart extends Component {
     }
 
     checkoutAppointment = () => {
+
 
         console.log(this.state.appointment);
     }
