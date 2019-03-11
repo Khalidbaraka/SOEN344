@@ -14,7 +14,8 @@ const AppointmentSchema = new Schema ({
         max: 1
     },
     clinic: { 
-        required: true,
+        //It is not required now, till we figure out what we wanna do for clinic, right now clinics are being null when creating appointments
+       // required: true,
         type: Schema.Types.ObjectId, ref: 'clinic'
     },
     doctor: { 

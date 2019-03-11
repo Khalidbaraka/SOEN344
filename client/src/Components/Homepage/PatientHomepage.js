@@ -3,9 +3,12 @@ import React, { Component } from 'react';
 import {Route, Switch} from "react-router-dom";
 
 import Identification from '../Appointment/Identification';
+import AppointmentsView from '../Appointment/MyAppointment';
+
 import { Link } from 'react-router-dom'
 
 class PatientHomepage extends Component {
+
     constructor(props) {
         super(props);
      
@@ -26,7 +29,7 @@ class PatientHomepage extends Component {
 
                     <Col md={9}>
                         <Switch>
-                            <Route path='/homepage/patient/myAppointment' component={''}/>
+                            <Route path='/homepage/patient/myAppointment' component={AppointmentsView}/>
                             <Route path='/homepage/patient/scheduleAppointment' component={ Identification }/>
                         </Switch>
                     </Col>

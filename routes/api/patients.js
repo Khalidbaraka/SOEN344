@@ -15,8 +15,13 @@ router.post('/register', patientController.patient_register);
 // @access Public
 router.post('/login', patientController.patient_login);
 
+// @route get api/patients/health_card_number/appointment/get
+// @desc  update patient
+// @access Public
+router.get('/:health_card_number/appointment/get', patientController.patient_get_appointments);
+
 // Protecting the routes below. The order is important
-router.use(decoder);
+//router.use(decoder);
 
 // @route GET api/patients/patientsList
 // @desc loads patients table from db
@@ -34,9 +39,11 @@ router.delete('/delete/:id', patientController.patient_delete);
 // @access Public
 router.put('/update/:id', patientController.patient_update);
 
-// @route get api/patients/health_card_number/appointment/get
+
+
+// @route post api/patients/health_card_number/cart/checkout
 // @desc  update patient
 // @access Public
-router.get('/:health_card_number/appointment/get', patientController.patient_get_appointments);
+router.post('/:health_card_number/cart/checkout', patientController.patient_checkout_appointment);
 
 module.exports = router;
