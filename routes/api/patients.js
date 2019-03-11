@@ -16,7 +16,7 @@ router.post('/register', patientController.patient_register);
 router.post('/login', patientController.patient_login);
 
 // Protecting the routes below. The order is important
-router.use(decoder);
+//router.use(decoder);
 
 // @route GET api/patients/patientsList
 // @desc loads patients table from db

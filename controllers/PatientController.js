@@ -186,18 +186,10 @@ exports.patient_checkout_appointment = (req, res) =>{
             //Use these for local tests.
             //appStart = new Date(req.body.start);
             //appEnd = new Date(req.body.end);
-            let foundDoctorMatchRoom = false;
             let foundRoomNoDoctor = false;
             let roomOverlap = false; 
             let doctorAvailable = false;
-            let appEndMinutes = 0;
-            if(appEnd.getMinutes()==0){
-               appEndMinutes = 60;
-            }
-            else{
-               appEndMinutes = appEnd.getMinutes();
-            }
-            var duration = appEndMinutes - appStart.getMinutes();
+            var duration = ((appEnd.getHours() - appStart.getHours()) * 60 )+ (appEnd.getMinutes() - appStart.getMinutes())
             var type =0;
             var price =0; //price for Walk-in is 20 dollars, and anual checkup is 60 dollars
             //from https://stackoverflow.com/questions/21069813/mongoose-multiple-query-populate-in-a-single-call
@@ -248,13 +240,11 @@ exports.patient_checkout_appointment = (req, res) =>{
                                   k++;   
                                 }
                                 if(doctorAvailable ==true && doctorRoom.equals(rooms[i]._id)){
-                                    console.log(duration)
                                     if(duration == 20){
                                         type = 0;
                                         price = 20;
                                     }
-                                    else if(duration == 60 || duration == 0){
-                                        duration = 60;
+                                    else if(duration == 60){
                                         type = 1;
                                         price = 60;
                                     }
@@ -282,10 +272,6 @@ exports.patient_checkout_appointment = (req, res) =>{
                                     patient.appointments.push(newAppointment);
                                     patient.save();
                                     res.json(rooms[i]) 
-                                }
-                                else if(doctorAvailable ==true && doctorRoom.equals(rooms[i]._id) ){
-                                    console.log (" this.")
-
                                 }
                                 else{
                                     foundRoomNoDoctor =true;
