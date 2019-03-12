@@ -74,17 +74,25 @@ class Cart extends Component {
     }
 
     handleDelete(appointment) {
+
+        const user = JSON.parse(localStorage.getItem('userToken'));
+        const healthCardNumber = encodeURI(user.healthCardNumber);
+
+
         this.setState({ appointment: appointment });
+        let deleteAppointment = this.state.appointment;
         console.log(appointment);
 
         //AXIOS METHOD CALL TO DELETE CART APPOINTMENT GOES HERE
-
-
-
-
-
-
-
+        axios.delete('api/patients/'+ healthCardNumber +'/cart/delete',{
+            data: {timeslot:deleteAppointment}
+        })
+            .then(res => {
+                if(res.data){
+                    this.getCartAppointments()
+                }
+            })
+            .catch(err => console.log(err))
         //dont forget to reset state for appointments after axios call , or simply call getCartAppointments ()
     }
 
