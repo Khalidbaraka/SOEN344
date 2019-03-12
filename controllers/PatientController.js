@@ -193,17 +193,32 @@ exports.patient_checkout_appointment = (req, res) =>{
     Patient.findOne({healthCardNumber: req.params.health_card_number}).populate('cart')
         .then(patient => {
             var timeslot = req.body.timeslot;
-            var appStart = timeslot.start;
-            var appEnd = timeslot.end;
+            var appStart = new Date(timeslot.start);
+            var appEnd = new Date(timeslot.end);
             //Use these for local tests.
             //appStart = new Date(req.body.start);
             //appEnd = new Date(req.body.end);
+            let annualCheckUpFound = false;
             let foundRoomNoDoctor = false;
             let roomOverlap = false; 
             let doctorAvailable = false;
             var duration = ((appEnd.getHours() - appStart.getHours()) * 60 )+ (appEnd.getMinutes() - appStart.getMinutes())
-            var type =0;
-            var price =0; //price for Walk-in is 20 dollars, and anual checkup is 60 dollars
+            let type =0;
+            let price =0; //price for Walk-in is 20 dollars, and anual checkup is 60 dollars
+            if(duration == 20){
+                type = 0;
+                price = 20;
+            }
+            else if(duration == 60){
+                type = 1;
+                price = 60;
+            }
+            else{
+                res.status(400).json({
+                    message: 'duration of appointment not 20 nor 60 minutes'
+                })
+            }
+            let toRemove =0;
             //from https://stackoverflow.com/questions/21069813/mongoose-multiple-query-populate-in-a-single-call
             //var populateQuery = [{path:'room', select:''}]
             Room.find().sort({'_id': 1}).populate('appointments')
@@ -215,90 +230,108 @@ exports.patient_checkout_appointment = (req, res) =>{
                             let j=0; // appointments index
                             let k=0; //doctor index
                             let l=0; // schedules index
-                           while(i<rooms.length){
-                            if(rooms[i].appointments.length == 0){
-                                console.log("Im here")
-                                roomOverlap = false;
-                            }
-                            else{
-                                for (j=0;j<rooms[i].appointments.length; j++) {
-                                let start = rooms[i].appointments[j].start;
-                                let end = rooms[i].appointments[j].end;
-                                roomOverlap = HelperController.overlaps(appStart, appEnd, start, end);
-                                if (roomOverlap == true){
-                                    break;
-                                }
+                            let h = 0;
+                            //Check if patient already has annual check up appointment
+                            if(type == 1){
+                                 while(h<patient.appointments.length){
+                                        let ptAppointmentType = patient.appointments[h].type;
+                                        let ptAppointmentStart = patient.appointments[h].start;
+                                    if(ptAppointmentType == type && ptAppointmentStart.getYear() == startTime.getYear()){
+                                        annualCheckUpFound = true;
+                                        break;
+                                    }
+                                h++;
                                 }
                             }
-                            if (roomOverlap == false){
-                                while(k<doctors.length){
-                                    if(doctors[k].schedules.length == 0){
-                                        doctorAvailable = true;
+                            if(annualCheckUpFound == false){
+                                while(i<rooms.length){
+                                    if(rooms[i].appointments.length == 0){
+                                        console.log("Im here")
+                                        roomOverlap = false;
                                     }
                                     else{
-                                        for (l=0;l<doctors[k].schedules.length; l++) {
-                                        let doctorStart = doctors[k].schedules[l].start;
-                                        let doctorEnd = doctors[k].schedules[l].end;
-                                        doctorRoom = doctors[k].schedules[l].room;
-                                        doctorAvailable = HelperController.overlaps(appStart, appEnd, doctorStart, doctorEnd);
-                                            if (doctorAvailable == true && doctorRoom.equals(rooms[i]._id)){
-                                                break;
-                                            }
-                                        }
-                                        if(doctorAvailable == true && doctorRoom.equals(rooms[i]._id)){
+                                        for (j=0;j<rooms[i].appointments.length; j++) {
+                                        let start = rooms[i].appointments[j].start;
+                                        let end = rooms[i].appointments[j].end;
+                                        roomOverlap = HelperController.overlaps(appStart, appEnd, start, end);
+                                        if (roomOverlap == true){
                                             break;
                                         }
+                                        }
                                     }
-                                  k++;   
+                                    if (roomOverlap == false){
+                                        while(k<doctors.length){
+                                            if(doctors[k].schedules.length == 0){
+                                                doctorAvailable = true;
+                                            }
+                                            else{
+                                                for (l=0;l<doctors[k].schedules.length; l++) {
+                                                let doctorStart = doctors[k].schedules[l].start;
+                                                let doctorEnd = doctors[k].schedules[l].end;
+                                                doctorRoom = doctors[k].schedules[l].room;
+                                                doctorAvailable = HelperController.overlaps(appStart, appEnd, doctorStart, doctorEnd);
+                                                    if (doctorAvailable == true && doctorRoom.equals(rooms[i]._id)){
+                                                        break;
+                                                    }
+                                                }
+                                                if(doctorAvailable == true && doctorRoom.equals(rooms[i]._id)){
+                                                    break;
+                                                }
+                                            }
+                                        k++;   
+                                        }
+                                        if(doctorAvailable ==true && doctorRoom.equals(rooms[i]._id)){
+                                            var newAppointment = new Appointment({
+                                                type: type,
+                                                clinic: null,
+                                                doctor: doctors[k]._id,
+                                                room: rooms[i]._id,
+                                                start: appStart,
+                                                patient: patient._id,
+                                                end: appEnd,
+                                                duration: duration.toString(),
+                                                price: price
+                                            })
+                                            newAppointment.save();
+                                            rooms[i].appointments.push(newAppointment);
+                                            rooms[i].save();
+                                            doctors[k].appointments.push(newAppointment);
+                                            doctors[k].save();
+                                            patient.appointments.push(newAppointment);
+                                            //deleting the timeslot from patient's cart
+                                            for(var q=0; q < patient.cart.length ; q++)
+                                            {
+                                                if (patient.cart[q] == timeslot._id)
+                                                {
+                                                    toRemove = q;
+                                                }
+                                            }
+                                            patient.cart.splice(toRemove,1);
+                                            patient.save();                                                                                                                                                 
+                                            //res.json({success:true})
+                                            res.json(rooms[i])
+                                        }
+                                        else{
+                                            foundRoomNoDoctor =true;
+                                        }                                
+                                        break;
+                                    }
+                                i++;
                                 }
-                                if(doctorAvailable ==true && doctorRoom.equals(rooms[i]._id)){
-                                    if(duration == 20){
-                                        type = 0;
-                                        price = 20;
-                                    }
-                                    else if(duration == 60){
-                                        type = 1;
-                                        price = 60;
-                                    }
-                                    else{
-                                        res.json({
-                                            message: 'duration of appointment not 20 nor 60 minutes'
-                                        })
-                                    }
-                                    var newAppointment = new Appointment({
-                                        type: type,
-                                        clinic: null,
-                                        doctor: doctors[k]._id,
-                                        room: rooms[i]._id,
-                                        start: appStart,
-                                        patient: patient._id,
-                                        end: appEnd,
-                                        duration: duration.toString(),
-                                        price: price
-                                    })
-                                    newAppointment.save();
-                                    rooms[i].appointments.push(newAppointment);
-                                    rooms[i].save();
-                                    doctors[k].appointments.push(newAppointment);
-                                    doctors[k].save();
-                                    patient.appointments.push(newAppointment);
-                                    patient.save();
-                                    //res.json({success:true})
-                                    res.json(rooms[i])
-                                }
-                                else{
-                                    foundRoomNoDoctor =true;
-                                }                                
-                                break;
                             }
-                           i++;
-                           }
-                           if(foundRoomNoDoctor == true){
+                            //Handling the reponse from the checks
+                            if(annualCheckUpFound == true){
+                                res.status(400).json({
+                                    success: false,
+                                    message: 'You already have an annual check up for the year. '
+                                });
+                            }
+                            if(foundRoomNoDoctor == true){
                                 res.status(400).json({
                                     success: false,
                                     message: 'Sorry, a room is available but no doctors are available at the selected time '
                                 });
-                           }
+                            }
                             if(roomOverlap == true){
                                 res.status(400).json({
                                     success: false,
