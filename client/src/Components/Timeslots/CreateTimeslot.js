@@ -33,7 +33,7 @@ class CreateTimeslot extends Component {
             start: value
         };
 
-        console.log("onchangestart called, start is:" + this.state.start);
+        console.log("onchangestart called, start is:" + value);
         this.setState(nextState);
     }
 
@@ -57,9 +57,6 @@ class CreateTimeslot extends Component {
 
     onSubmit = (e) => {
         e.preventDefault();
-
-        console.log(this.state.start);
-        console.log(this.state.end)
         const timeslot = {
             doctor: this.state.doctor,
             start: this.state.start.toDate(),

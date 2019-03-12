@@ -38,9 +38,9 @@ class DoctorSchedule extends Component {
         schedulerData.setResources(resources);
 
 
-            
 
-        
+
+
     }
 
     componentDidMount() {
@@ -58,16 +58,15 @@ class DoctorSchedule extends Component {
             }).catch(err =>
                 console.log(err)
             );
-       
 
-        
+
+
 
     }
 
     prevClick = (schedulerData) => {
         schedulerData.prev();
-        for(let i =0; i< this.state.schedules.length; i++)
-        {
+        for (let i = 0; i < this.state.schedules.length; i++) {
             var timeSlotObject = {
                 id: this.state.schedules[i]['_id'],
                 start: moment(this.state.schedules[i]['start']).format("YYYY-MM-D h:mm:ss A"),
@@ -79,16 +78,16 @@ class DoctorSchedule extends Component {
             this.state.timeslot.push(timeSlotObject);
         }
         schedulerData.setEvents(this.state.timeslot);
-        this.state.timeslot = [];
+
         this.setState({
-            viewModel: schedulerData
+            viewModel: schedulerData,
+            timeslot: []
         })
     }
 
     nextClick = (schedulerData) => {
         schedulerData.next();
-        for(let i =0; i< this.state.schedules.length; i++)
-        {
+        for (let i = 0; i < this.state.schedules.length; i++) {
             var timeSlotObject = {
                 id: this.state.schedules[i]['_id'],
                 start: moment(this.state.schedules[i]['start']).format("YYYY-MM-D h:mm:ss A"),
@@ -100,20 +99,20 @@ class DoctorSchedule extends Component {
             this.state.timeslot.push(timeSlotObject);
         }
         schedulerData.setEvents(this.state.timeslot);
-        this.state.timeslot = [];
+
         this.setState({
-            viewModel: schedulerData
+            viewModel: schedulerData,
+            timeslot: []
         })
     }
 
-    
+
 
     onViewChange = (schedulerData, view) => {
         schedulerData.setViewType(view.viewType, view.showAgenda, view.isEventPerspective);
         //in for loop set timeslot object values
         //push these objects to events array
-        for(let i =0; i< this.state.schedules.length; i++)
-        {
+        for (let i = 0; i < this.state.schedules.length; i++) {
             var timeSlotObject = {
                 id: this.state.schedules[i]['_id'],
                 start: moment(this.state.schedules[i]['start']).format("YYYY-MM-D h:mm:ss A"),
@@ -126,16 +125,15 @@ class DoctorSchedule extends Component {
         }
         console.log(this.state.timeslot);
         schedulerData.setEvents(this.state.timeslot);
-        this.state.timeslot = [];
         this.setState({
-            viewModel: schedulerData
+            viewModel: schedulerData,
+            timeslot:[]
         })
     }
 
     onSelectDate = (schedulerData, date) => {
         schedulerData.setDate(date);
-         for(let i =0; i< this.state.schedules.length; i++)
-        {
+        for (let i = 0; i < this.state.schedules.length; i++) {
             var timeSlotObject = {
                 id: this.state.schedules[i]['_id'],
                 start: moment(this.state.schedules[i]['start']).format("YYYY-MM-D h:mm:ss A"),
@@ -147,9 +145,10 @@ class DoctorSchedule extends Component {
             this.state.timeslot.push(timeSlotObject);
         }
         schedulerData.setEvents(this.state.timeslot);
-        this.state.timeslot = [];
+
         this.setState({
-            viewModel: schedulerData
+            viewModel: schedulerData,
+            timeslot: []
         })
     }
 
@@ -157,18 +156,18 @@ class DoctorSchedule extends Component {
     routeChange() {
         let path = `/timeslot/doctor`;
         this.props.history.push(path);
-      }
+    }
 
-   
 
-      //open a modal, remove this function and use eventItemClick to open a modal in render function once clicked
+
+    //open a modal, remove this function and use eventItemClick to open a modal in render function once clicked
     eventClicked() {
         let path = `/homepage/doctor/`;
         this.props.history.push(path);
-        
+
     };
 
-    
+
 
 
     render() {
@@ -182,13 +181,15 @@ class DoctorSchedule extends Component {
             padding: 0,
             verticalAlign: "top",
             height: 100,
+            width: 100,
         };
+
+    
 
         //in for loop set timeslot object values
         //push these objects to events array
         let schedulerData = new SchedulerData(new moment().format(DATE_FORMAT), ViewTypes.Day);
-        for(let i =0; i< this.state.schedules.length; i++)
-        {
+        for (let i = 0; i < this.state.schedules.length; i++) {
             var timeSlotObject = {
                 id: this.state.schedules[i]['_id'],
                 start: moment(this.state.schedules[i]['start']).format("YYYY-MM-D h:mm:ss A"),
@@ -205,32 +206,36 @@ class DoctorSchedule extends Component {
 
         return (
             <div>
+                <div className = "test">
                 <table>
                     <tbody>
-                    <tr>
+                        <tr>
                         <td style={stylePosition}>
-                            <nav className="navbar-user navbar-expand-lg navbar-dark bg-dark">
-                                <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
-                                    <li className="nav-item active">
-                                        <Link to={'/homepage/doctor/schedule'} className="nav-link"> My Schedule </Link>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </td>
-                        <td style={stylePosition}>
-                            <Scheduler schedulerData={viewModel}
-                                 prevClick={this.prevClick}
-                                 nextClick={this.nextClick}
-                                 onSelectDate={this.onSelectDate}
-                                 onViewChange={this.onViewChange}
-                                 eventItemClick={this.eventClicked}
-                            />
-                            <Button onClick={this.routeChange} type="submit">Add Availability</Button>
-                            
-                        </td>
-                    </tr>
+                                <nav className="navbar-user navbar-dark bg-dark">
+                                    <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
+                                        <li className="nav-user active">
+                                            <Link to={'/homepage/doctor/schedule'} className="nav-link"> My Schedule </Link>
+                                        </li>
+                                        <li className="nav-item active">
+                                            <Link to={'/timeslot/doctor'} className="nav-link"> Add Availability </Link>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </td>
+                            <td className="scheduler">
+                                <Scheduler schedulerData={viewModel}
+                                    prevClick={this.prevClick}
+                                    nextClick={this.nextClick}
+                                    onSelectDate={this.onSelectDate}
+                                    onViewChange={this.onViewChange}
+                                    eventItemClick={this.eventClicked}
+                                />
+
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
+                </div>
             </div>
 
         );
