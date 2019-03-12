@@ -5,31 +5,32 @@ const AppointmentList = (props) => {
     const appointments = props.appointments;
 
 
-    
+    function formatType(duration) {
 
-    //formatting appointment data
-    for(let i = 0; i < appointments.length; i++){
+        let type = '';
 
-        appointments[i].duration += " minutes";
-        appointments[i].price += "$";
+        if (duration == 20) {
+            type = "Walk-in";
+        } else if (type == 60) {
+            type = "Annual";
+        }
+        return type;
+    }
 
-        let d = new Date(appointments[i].start);
+    function formatDate(date) {
+        let d = new Date(date);
 
-        let date = ("0" + d.getDate().toString()).slice(-2);
+        let fdate = ("0" + d.getDate().toString()).slice(-2);
         let month = ("0" + (d.getMonth() + 1).toString()).slice(-2);
         let year = d.getUTCFullYear().toString();
         let hour = ("0" + (d.getUTCHours() - 4).toString()).slice(-2);
         let minute = ("0" + d.getUTCMinutes().toString()).slice(-2);
 
-        appointments[i].start = date + "/" +  month + "/"+ year + "  at " + hour + ":" + minute;
+        date = fdate + "/" +  month + "/"+ year + "  at " + hour + ":" + minute;
 
-        if(appointments[i].type === 0){
-            appointments[i].type = "Walk-in";
-        }
-        else if(appointments[i].type === 1){
-            appointments[i].type = "Annual";
-        }
+        return  date;
     }
+
 
     // Displaying the list of items. _id is unique to MongoDB (Primary Key)
     return (
@@ -54,7 +55,10 @@ const AppointmentList = (props) => {
                                 <tr key={appointment._id}>
                                     <th> {appointment.doctor } </th>
                                     <td> {appointment.type} </td>
-                                    <td> {appointment.start} </td>
+                                    <td> {formatType(appointment.duration)} </td>
+                                    <td> {formatDate(appointment.start)} </td>
+                                    <td> {appointment.duration + " minutes"} </td>
+                                    <td> {appointment.duration+ "$"} </td>
                                     <td> {appointment.duration} </td>
                                     <td> {appointment.price} </td>
                                    { <td> <button onClick={() => props.handleShow(appointment)} type="button" className="btn btn-outline-warning">Update</button> </td>}
