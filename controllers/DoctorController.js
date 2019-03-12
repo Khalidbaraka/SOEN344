@@ -250,16 +250,19 @@ exports.doctor_update_timeslot = (req, res) => {
 
     let timeslotToEdit;
 
-    Timeslot.find().populate('doctor')
+    Timeslot.find().populate('doctor').populate('room')
         .then(allTimeslots => {
-            // check that the edit won't overlap with existing timeslot
+            // set the timeslot that wil be edited
+            timeslotToEdit = allTimeslots.find(ts => ts._id == timeslotToEditId);
+
             for (let scheduledTimeslot of allTimeslots) {
-                // ignore timeslot being edited
-                if (scheduledTimeslot._id === timeslotToEditId) {
-                    timeslotToEdit = scheduledTimeslot; // set the timeslot to edit
+
+                // ignore timeslot being edited or if rooms dont match
+                if (scheduledTimeslot._id == timeslotToEditId
+                    || scheduledTimeslot.room.number !== timeslotToEdit.room.number) {
                     continue;
                 }
-
+                // check the schedules dont overlap
                 if (HelperController.overlaps(newStart, newEnd, scheduledTimeslot.start, scheduledTimeslot.end)) {
                     return res.status(400).json({
                         success: false,
