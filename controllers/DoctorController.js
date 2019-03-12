@@ -244,8 +244,42 @@ exports.doctor_delete_timeslot = (req, res) => {
 }
 
 exports.doctor_edit_timeslot = (req, res) => {
+    let timeslotToEditId = req.body.id;
     let newStart = new Date(req.body.start);
     let newEnd = new Date(req.body.end);
+
+    let timeslotToEdit;
+
+    Timeslot.find().populate('doctor')
+        .then(allTimeslots => {
+            // check that the edit won't overlap with existing timeslot
+            for (let scheduledTimeslot of allTimeslots) {
+                // ignore timeslot being edited
+                if (scheduledTimeslot._id === timeslotToEditId) {
+                    timeslotToEdit = scheduledTimeslot; // set the timeslot to edit
+                    continue;
+                }
+
+                if (HelperController.overlaps(newStart, newEnd, scheduledTimeslot.start, scheduledTimeslot.end)) {
+                    return res.status(400).json({
+                        success: false,
+                        message: "The scheduled time conflicts with a time that's already scheduled",
+                    });
+                }
+            }
+
+            // make sure the timeslot was found
+            if (timeslotToEdit === undefined) {
+                return res.status(400).json({
+                    success: false,
+                    message: "The timeslot was not found",
+                });
+            }
+
+            scheduledTimeslot.populate('')
+
+
+    })
 
     Timeslot.findById(req.body.id).populate({
         path: 'doctor',
@@ -256,12 +290,12 @@ exports.doctor_edit_timeslot = (req, res) => {
         .then(timeslotToModify => {
             let doctor = timeslotToModify.doctor;
 
-            // check that new timeslot doesnt overlap an exiting one
+            // check that new timeslot doesnt overlap any exiting one  //TODO must check all schedules, not just the doctors
             doctor.schedules.forEach(scheduledTimeslot => {
                 if (HelperController.overlaps(newStart, newEnd, scheduledTimeslot.start, scheduledTimeslot.end)) {
                     return res.status(400).json({
                         success: false,
-                        message: 'The schedulded time conflicts with the',
+                        message: "The scheduled time conflicts with a time that's already scheduled",
                     });
                 }
             });
