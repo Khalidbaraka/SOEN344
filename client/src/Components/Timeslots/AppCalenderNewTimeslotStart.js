@@ -21,7 +21,6 @@ class AppCalender extends Component {
         return [0, 1, 2, 3, 4, 5, 6, 7, 21, 22, 23];
     }
 
-
     disabledSeconds = (h, m) => {
         const arraySeconds = [];
         let i = 0;
@@ -33,6 +32,28 @@ class AppCalender extends Component {
         return arraySeconds
     }
 
+       disabledDate = (current) => {
+        const date = new Date();
+        
+        // Can not select days before today
+        return current.isBefore(date.setDate(date.getDate() - 1));
+    }
+
+    onChange = (value) => {
+        this.props.onChange(value);
+        console.log("Moment START", value.toDate());
+    
+        const nextState = {
+            ...this.state,
+            startDate: value,
+
+        };
+        
+
+        this.setState(nextState);
+
+ 
+    }
 
 
     render() {
@@ -46,18 +67,20 @@ class AppCalender extends Component {
             disabledHours={this.disabledHours}
             disabledSeconds={this.disabledSeconds}
             minuteStep={this.props.type == "0" ? 20 : 60}
+            
         />;
 
         // rc-calendar
         const calendar = (<Calender
             showWeekNumber={false}
             disabledTime={false}
+            disabledDate={this.disabledDate}
             format='YYYY-MM-DD HH:mm'
             showToday={true}
             timePicker={timePickerElement}
             showOk={true}
             value={startDate}
-            onChange={this.props.onChange}
+            onChange={this.onChange}
             showDateInput={false}
         />);
 

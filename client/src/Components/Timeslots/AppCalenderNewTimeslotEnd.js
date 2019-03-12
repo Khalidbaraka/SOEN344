@@ -34,6 +34,21 @@ class AppCalender extends Component {
         return arraySeconds
     }
 
+    onChange = (value) => {
+        this.props.onChange(value);
+        console.log("Moment END:" + value.toDate());
+
+
+        const nextState = {
+            ...this.state,
+            endDate: value,
+        };
+
+       
+
+        this.setState(nextState);
+
+    }
 
 
     render() {
@@ -45,6 +60,7 @@ class AppCalender extends Component {
             format='HH:mm'
             defaultValue={moment().startOf('day')}
             disabledHours={this.disabledHours}
+            disabledMinutes={this.disabledMinutes}
             disabledSeconds={this.disabledSeconds}
             minuteStep={this.props.type == "0" ? 20 : 60}
         />;
@@ -58,7 +74,7 @@ class AppCalender extends Component {
             timePicker={timePickerElement}
             showOk={true}
             value={endDate}
-            onChange={this.props.onChange}
+            onChange={this.onChange}
             showDateInput={false}
         />);
 
