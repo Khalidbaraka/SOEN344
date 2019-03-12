@@ -283,7 +283,8 @@ exports.patient_checkout_appointment = (req, res) =>{
                                     doctors[k].save();
                                     patient.appointments.push(newAppointment);
                                     patient.save();
-                                    res.json(rooms[i]) 
+                                    //res.json({success:true})
+                                    res.json(rooms[i])
                                 }
                                 else{
                                     foundRoomNoDoctor =true;

@@ -34,7 +34,6 @@ class Cart extends Component {
         axios.get('/api/patients/'+ healthCardNumber+ '/cart/get')
             .then(res => {
                 if(res.data){
-                    console.log(res.data);
                     this.setState({
                         appointments: res.data
                     })
@@ -45,9 +44,31 @@ class Cart extends Component {
 
     checkoutAppointment = () => {
 
-        
-        console.log(this.state.appointment);
-    }
+        const user = JSON.parse(localStorage.getItem('userToken'));
+        const healthCardNumber = encodeURI(user.healthCardNumber);
+
+        let appointment = {};
+        appointment.timeslot = {};
+
+        console.log(this.state.appointment.start);
+
+        appointment.timeslot.start = this.state.appointment.start;
+        appointment.timeslot.end = this.state.appointment.end;
+
+        console.log(appointment.timeslot);
+
+        axios.post('/api/patients/'+ healthCardNumber +'/cart/checkout', {
+            timeslot: appointment.timeslot
+        }).then(res => {
+            if (res.data.success) {
+             console.log("success");
+            } else {
+                console.log("failure");
+            }
+        }).catch(error => {
+            console.log(error.res);
+        });
+    };
 
     handleClose() {
         this.setState({ show: false });
