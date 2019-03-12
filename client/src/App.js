@@ -42,6 +42,7 @@ class App extends Component {
             <Route path='/homepage/patient' component={ PatientHomepage }/>
             <Route exact path='/homepage/patient/scheduleAppointment' component={ PatientHomepage }/>
             <Route exact path='/homepage/patient/myAppointment' component={ PatientHomepage }/>
+            <Route exact path='/homepage/nurse/ViewAppointment' component={ NurseHomepage }/>
 
             <Route render={() => (<div> Sorry, this page does not exist. </div>)} />
           </Switch>
