@@ -86,36 +86,18 @@ class ModifyAppointment extends Component {
     }
 
 
-    handleFormSubmit= (e) => {
+    onSubmit= (e) => {
         // Form submission logic
 
         e.preventDefault();
 
+        const momentDate = moment(this.state.start,'YYYY-MM-DD HH:mm');
         const updatedAppointment = {
-            dateCreated: this.state.dateCreated,
             type: this.state.type,
-            clinic: this.state.clinic,
-            doctor: this.state.doctor,
-            patient: this.state.patient,
-            room: this.state.room,
-            start: this.state.start,
-            duration: this.state.duration,
-            end: this.state.end,
-            price: this.state.price
+            momentDate
         };
 
-        axios.post('api/modifyApt', {
-            dateCreated: updatedAppointment.dateCreated,
-            type: updatedAppointment.type,
-            clinic: updatedAppointment.clinic,
-            doctor: updatedAppointment.doctor,
-            patient: updatedAppointment.patient,
-            room: updatedAppointment.room,
-            start: updatedAppointment.start,
-            duration: updatedAppointment.duration,
-            end: updatedAppointment.end,
-            price: updatedAppointment.price
-        })
+        axios.post('api/modifyAppointment', {updatedAppointment})
 
     }
 
@@ -196,7 +178,7 @@ class ModifyAppointment extends Component {
 
                        <Form.Group as={Col} controlId="formGridState">
                             <Form.Label>Select an appointment type</Form.Label>
-                            <Form.Control as="select" onChange={this.onAppointmentTypeHandler} value={type}>
+                            <Form.Control as="select" onChange={this.onAppointmentTypeHandler} value={appointment.type}>
                                 <option value="0"> Walk-in </option>
                                 <option value="1"> Annual </option>
                             </Form.Control>

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Table } from 'react-bootstrap';
-import { Redirect } from 'react-router-dom';
 
 class AppointmentList extends Component {
     constructor(props) {
@@ -60,8 +59,8 @@ class AppointmentList extends Component {
                                 <tr key={appointment._id}>
                                     <th> {appointment.doctor } </th>
                                     <td> {appointment.type} </td>
-                                    <td> {formatType(appointment.duration)} </td>
-                                    <td> {formatDate(appointment.start)} </td>
+                                    <td> {this.formatType(appointment.duration)} </td>
+                                    <td> {this.formatDate(appointment.start)} </td>
                                     <td> {appointment.duration + " minutes"} </td>
                                     <td> {appointment.duration+ "$"} </td>
                                     <td> {appointment.duration} </td>
