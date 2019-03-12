@@ -27,12 +27,13 @@ const timeslotSchema = new Schema ({
 
 module.exports = Timeslot = mongoose.model('timeslot', timeslotSchema);
 
-timeslotSchema.pre('remove', function(timeslot) {
-    console.log("Removing Timeslot " + timeslot._id + " from Doctor" + timeslot.doctor.permitNumber + "'s schedule");
-    this.model('Doctor').update(
-        { _id: timeslot.doctor._id },
-        { "$pull": { "schedules": { "_id": timeslot._id } }},
-        function(err, obj) {
-            console.log(err, obj);
-    });
+timeslotSchema.pre('remove', (ts) => {
+    ts.populate('doctor').then(timeslot => {
+        console.log("Removing Timeslot " + timeslot._id + " from Doctor" + timeslot.doctor.permitNumber + "'s schedule");
+        this.model('Doctor').update(
+            { _id: timeslot.doctor._id },
+            { "$pull": { "schedules": { "_id": timeslot._id } }}, (err, obj) => {
+                console.log(err, obj);
+            });
+    })
 });
