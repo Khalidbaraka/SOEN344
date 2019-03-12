@@ -155,7 +155,7 @@ class DoctorSchedule extends Component {
 
     //should redirect to add timeslot page here 
     routeChange() {
-        let path = `/homepage/doctor`;
+        let path = `/timeslot/doctor`;
         this.props.history.push(path);
       }
 

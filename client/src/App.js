@@ -39,9 +39,10 @@ class App extends Component {
 
             <Route path='/logout' component={ Logout }/>
             <Route path='/homepage/nurse' component={ NurseHomepage }/>
+
             
-            <Route exact path='/homepage/doctor/schedule' component={ DoctorSchedule }/>
             <Route exact path='/homepage/doctor' component={ DoctorHomepage }/>
+            <Route exact path='/homepage/doctor/schedule' component={ DoctorSchedule }/>
             <Route exact path='/timeslot/doctor' component={ CreateTimeslot }/>
 
 

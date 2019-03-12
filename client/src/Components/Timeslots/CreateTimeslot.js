@@ -48,10 +48,10 @@ class CreateTimeslot extends Component {
         this.setState(nextState);
     }
 
-    routeChange = () => {
-        let path = '/homepage/doctor'
+    routeChange() {
+        let path = `/homepage/doctor/schedule`;
         this.props.history.push(path);
-    }
+      }
 
     onSubmit = (e) => {
         e.preventDefault();
