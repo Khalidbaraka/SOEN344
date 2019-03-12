@@ -76,7 +76,7 @@ class DoctorLogin extends Component{
         }
 
 		return(
-            <div>t
+            <div>
                 <Card className="p-4">
                     <Form noValidate onSubmit = {this.onSubmit} className="font-weight-bold">
                         { message ? 

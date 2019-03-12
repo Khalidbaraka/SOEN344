@@ -58,6 +58,7 @@ class AppCalender extends Component {
             showOk={true}
             value={startDate}
             onChange={this.props.onChange}
+            showDateInput={false}
         />);
 
         return (
@@ -76,7 +77,6 @@ class AppCalender extends Component {
                                         <Button variant="outline-info"><i className="fa fa-calendar-plus-o" aria-hidden="true"></i></Button>
                                     </Form.Row>
                                 </Form>
-
                             )
                         }
                     }</DatePicker>
