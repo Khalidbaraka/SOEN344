@@ -176,6 +176,18 @@ exports.patient_get_appointments = (req, res) =>{
         })
 }
 
+//Returns Patient Cart
+exports.return_patient_cart = (req, res) =>{
+    Patient.findOne({healthCardNumber: req.params.health_card_number})
+    .populate('cart')
+            .then(patient =>{
+                res.json(patient.cart);
+                })
+            .catch(err => res.status(404).json({
+                success: false
+         }))
+};
+
 //Checkout appointments from the cart.
 exports.patient_checkout_appointment = (req, res) =>{
     Patient.findOne({healthCardNumber: req.params.health_card_number}).populate('cart')
