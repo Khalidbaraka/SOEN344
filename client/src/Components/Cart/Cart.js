@@ -47,20 +47,13 @@ class Cart extends Component {
         const user = JSON.parse(localStorage.getItem('userToken'));
         const healthCardNumber = encodeURI(user.healthCardNumber);
 
-        let appointment = {};
-        appointment.timeslot = {};
-
-        console.log(this.state.appointment.start);
-
-        appointment.timeslot.start = this.state.appointment.start;
-        appointment.timeslot.end = this.state.appointment.end;
-
-        console.log(appointment.timeslot);
+        let appointment = this.state.appointment;
+        console.log(appointment);
 
         axios.post('/api/patients/'+ healthCardNumber +'/cart/checkout', {
-            timeslot: appointment.timeslot
+            timeslot: appointment
         }).then(res => {
-            if (res.data.success) {
+            if (res.data) {
              console.log("success");
             } else {
                 console.log("failure");
@@ -76,6 +69,7 @@ class Cart extends Component {
 
     handleShow(appointment) {
         this.setState({ show: true, appointment: appointment });
+        console.log(appointment);
     }
 
     render() {
