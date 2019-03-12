@@ -116,11 +116,6 @@ class CreateTimeslot extends Component {
                         onChange = { this.onChangeEnd }
                     />
 
-                    <Form.Group controlId="formBasicUsername">
-                        <Form.Label>Doctor ID Number</Form.Label>
-                        <Form.Control name="doctor" type="text" placeholder="Enter Doctor ID Number" value = {this.state.doctor} onChange={this.onChange}/>
-                    </Form.Group>
-
                     <Button variant="outline-info" type="submit" className="float-right mt-3">
                         Submit
                     </Button>
