@@ -182,14 +182,19 @@ exports.patient_delete_cart_entry = (req, res) =>{
         .then(patient =>{
             let toRemove =0;
             //deleting the timeslot from patient's cart
-            for(var i=0; q < patient.cart.length ; q++){
+            for(var i=0; i < patient.cart.length ; i++){
                 if (patient.cart[i] == req.body.timeslot._id){
                     toRemove = i;
                 }
             }
             patient.cart.splice(toRemove,1);
-            patient.save(); 
-        })}
+            patient.save().then(patient =>
+                res.json(patient)).catch(err => console.log(err));
+            res.json({
+                success: true,
+            })   
+        })
+}
 
 //Returns Patient Cart
 exports.return_patient_cart = (req, res) =>{
