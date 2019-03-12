@@ -1,26 +1,24 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 /* Import Components */
-import Input from '../Input';
-import Button from '../Button';
 import Form from "react-bootstrap/es/Form";
-
-class FormContainer extends Component {
+import Input from "../Input";
+class ModifyAppointment extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
             appointment: this.props.appointment,
-            dateCreated: "2019-03-10",
-            type: "60 mins",
-            clinic: "yoyo",
-            doctor: "Jason",
-            patient: "kelly",
-            room:"1",
-            start: "2020-03-01-12:00",
-            duration: "60 mins",
-            end: "2019-03-01-1:00",
-            price: "12"
+            dateCreated: this.props.appointment.dateCreated,
+            type: this.props.appointment.type,
+            clinic: this.props.appointment.clinic,
+            doctor: this.props.appointment.doctor,
+            patient: this.props.appointment.patient,
+            room:this.props.appointment.room,
+            start: this.props.appointment.start,
+            duration: this.props.appointment.duration,
+            end: this.props.appointment.end,
+            price: this.props.appointment.price
         };
 
 
@@ -120,7 +118,7 @@ class FormContainer extends Component {
                            onChange={this.onChange} required
                     />
 
-                    <Button
+                    <button
                         action={this.handleFormSubmit}
                         type={"primary"}
                         title={"Submit"}
@@ -134,7 +132,7 @@ class FormContainer extends Component {
 
     }}
 
-export default FormContainer;
+export default ModifyAppointment;
 const buttonStyle = {
     margin: "10px 10px 10px 10px"
 };

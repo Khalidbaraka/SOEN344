@@ -4,7 +4,7 @@ import { Button, Card, Col, Dropdown, DropdownButton, Form, Row, Modal } from 'r
 import React, { Component } from 'react';
 import AppointmentList from './AppointmentList';
 import axios from 'axios';
-
+import ModifyAppointment from './ModifyAppointment';
 
 
 
@@ -64,18 +64,17 @@ class MyAppointment extends Component {
 
     render() {
 
-        const { appointments,message} = this.state;
+        const { appointments,message,appointment} = this.state;
         return (
-            <div className="container">
-                <Modal show={this.state.show} onHide={this.handleClose}>
+            <div className="ModalStyle">
+                <Modal size="lg" show={this.state.show} onHide={this.handleClose}>
                     <Modal.Header closeButton>
                         <Modal.Title>Modal heading</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         {this.state.appointment ? this.state.appointment.start : ''}
 
-                        <ModifyAppoinment />
-                        <AppointmentList appointments={appointments} handleShow={this.handleShow}/>
+                        <ModifyAppointment appointment={appointment} handleShow={this.handleShow}/>
 
 
                     </Modal.Body>
@@ -109,3 +108,4 @@ class MyAppointment extends Component {
 }
 
 export default MyAppointment;
+
