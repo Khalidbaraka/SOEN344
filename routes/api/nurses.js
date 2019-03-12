@@ -14,9 +14,6 @@ router.post('/register', nurse_controller.nurse_register);
 // @access Public
 router.post('/login', nurse_controller.nurse_login);
 
-// Protecting the routes below. The order is important
-router.use(decoder);
-
 // @route GET api/nurses/nursesList
 // @desc get list of nurses from db
 // @access Public
@@ -36,5 +33,13 @@ router.put('/editPassword', nurse_controller.change_nurse_password);
 // @desc  remove a nurse from the db
 // @access Public
 router.delete('/delete', nurse_controller.nurse_delete);
+
+// @route post api/nurses/access_id/health_card_number/create
+// @desc  create new appointment for patient 
+// @access Public
+router.post('/:access_id/:health_card_number/create', nurse_controller.nurse_create_appointment);
+
+// Protecting the routes below. The order is important
+router.use(decoder);
 
 module.exports = router;
