@@ -319,7 +319,6 @@ exports.patient_cart_save = (req,res)=>{
                 endTime = new Date(endTime.setHours(endTime.getHours() + 1));
             }  
             let annualCheckUpFound = false;
-            let foundDoctorMatchRoom = false;
             let isInCart = false;
             let personalAppointmentOverlap = false;
             let foundRoomNoDoctor = false;
@@ -363,6 +362,7 @@ exports.patient_cart_save = (req,res)=>{
                                             break;
                                         }
                                     }
+                                }
                                     if(isInCart == false){
                                         //Third check, check if patient already has an appointment at the selected startTime
                                         if(patient.appointments.length == 0){
@@ -440,7 +440,7 @@ exports.patient_cart_save = (req,res)=>{
                                             }
                                         }
                                     }
-                                } 
+                                 
                             }
 
                             //Handling the reponse from the checks
