@@ -1,21 +1,9 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 /* Import Components */
-import Form from "react-bootstrap/es/Form";
 import AppCalender from './AppCalender';
-import Input from "../Input";
-import 'rc-time-picker/assets/index.css';
-
-import { Alert, Button, Col, Row } from 'react-bootstrap';
-
-import Calender from 'rc-calendar';
-import DatePicker from 'rc-calendar/lib/Picker';
-import TimePickerPanel from 'rc-time-picker/lib/Panel';
+import { Form, Button, Card, Col, Row } from 'react-bootstrap';
 import moment from 'moment';
-
-
-
-
 
 
 
@@ -24,27 +12,77 @@ class ModifyAppointment extends Component {
         super(props);
 
         this.state = {
-            appointment: this.props.appointment,
-            dateCreated: this.props.appointment.dateCreated,
-            type: this.props.appointment.type,
-            clinic: this.props.appointment.clinic,
-            doctor: this.props.appointment.doctor,
-            patient: this.props.appointment.patient,
-            room:this.props.appointment.room,
-            start: moment().startOf('day'),
-            duration: this.props.appointment.duration,
-            price: this.props.appointment.price
+            appointment: {
+                _id: '',
+                clinic: '',
+                doctor: '',
+                duration: '',
+                end: '',
+                price: '',
+                room: '',
+                start: '',
+                type: ''
+            },
+            onUpdate: false
         };
-
 
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
         this.onChange = this.onChange.bind(this);
 
     }
 
+    // Load the selected appointment, set the state of the component of the props.appointment value
     componentDidMount = () => {
-        console.log("START", this.state.start);
+        const appointment = this.props.appointment ? this.props.appointment : '';
 
+        console.log("Appointment", appointment);
+
+        const nextState = {
+            ...this.state,
+            appointment: {
+                ...this.state.appointment,
+                _id: appointment._id,
+                clinic: appointment.clinic,
+                doctor: appointment.doctor,
+                duration: appointment.duration,
+                end: moment(appointment.end),
+                price: appointment.price,
+                room: appointment.room,
+                start: moment(appointment.start),
+                type: appointment.type
+            }
+        };
+
+        this.setState(nextState);
+    }
+
+    disabledHours = () => {
+        return [0, 1, 2, 3, 4, 5, 6, 7, 21, 22, 23];
+    }
+
+    disabledMinutes = () => {
+
+        if (this.state.appointment.start.toDate().getHours() == 0) {
+            return [0, 20, 40];
+        }
+    }
+
+    disabledSeconds = (h, m) => {
+        const arraySeconds = [];
+        let i = 0;
+        while (i <= 60) {
+            arraySeconds.push(i);
+            i++;
+        }
+
+        return arraySeconds
+    }
+
+    disabledDate = (current) => {
+        const date = new Date();
+
+        // Can not select days before today
+        return current.isBefore(date.setDate(date.getDate() - 1));
     }
 
 
@@ -81,192 +119,136 @@ class ModifyAppointment extends Component {
 
     }
 
-    onChange = (e) => {
-        this.setState({
-            [e.target.name]: e.target.value
-        })
-    }
-
-    onAppointmentTypeHandler = (event) => {
-        this.setState({
-            type: event.target.value
-        })
-    }
-
-    disabledHours = () => {
-        return [0, 1, 2, 3, 4, 5, 6, 7, 21, 22, 23];
-    }
-
-    disabledMinutes = () => {
-
-        if (this.state.start.toDate().getHours() == 0) {
-            return [0, 20, 40];
-        }
-    }
-
-    disabledSeconds = (h, m) => {
-        const arraySeconds = [];
-        let i = 0;
-        while (i <= 60) {
-            arraySeconds.push(i);
-            i++;
-        }
-
-        return arraySeconds
-    }
-
-    disabledDate = (current) => {
-        const date = new Date();
-
-        // Can not select days before today
-        return current.isBefore(date.setDate(date.getDate() - 1));
-    }
-
-    onChangeTime = (value) => {
-
+    onChange = (value) => {
         console.log("Moment", value.toDate());
 
         const nextState = {
             ...this.state,
-            start: value
+            appointment: {
+                ...this.state.appointment,
+                start: value
+            }
         };
+        this.setState(nextState);
+    }
+
+    // Handler for selecting the type of appointment
+    onAppointmentTypeHandler = (event) => {
+
+        const nextState = {
+            ...this.state,
+            appointment: {
+                ...this.state.appointment,
+                type: event.target.value,
+                start: moment().startOf('day')
+            }
+        };
+        this.setState(nextState);
+    }
+
+    // Once the patient select the start time to update, the Calendar is displayed and the end time is removed.
+    onUpdateTimeHandler = () => {
+
+        const { onUpdate } = this.state
+
+        const nextState = ({
+            ...this.state,
+            onUpdate: !onUpdate,
+            appointment: {
+                ...this.state.appointment,
+                end: ''
+            }
+        });
 
         this.setState(nextState);
     }
 
-
-    test = () => {
-        console.log("CLICKING")
-    }
-
-
     render() {
-        const { type, start } = this.state;
-
-        const timePickerElement = <TimePickerPanel
-            format='HH:mm'
-            defaultValue={moment().startOf('day')}
-            disabledHours={this.disabledHours}
-            disabledMinutes={this.disabledMinutes}
-            disabledSeconds={this.disabledSeconds}
-            minuteStep={type == "0" ? 20 : 60}
-        />;
-
-        // rc-calendar
-        const calendar = (<Calender
-            showWeekNumber={false}
-            disabledTime={false}
-            disabledDate={this.disabledDate}
-            format='YYYY-MM-DD HH:mm'
-            timePicker={timePickerElement}
-            showOk={true}
-            value={start}
-            onChange={this.onChangeTime}
-            showDateInput={false}
-        />);
-
+        const { appointment, onUpdate } = this.state;
 
         return (
             <div>
                 <h1>Modify Appointment</h1>
                 <br/>
-                <form className="container" onSubmit={this.handleFormSubmit}>
-                    <Input type={'text'}
-                           title= {'Type'}
-                           name= {'name'}
-                           value={this.state.type}
-                           placeholder = {'Enter your name'}
-                           onChange={this.onChange} required
-                    />
-
-                    <Input type={'text'}
-                           title= {'Doctor'}
-                           name= {'name'}
-                           value={this.state.doctor}
-                           placeholder = {'Enter your name'}
-                           onChange={this.onChange} required
-                    />
-                    <Input type={'text'}
-                           title= {'Room Number'}
-                           name= {'name'}
-                           value={this.state.room}
-                           placeholder = {'Enter your name'}
-                           onChange={this.onChange} required
-                    />
-                    <Input type={'text'}
-                           title= {'Start Time'}
-                           name= {'name'}
-                           value={this.state.start}
-                           placeholder = {'Enter your name'}
-                           onChange={this.onChange} required
-                    />
-                    <Input type={'text'}
-                           title= {'End Time'}
-                           name= {'name'}
-                           value={this.state.end}
-                           placeholder = {'Enter your name'}
-                           onChange={this.onChange} required
-                    />
-                    <Input type={'text'}
-                           title= {'Duration'}
-                           name= {'name'}
-                           value={this.state.duration}
-                           placeholder = {'Enter your name'}
-                           onChange={this.onChange} required
-                    />
-
+                <Card.Body>
                     <Form>
-                        <Form.Row>
-                            <Form.Group as={Col} controlId="formGridState">
-                                <Form.Label>Select an appointment type</Form.Label>
-                                <Form.Control as="select" onChange={this.onAppointmentTypeHandler} value={type}>
-                                    <option value="0"> Walk-in </option>
-                                    <option value="1"> Annual </option>
-                                </Form.Control>
+                        <Form.Group controlId="">
+                            <Form.Label>Clinic</Form.Label>
+                            <Form.Control type="text" readOnly value={appointment.clinic} disabled />
+                        </Form.Group>
+
+                        <Row>
+                            <Col>
+                                <Form.Group controlId="">
+                                    <Form.Label>Doctor</Form.Label>
+                                    <Form.Control type="text" readOnly  value={appointment.doctor} disabled />
+                                </Form.Group>
+                            </Col>
+
+                            <Col>
+                                <Form.Group controlId="">
+                                    <Form.Label>Room</Form.Label>
+                                    <Form.Control type="text" value={appointment.room} disabled />
+                                </Form.Group>
+                            </Col>
+                        </Row>
+
+
+                       <Form.Group as={Col} controlId="formGridState">
+                            <Form.Label>Select an appointment type</Form.Label>
+                            <Form.Control as="select" onChange={this.onAppointmentTypeHandler} value={type}>
+                                <option value="0"> Walk-in </option>
+                                <option value="1"> Annual </option>
+                            </Form.Control>
+                       </Form.Group>
+
+                        { onUpdate == false ? (
+                            <Form.Group controlId="">
+                                <Form.Label>Start time</Form.Label>
+                                <Form.Control type="text" value={appointment.start.toString()} onClick={this.onUpdateTimeHandler} />
                             </Form.Group>
-                        </Form.Row>
-                    </Form>
-
-
-                    <div classNameName="my-4">
-                        <DatePicker
-                            animation="slide-up"
-                            calendar={calendar}
-                        >
-                            {
-                                ({start}) => {
-                                    return (
-                                        <Form>
-                                            <Form.Row noGutters={true}>
-                                                <Col md={12}><Form.Label>Please select date and time of appointment</Form.Label></Col>
-                                                <Col md={3}><Form.Control disabled={true} value={this.state.start.format("YYYY-MM-DD HH:mm")} /></Col>
-                                                <Button onClick={this.test} variant="outline-info"><i className="fa fa-calendar-plus-o" aria-hidden="true"></i></Button>
-                                            </Form.Row>
-                                        </Form>
-
-                                    )
-                                }
-                            }</DatePicker>
-
-                        <Alert variant="info" className="my-4">
-                            <div> Appointment Type:
-                                <span className="font-weight-bold">
-                            {this.state.type == 0 ? " Walk-in " : " Annual " }
-                        </span>
+                        ) : (
+                            <div>
+                                <hr/>
+                                <AppCalender
+                                    disabledHours = {this.disabledHours}
+                                    disabledMinutes = {this.disabledMinutes}
+                                    disabledSeconds = {this.disabledSeconds}
+                                    disabledDate = {this.disabledDate}
+                                    onChange = {this.onChange}
+                                    startTime = {appointment.start}
+                                    type = {appointment.type}
+                                />
+                                <hr/>
                             </div>
-                            <div> For: <span className="font-weight-bold">{ start.toDate().toString() }</span> </div>
-                        </Alert>
-                    </div>
+                        )}
 
+                        <Form.Group controlId="">
+                            <Form.Label>End time</Form.Label>
+                            <Form.Control type="text" readOnly value={appointment.end.toString()} disabled />
+                        </Form.Group>
 
-                    <button
-                        action={this.handleFormSubmit}
-                        type={"primary"}
-                        title={"Submit"}
-                        style={buttonStyle}
-                        onChange={this.onChange} required
-                    />{" "}
-                </form>
+                        <Row>
+                            <Col>
+                                <Form.Group controlId="">
+                                    <Form.Label>Duration</Form.Label>
+                                    <Form.Control type="text" readOnly  value={appointment.type == 0 ? "20" + " min" : "60" + " min"} disabled />
+                                </Form.Group>
+                            </Col>
+
+                            <Col>
+                                <Form.Group controlId="">
+                                    <Form.Label>Price</Form.Label>
+                                    <Form.Control type="text" readOnly  value={appointment.type == 0 ? "20" + " min" : "60" + " $"} disabled />
+                                </Form.Group>
+                            </Col>
+                        </Row>
+
+                        <Button variant="outline-info" className="float-right my-3" type="submit">
+                            Submit
+                        </Button>
+                </Form>
+                </Card.Body>
             </div>
 
         );
@@ -274,6 +256,3 @@ class ModifyAppointment extends Component {
     }}
 
 export default ModifyAppointment;
-const buttonStyle = {
-    margin: "10px 10px 10px 10px"
-};
