@@ -63,9 +63,13 @@ class AppNavbar extends Component {
                       <li className="nav-item">
                         <span className="nav-link"> { user.firstName } { user.lastName } </span>
                       </li>
-                      <li className="nav-item">
-                        <Link to={'/cart'} className="nav-link"> Cart </Link>
-                      </li>
+                        {user.healthCardNumber ? (
+                            <li className="nav-item">
+                                <Link to={'/cart'} className="nav-link"> Cart </Link>
+                            </li>
+                            )
+                            : ""
+                        }
                       <li className="nav-item">
                         <Link to={'/logout'} className="nav-link"> Logout </Link>
                       </li>

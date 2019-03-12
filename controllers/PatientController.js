@@ -189,7 +189,7 @@ exports.patient_delete_cart_entry = (req, res) =>{
             }
             patient.cart.splice(toRemove,1);
             patient.save(); 
-        })
+        })}
 
 //Returns Patient Cart
 exports.return_patient_cart = (req, res) =>{
