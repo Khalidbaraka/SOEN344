@@ -54,28 +54,6 @@ class MyAppointment extends Component {
         });
         console.log(this.state.healthCardNumber);
         this.getAppointments(this.state.healthCardNumber);
-      /*  const { appointmentType, startTime } = this.state;
-
-        const user = JSON.parse(localStorage.getItem('userToken'));
-        const healthCardNumber = encodeURI(user.healthCardNumber);
-
-        axios.post('/api/patients/' + healthCardNumber + '/cart/save', {
-            type: appointmentType,
-            startTime: startTime,
-            endTime: startTime
-        }).then(res => {
-            if (res) {
-                this.setState({
-                    message: "Appointment successfully added",
-                    variant: "success"
-                });
-            }
-        }).catch((error) => {
-            // Error
-            if (error.response) {
-
-            }
-        });*/
     }
 
 

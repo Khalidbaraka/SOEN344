@@ -55,7 +55,8 @@ class Cart extends Component {
             timeslot: appointment
         }).then(res => {
             if (res.data) {
-             console.log("success");
+                this.handleClose();
+                this.getCartAppointments();
             } else {
                 console.log("failure");
             }
@@ -83,17 +84,15 @@ class Cart extends Component {
         let deleteAppointment = this.state.appointment;
         console.log(appointment);
 
-        //AXIOS METHOD CALL TO DELETE CART APPOINTMENT GOES HERE
         axios.delete('api/patients/'+ healthCardNumber +'/cart/delete',{
             data: {timeslot:deleteAppointment}
         })
             .then(res => {
                 if(res.data){
-                    this.getCartAppointments()
+
                 }
             })
             .catch(err => console.log(err))
-        //dont forget to reset state for appointments after axios call , or simply call getCartAppointments ()
     }
 
     render() {
