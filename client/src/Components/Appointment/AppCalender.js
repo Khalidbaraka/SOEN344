@@ -1,8 +1,6 @@
 import 'rc-time-picker/assets/index.css';
-
 import { Alert, Button, Col, Form, Row } from 'react-bootstrap';
 import React, { Component } from 'react';
-
 import Calender from 'rc-calendar';
 import DatePicker from 'rc-calendar/lib/Picker';
 import TimePickerPanel from 'rc-time-picker/lib/Panel';
@@ -11,55 +9,11 @@ import moment from 'moment';
 class AppCalender extends Component {
     constructor(props) {
         super(props);
-        
-        this.state = {
-            startTime: moment().startOf('day')
-        }
     }
 
-    disabledHours = () => {
-        return [0, 1, 2, 3, 4, 5, 6, 7, 21, 22, 23];
-    }
-
-    disabledMinutes = () => {
-        
-        if (this.state.startTime.toDate().getHours() == 0) {
-            return [0, 20, 40];
-        }
-    }
-
-    disabledSeconds = (h, m) => {
-        const arraySeconds = [];
-        let i = 0;
-        while (i <= 60) {
-            arraySeconds.push(i);
-            i++;
-        }
-
-        return arraySeconds
-    }
-
-    disabledDate = (current) => {
-        const date = new Date();
-        
-        // Can not select days before today
-        return current.isBefore(date.setDate(date.getDate() - 1));
-    }
-
-    onChange = (value) => {       
-        console.log("Moment", value.toDate());
-        
-        const nextState = {
-            ...this.state,
-            startTime: value
-        };
-        
-        this.setState(nextState);           
-    }
-    
     render() {
 
-        const { startTime } = this.state
+        const { startTime } = this.props
 
         // rc-time-picker Panel
         const timePickerElement = <TimePickerPanel 
@@ -80,7 +34,7 @@ class AppCalender extends Component {
             timePicker={timePickerElement}
             showOk={true}
             value={startTime}
-            onChange={this.onChange}
+            onChange={this.props.onChange}
             showDateInput={false}
             />);
 
@@ -96,7 +50,7 @@ class AppCalender extends Component {
                             <Form>
                                 <Form.Row noGutters={true}>
                                     <Col md={12}><Form.Label>Please select date and time of appointment</Form.Label></Col>
-                                    <Col md={3}><Form.Control disabled={true} value={this.state.startTime.format("YYYY-MM-DD HH:mm")} /></Col>
+                                    <Col md={3}><Form.Control disabled={true} value={this.props.startTime.format("YYYY-MM-DD HH:mm")} /></Col>
                                     <Button variant="outline-info"><i className="fa fa-calendar-plus-o" aria-hidden="true"></i></Button>
                                 </Form.Row>
                             </Form>
