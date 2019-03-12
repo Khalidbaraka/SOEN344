@@ -210,10 +210,7 @@ exports.doctor_create_timeslot= (req, res) => {
 exports.doctor_delete_timeslot = (req, res) => {
     Timeslot.findById(req.body.id).populate({
         path: 'doctor',
-        populate: {
-            path: 'appointments',
-            model: 'Appointment'
-        }
+        populate: {path: 'appointments'}
     })
         .then(timeslot => {
             // check if the doctor has an appointment at the time
