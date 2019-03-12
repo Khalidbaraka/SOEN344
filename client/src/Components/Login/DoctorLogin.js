@@ -72,7 +72,7 @@ class DoctorLogin extends Component{
 
         if (isAuthenticated) {
             //direct to doctor homepage
-            return <Redirect to = '/homepage/doctor' / > ;
+            return <Redirect to = '/homepage/doctor'/> ;
         }
 
 		return(
