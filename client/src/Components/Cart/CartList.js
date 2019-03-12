@@ -5,11 +5,13 @@ const CartList = (props) => {
     
     const appointments = props.appointments;
 
-    function formatType(type) {
+    function formatType(duration) {
 
-        if (type === 0) {
+        let type = '';
+
+        if (duration == 20) {
             type = "Walk-in";
-        } else if (type === 1) {
+        } else if (type == 60) {
             type = "Annual";
         }
         return type;
@@ -34,7 +36,6 @@ const CartList = (props) => {
         <Table striped bordered hover variant="dark">
             <thead>
             <tr>
-                <th scope="col"> Doctor </th>
                 <th scope="col"> Type </th>
                 <th scope="col"> Date </th>
                 <th scope="col"> Duration </th>
@@ -50,11 +51,10 @@ const CartList = (props) => {
                         appointments.map(appointment => {
                             return (
                                 <tr key={appointment._id}>
-                                    <th> {appointment.doctor } </th>
-                                    <td> {formatType(appointment.type)} </td>
+                                    <td> {formatType(appointment.duration)} </td>
                                     <td> {formatDate(appointment.start)} </td>
                                     <td> {appointment.duration + " minutes"} </td>
-                                    <td> {appointment.price+ "$"} </td>
+                                    <td> {appointment.duration+ "$"} </td>
                                     { <td> <button onClick={() => props.handleShow(appointment)} type="button" className="btn btn-outline-success">Checkout</button> </td>}
                                     { <td> <button onClick={{/*LINK ACCORDINGLY() => props.deleteItem(appointment._id)*/}} type="button" className="btn btn-outline-danger">Delete</button> </td>}
                                 </tr>

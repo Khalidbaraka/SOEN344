@@ -50,5 +50,4 @@ router.post('/:health_card_number/cart/checkout', patientController.patient_chec
 // @desc  returns patient cart
 // @access Public
 router.get('/:health_card_number/cart/get', patientController.return_patient_cart);
-
 module.exports = router;

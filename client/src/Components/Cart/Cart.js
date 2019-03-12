@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Card, Col, Dropdown, DropdownButton, Form, Row, Modal } from 'react-bootstrap';
-import Table from "react-bootstrap/Table";
-import AppointmentList from "../Appointment/AppointmentList";
-import Axios from 'axios';
+import axios from 'axios';
+
 
 import CartList from './CartList';
 
@@ -13,35 +12,7 @@ class Cart extends Component {
 
         this.state = {
             message: "Your Cart",
-            appointments:[
-                {type: 0,
-                    clinic: null,
-                    doctor: "James",
-                    room: "2",
-                    start : "2019-03-20T21:33:00.000Z",
-                    patient : "Kelly",
-                    end : "2019-03-20T22:00:00.000Z",
-                    duration : "40",
-                    price : 60},
-                {type: 1,
-                    clinic: null,
-                    doctor: "Jenny",
-                    room: "2",
-                    start : "2019-10-20T21:40:00.000Z",
-                    patient : "Kelly",
-                    end : "2019-10-20T22:00:00.000Z",
-                    duration : "40",
-                    price : 60},
-                {type: 1,
-                    clinic: null,
-                    doctor: "James",
-                    room: "2",
-                    start : "2019-03-20T21:33:00.000Z",
-                    patient : "Kelly",
-                    end : "2019-03-20T22:00:00.000Z",
-                    duration : "40",
-                    price : 60}
-            ],
+            appointments:[],
             appointment:'',
             show: false
         }
@@ -52,9 +23,29 @@ class Cart extends Component {
 
     }
 
+    componentDidMount() {
+        this.getCartAppointments();
+    }
+
+    getCartAppointments () {
+        const user = JSON.parse(localStorage.getItem('userToken'));
+        const healthCardNumber = encodeURI(user.healthCardNumber);
+
+        axios.get('/api/patients/'+ healthCardNumber+ '/cart/get')
+            .then(res => {
+                if(res.data){
+                    console.log(res.data);
+                    this.setState({
+                        appointments: res.data
+                    })
+                }
+            })
+            .catch(err => console.log(err))
+    }
+
     checkoutAppointment = () => {
 
-
+        
         console.log(this.state.appointment);
     }
 
@@ -76,7 +67,7 @@ class Cart extends Component {
                                 <Modal.Title>Appointment Checkout </Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
-                                Your total amount is : {this.state.appointment.price}
+                                Your total amount is : {this.state.appointment.duration}$
 
                                     <Form noValidate onSubmit = {this.onSubmit} className="font-weight-bold">
                                         <Form.Group controlId="credit_card">
