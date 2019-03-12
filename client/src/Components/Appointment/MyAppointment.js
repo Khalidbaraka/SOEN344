@@ -92,7 +92,7 @@ class MyAppointment extends Component {
                             <Card.Header>
                                 <Row>
                                     <Col md={1}>
-                                        <Button variant="outline-info" onClick={this.onReturn}> B </Button>
+                                        <Button variant="outline-info" onClick={this.onReturn.bind(this)}> <i className="fa fa-chevron-left" aria-hidden="true"></i> </Button>
                                     </Col>
                                     <Col md={11}>
                                         <Card.Title className="text-center text-monospace">Modify the Appointment</Card.Title>

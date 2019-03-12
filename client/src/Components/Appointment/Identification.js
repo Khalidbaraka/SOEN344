@@ -4,24 +4,67 @@ import { Button, Card, Col, Dropdown, DropdownButton, Form, Row } from 'react-bo
 import React, { Component } from 'react';
 
 import AppCalender from './AppCalender';
+import moment from 'moment';
 
 class Identification extends Component {
     constructor(props) {
         super(props);
         
         this.state = {
-            appointmentType: "0"
+            appointmentType: "0", 
+            startTime: moment().startOf('day')
         }
     }
 
     onAppointmentTypeHandler = (event) => {
         this.setState({
-            appointmentType: event.target.value
+            appointmentType: event.target.value,
+            startTime: moment().startOf('day')
         })
+    }
+
+    disabledHours = () => {
+        return [0, 1, 2, 3, 4, 5, 6, 7, 21, 22, 23];
+    }
+
+    disabledMinutes = () => {
+        
+        if (this.state.startTime.toDate().getHours() == 0) {
+            return [0, 20, 40];
+        }
+    }
+
+    disabledSeconds = (h, m) => {
+        const arraySeconds = [];
+        let i = 0;
+        while (i <= 60) {
+            arraySeconds.push(i);
+            i++;
+        }
+
+        return arraySeconds
+    }
+
+    disabledDate = (current) => {
+        const date = new Date();
+        
+        // Can not select days before today
+        return current.isBefore(date.setDate(date.getDate() - 1));
+    }
+
+    onChange = (value) => {       
+        console.log("Moment", value.toDate());
+        
+        const nextState = {
+            ...this.state,
+            startTime: value
+        };
+        
+        this.setState(nextState);           
     }
     
     render() {        
-        const { appointmentType } = this.state;
+        const { appointmentType, startTime } = this.state;
 
         return (
             <div className="container">
@@ -43,7 +86,15 @@ class Identification extends Component {
                             </Form.Row>
                         </Form>
                         <hr/>
-                        <AppCalender type={appointmentType} />  
+                        <AppCalender 
+                            type = {appointmentType}
+                            startTime = {startTime}
+                            disabledHours = {this.disabledHours}
+                            disabledMinutes = {this.disabledMinutes}
+                            disabledSeconds = {this.disabledSeconds}
+                            disabledDate = {this.disabledDate}
+                            onChange = {this.onChange}
+                         />  
                         <hr/>
                         <Button variant="outline-info float-right"> Proceed </Button>
                     </Card.Body>

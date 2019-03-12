@@ -6,7 +6,6 @@ import { Table } from 'react-bootstrap';
 class AppointmentList extends Component {
     constructor(props) {
         super(props);
-        
     }
 
     formatType = (duration) => {

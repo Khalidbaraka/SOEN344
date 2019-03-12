@@ -24,25 +24,21 @@ class ModifyAppointment extends Component {
         }
     }
 
+    // Load the selected appointment, set the state of the component of the props.appointment value
     componentDidMount = () => {
         const appointment = this.props.appointment ? this.props.appointment : '';
 
         console.log("Appointment", appointment);
         
-        // this.setState({
-        //     appointment: appointment, 
-        //     startTime: moment(appointment.start), 
-        //     type: appointment.type
-        // });
-
         const nextState = {
-            ...this.state.appointment,
+            ...this.state, 
             appointment: {
+                ...this.state.appointment,
                 _id: appointment._id,
                 clinic: appointment.clinic,
                 doctor: appointment.doctor,
                 duration: appointment.duration,
-                end: appointment.end,
+                end: moment(appointment.end),
                 price: appointment.price,
                 room: appointment.room,
                 start: moment(appointment.start),
@@ -51,8 +47,6 @@ class ModifyAppointment extends Component {
         };
 
         this.setState(nextState);
-
-        
     }
 
     disabledHours = () => {
@@ -84,12 +78,14 @@ class ModifyAppointment extends Component {
         return current.isBefore(date.setDate(date.getDate() - 1));
     }
 
+    // Handleer for selecting the date and time
     onChange = (value) => {       
         console.log("Moment", value.toDate());
         
         const nextState = {
-            ...this.state.appointment,
+            ...this.state,
             appointment: {
+                ...this.state.appointment,
                 start: value
             }
         };
@@ -97,28 +93,41 @@ class ModifyAppointment extends Component {
         this.setState(nextState);           
     }
 
+    // Handler for selecting the type of appointment
     onAppointmentTypeHandler = (event) => {
         
         const nextState = {
-            ...this.state.appointment,
+            ...this.state,
             appointment: {
-                type: event.target.value
+                ...this.state.appointment,
+                type: event.target.value, 
+                start: moment().startOf('day')
             }
         };
+        
 
         this.setState(nextState);
     }
 
+    // Once the patient select the start time to update, the Calendar is displayed and the end time is removed.
     onUpdateTimeHandler = () => {
 
         const { onUpdate } = this.state
 
         const nextState = ({
             ...this.state,
-            onUpdate: !onUpdate
+            onUpdate: !onUpdate, 
+            appointment: {
+                ...this.state.appointment, 
+                end: ''
+            }
         });
 
         this.setState(nextState);
+    }
+
+    onSubmit = () => {
+        // Post request will send both appointment.type and appointment.start to back-end
     }
     
     render() {
@@ -129,25 +138,28 @@ class ModifyAppointment extends Component {
                     <Form>
                         <Form.Group controlId="">
                             <Form.Label>Clinic</Form.Label>
-                            <Form.Control type="text" value={appointment.clinic} disabled />
-                            <Form.Text className="text-muted">
-                                We'll never share your email with anyone else.
-                            </Form.Text>
+                            <Form.Control type="text" readOnly value={appointment.clinic} disabled />
                         </Form.Group>
 
-                        <Form.Group controlId="">
-                            <Form.Label>Doctor</Form.Label>
-                            <Form.Control type="text" value={appointment.doctor} disabled />
-                        </Form.Group>
-
-                        <Form.Group controlId="">
-                            <Form.Label>Room</Form.Label>
-                            <Form.Control type="text" value={appointment.room} disabled />
-                        </Form.Group>
+                        <Row>
+                            <Col>
+                                <Form.Group controlId="">
+                                    <Form.Label>Doctor</Form.Label>
+                                    <Form.Control type="text" readOnly  value={appointment.doctor} disabled />
+                                </Form.Group>
+                            </Col>
+    
+                            <Col>
+                                <Form.Group controlId="">
+                                    <Form.Label>Room</Form.Label>
+                                    <Form.Control type="text" value={appointment.room} disabled />
+                                </Form.Group>
+                            </Col>
+                        </Row>
 
                         <Form.Group controlId="">
                             <Form.Label>Type</Form.Label>
-                            <Form.Control as="select" value={appointment.type}>
+                            <Form.Control as="select" onChange={this.onAppointmentTypeHandler.bind(this)} value={appointment.type}>
                                 <option value="0"> Walk-in </option>
                                 <option value="1"> Annual </option>
                             </Form.Control>
@@ -176,26 +188,26 @@ class ModifyAppointment extends Component {
 
                         <Form.Group controlId="">
                             <Form.Label>End time</Form.Label>
-                            <Form.Control type="text" value={appointment.end.toString()} disabled />
+                            <Form.Control type="text" readOnly value={appointment.end.toString()} disabled />
                         </Form.Group>
 
                         <Row>
                             <Col>
                                 <Form.Group controlId="">
                                     <Form.Label>Duration</Form.Label>
-                                    <Form.Control type="text" value={appointment.duration + " min"} disabled />
+                                    <Form.Control type="text" readOnly  value={appointment.type == 0 ? "20" + " min" : "60" + " min"} disabled />
                                 </Form.Group>
                             </Col>
     
                             <Col>
                                 <Form.Group controlId="">
                                     <Form.Label>Price</Form.Label>
-                                    <Form.Control type="text" value={appointment.price + " $"} disabled />
+                                    <Form.Control type="text" readOnly  value={appointment.type == 0 ? "20" + " min" : "60" + " $"} disabled />
                                 </Form.Group>
                             </Col>
                         </Row>
 
-                        <Button variant="outline-info" className="float-right" type="submit">
+                        <Button variant="outline-info" className="float-right my-3" type="submit">
                             Submit
                         </Button>
                     </Form>
