@@ -55,5 +55,11 @@ router.get('/:health_card_number/cart/get', patientController.return_patient_car
 // @desc  deletes an entry on patient cart
 // @access Public
 router.delete('/:health_card_number/cart/delete', patientController.patient_delete_cart_entry);
+
+// @route post api/patients/health_card_number/cart/save
+// @desc  update patient
+// @access Public
+router.post('/:health_card_number/cart/save', patientController.patient_cart_save);
+
 module.exports = router;
 
