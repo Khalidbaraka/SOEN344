@@ -22,6 +22,26 @@ class MyAppointment extends Component {
         this.getAppointments();
     }
 
+    deleteItem(id) {
+
+        let string = localStorage.getItem('userToken');
+        let jsonToken = JSON.parse(string);
+
+        axios.delete(`/api/patients/${jsonToken['healthCardNumber']}/appointment/${id}/delete`)
+            .then(res => {
+                if(res.data){
+                    console.log(res.data);
+                    this.setState({
+                        appointments: res.data,
+                        message: res.data.message
+                    })
+                }
+            })
+            .catch(err => console.log(err))
+
+        window.location.reload()
+    }
+
     getAppointments () {
         const user = JSON.parse(localStorage.getItem('userToken'));
         const healthCardNumber = encodeURI(user.healthCardNumber);
@@ -58,7 +78,7 @@ class MyAppointment extends Component {
                         <Card.Title className="text-center text-monospace">Your Appointments</Card.Title>
                 </Card.Header>
 
-                <AppointmentList appointments={appointments} />
+                <AppointmentList appointments={appointments} deleteItem = {this.deleteItem}/>
             </Card> 
             </div>
         );

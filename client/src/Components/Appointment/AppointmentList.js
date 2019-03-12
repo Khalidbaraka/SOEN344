@@ -4,9 +4,6 @@ import { Table } from 'react-bootstrap';
 const AppointmentList = (props) => {
     const appointments = props.appointments;
 
-
-    
-
     //formatting appointment data
     for(let i = 0; i < appointments.length; i++){
 
@@ -58,7 +55,7 @@ const AppointmentList = (props) => {
                                     <td> {appointment.duration} </td>
                                     <td> {appointment.price} </td>
                                    { <td> <button onClick={{ /*LINK ACCORDINGLY() => props.deleteItem(appointment._id)*/}} type="button" className="btn btn-outline-warning">Update</button> </td>}
-                                   { <td> <button onClick={{/*LINK ACCORDINGLY() => props.deleteItem(appointment._id)*/}} type="button" className="btn btn-outline-danger">Delete</button> </td>}
+                                   { <td> <button onClick = { () => props.deleteItem(appointment._id) } type="button" className="btn btn-outline-danger">Delete</button> </td>}
                                 </tr>
                             )
                         })

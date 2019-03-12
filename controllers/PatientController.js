@@ -137,10 +137,36 @@ exports.patient_update = (req, res) => {
 }
 
 exports.patient_delete_appointment = (req, res) => {
-    Patient.findOne({healthCardNumber: req.body.health_card_number})
-        .
+    Patient.findOne({healthCardNumber: req.params.health_card_number}).populate('appointments')
+        .then(patient => {
+            if(patient){
+                let toRemove;
+                for(let i=0; i < patient.appointments.length ; i++)
+                {
+                    if (patient.appointments[i]._id === req.params.id)
+                    {
+                        toRemove = i;
+                    }
+                }
+                patient.appointments.splice(toRemove,1);
+                patient.save()
+                    .then(res.json({
+                        success: true
+                    }));
+                console.log('deleted from patient model');
 
+            } else {
+                res.json({
+                    success: false,
+                    message: 'patient not found'
+                })
+            }
+        });
 
+    Appointment.findOneAndDelete({_id: req.params.id})
+        .then(res.json({
+            success: true
+        }));
 
 };
 
