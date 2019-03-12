@@ -25,15 +25,15 @@ const timeslotSchema = new Schema ({
     }
 });
 
+timeslotSchema.post('remove', timeslot => {
+    console.log("Removing Timeslot " + timeslot._id + " from Doctor" + timeslot.doctor.permitNumber + "'s schedule");
+    this.model('Doctor').update(
+        { _id: timeslot.doctor._id },
+        { "$pull": { "schedules": { "_id": timeslot._id } }},
+        (err, obj) => {
+            console.log(err, obj);
+        });
+});
+
 module.exports = Timeslot = mongoose.model('timeslot', timeslotSchema);
 
-timeslotSchema.pre('remove', (ts) => {
-    ts.populate('doctor').then(timeslot => {
-        console.log("Removing Timeslot " + timeslot._id + " from Doctor" + timeslot.doctor.permitNumber + "'s schedule");
-        this.model('Doctor').update(
-            { _id: timeslot.doctor._id },
-            { "$pull": { "schedules": { "_id": timeslot._id } }}, (err, obj) => {
-                console.log(err, obj);
-            });
-    })
-});
