@@ -18,6 +18,7 @@ class Cart extends Component {
         }
 
         this.handleShow = this.handleShow.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.checkoutAppointment = this.checkoutAppointment.bind(this)
 
@@ -70,6 +71,21 @@ class Cart extends Component {
     handleShow(appointment) {
         this.setState({ show: true, appointment: appointment });
         console.log(appointment);
+    }
+
+    handleDelete(appointment) {
+        this.setState({ appointment: appointment });
+        console.log(appointment);
+
+        //AXIOS METHOD CALL TO DELETE CART APPOINTMENT GOES HERE
+
+
+
+
+
+
+
+        //dont forget to reset state for appointments after axios call , or simply call getCartAppointments ()
     }
 
     render() {
@@ -129,7 +145,7 @@ class Cart extends Component {
                             <Card.Header>
                                 <Card.Title className="text-center text-monospace"> Appointments</Card.Title>
                             </Card.Header>
-                            <CartList handleShow = {this.handleShow} appointments={appointments} />
+                            <CartList handleShow = {this.handleShow} handleDelete={this.handleDelete} appointments={appointments} />
                         </Card>
                     </div>
 

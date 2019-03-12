@@ -55,8 +55,8 @@ const CartList = (props) => {
                                     <td> {formatDate(appointment.start)} </td>
                                     <td> {appointment.duration + " minutes"} </td>
                                     <td> {appointment.duration+ "$"} </td>
-                                    { <td> <button onClick={() => props.handleShow(appointment)} type="button" className="btn btn-outline-success">Checkout</button> </td>}
-                                    { <td> <button onClick={{/*LINK ACCORDINGLY() => props.deleteItem(appointment._id)*/}} type="button" className="btn btn-outline-danger">Delete</button> </td>}
+                                    <td> <button onClick={() => props.handleShow(appointment)} type="button" className="btn btn-outline-success">Checkout</button> </td>
+                                    <td> <button onClick={() => props.handleDelete(appointment)} type="button" className="btn btn-outline-danger">Delete</button> </td>
                                 </tr>
                             )
                         })
