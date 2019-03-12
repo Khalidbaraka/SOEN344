@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import { Table } from 'react-bootstrap';
 
 const CartList = (props) => {
@@ -11,7 +12,7 @@ const CartList = (props) => {
 
         if (duration == 20) {
             type = "Walk-in";
-        } else if (type == 60) {
+        } else {
             type = "Annual";
         }
         return type;
