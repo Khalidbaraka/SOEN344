@@ -2,10 +2,10 @@ import { Col, ListGroup, Row } from 'react-bootstrap';
 import React, { Component } from 'react';
 import {Route, Switch} from "react-router-dom";
 
-import Identification from '../Appointment/Identification';
 import AppointmentsView from '../Appointment/MyAppointment';
-
+import Identification from '../Appointment/Identification';
 import { Link } from 'react-router-dom'
+import ModifyAppointment from '../Appointment/ModifyAppointment';
 
 class PatientHomepage extends Component {
 
