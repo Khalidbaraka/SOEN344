@@ -176,6 +176,14 @@ exports.patient_get_appointments = (req, res) =>{
         })
 }
 
+exports.patient_delete_appointment = (req, res) => {
+    Patient.findOne({healthCardNumber: req.params.health_card_number})
+        .then(patient => {
+            Appointment.find({patient:patient._id})
+                .
+        })
+};
+
 //Checkout appointments from the cart.
 exports.patient_checkout_appointment = (req, res) =>{
     Patient.findOne({healthCardNumber: req.params.health_card_number}).populate('cart')
