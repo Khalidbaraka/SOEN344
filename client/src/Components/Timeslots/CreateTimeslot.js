@@ -26,23 +26,23 @@ class CreateTimeslot extends Component {
     }
 
     onChangeStart = (value) => {
-        console.log("Moment END", value.toDate());
+        console.log("Moment START", value.toDate());
 
         const nextState = {
             ...this.state,
-            end: value
+            start: value
         };
 
         this.setState(nextState);
     }
 
     onChangeEnd = (value) => {
-        console.log("Moment Start:" + value.toDate());
+        console.log("Moment END:" + value.toDate());
 
 
         const nextState = {
             ...this.state,
-            start: value
+            end: value
         };
 
         this.setState(nextState);
