@@ -1,10 +1,12 @@
 import 'rc-calendar/assets/index.css';
 
-import { Button, Card, Col, Dropdown, DropdownButton, Form, Row, Modal } from 'react-bootstrap';
+import { Button, Card, Col, Dropdown, DropdownButton, Form, Row } from 'react-bootstrap';
 import React, { Component } from 'react';
 import AppointmentList from './AppointmentList';
 import axios from 'axios';
 import ModifyAppointment from './ModifyAppointment';
+import { Redirect } from 'react-router-dom'
+
 
 
 
@@ -15,12 +17,10 @@ class MyAppointment extends Component {
         this.state = {
             appointments: [],
             message: "",
-            show: false,
-            appointment: ''
+            appointment: '',
+            toUpdate: false
         }
 
-        this.handleShow = this.handleShow.bind(this);
-        this.handleClose = this.handleClose.bind(this);
     }
 
     componentDidMount() {
@@ -44,49 +44,31 @@ class MyAppointment extends Component {
             .catch(err => console.log(err))
     }
 
-    handleClose() {
-        this.setState({ show: false });
+    onUpdateAppointment = (appointment) => {
+
+        console.log("Appointment on Update", appointment );
+
+        this.setState({
+            toUpdate: true,
+            appointment: appointment
+        });
     }
 
-    handleShow = (appointment) => {
-
+    onReturn = () => {
         const nextState = {
             ...this.state,
-            show: true,
-            appointment: appointment
+            toUpdate: false
         }
 
-        this.setState(nextState, function () {console.log('State', this.state.appointment)});
-        console.log("APPOINTMENT", appointment);
-
+        this.setState(nextState);
     }
 
 
     render() {
 
-        const { appointments,message,appointment} = this.state;
+        const { appointments,message,appointment,toUpdate} = this.state;
         return (
-            <div className="ModalStyle">
-                <Modal size="lg" show={this.state.show} onHide={this.handleClose}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Modal heading</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        {this.state.appointment ? this.state.appointment.start : ''}
-
-                        <ModifyAppointment appointment={appointment} handleShow={this.handleShow}/>
-
-
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={this.handleClose}>
-                            Close
-                        </Button>
-                        <Button variant="primary" onClick={this.handleClose}>
-                            Save Changes
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
+            <div className="container">
                 { message ?
                     <Card border="danger" className="text-center my-3">
                         <Card.Body>
@@ -95,14 +77,34 @@ class MyAppointment extends Component {
                     </Card>
                     : ''}
             <Card className="my-5">
-
+             { !toUpdate ? (
+            <div>
                 <Card.Header>
                         <Card.Title className="text-center text-monospace">Your Appointments</Card.Title>
                 </Card.Header>
 
-                <AppointmentList appointments={appointments} handleShow={this.handleShow}/>
-            </Card> 
-            </div>
+                <AppointmentList appointments = {appointments}
+                                 onUpdateAppointment = {this.onUpdateAppointment}
+                                 toUpdate = {this.state.toUpdate} />
+            </div>) : (
+
+              <div>
+               <Card.Header>
+                   <Row>
+                     <Col md={1}>
+                         <Button variant="outline-info" onClick={this.onReturn.bind(this)}> <i className="fa fa-chevron-left" aria-hidden="true"></i> </Button>
+                     </Col>
+                     <Col md={11}>
+                          <Card.Title className="text-center text-monospace">Modify the Appointment</Card.Title>
+                     </Col>
+                   </Row>
+               </Card.Header>
+                 <ModifyAppointment appointment = {appointment}/>
+              </div>
+            )}
+
+           </Card>
+           </div>
         );
     }
 }
