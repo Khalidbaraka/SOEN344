@@ -53,8 +53,8 @@ class DoctorSchedule extends Component {
             .then((res) => {
                 this.setState({
                     schedules: res.data
-                })
-            this.populateSchedules();
+                });
+                this.populateSchedules();
             }).catch(err =>
                 console.log(err)
             );

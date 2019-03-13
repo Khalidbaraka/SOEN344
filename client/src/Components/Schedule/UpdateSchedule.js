@@ -52,20 +52,17 @@ class UpdateSchedule extends React.Component {
     }
 
     modifyTimeslot() {
+        // todo do stuff with response
 
-        // todo have to set the date and time back manually using date and time in form HH:mm
-        //var timeAndDate = moment(date+' '+time); //just have  to do this
+        let startDate = moment(this.state.date + ' ' + this.state.timeRange.start).toDate();
+        let endDate = moment(this.state.date + ' ' + this.state.timeRange.end).toDate();
 
-        let startDate = this.state.timeRange.start;
-        let endDate = this.state.timeRange.start;
-        
         let data = {
             id: this.state.id,
             start: startDate,
             end: endDate,
         };
-
-
+        
         axios.put('/api/doctors/schedule/update', data).then(res => {
             console.log('res', res);
         }).catch(err => {
