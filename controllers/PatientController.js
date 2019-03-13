@@ -9,6 +9,9 @@ const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('./../config/keys');
 const HelperController = require('./HelperController');
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+const ObjectId = mongoose.Types.ObjectId;
 //  Callback functions that they will invoke on our routes
 
 // Display list of all items.
@@ -180,20 +183,15 @@ exports.patient_get_appointments = (req, res) =>{
 exports.patient_delete_cart_entry = (req, res) =>{
     Patient.findOne({healthCardNumber: req.params.health_card_number})
         .then(patient =>{
-            let toRemove =0;
-            //deleting the timeslot from patient's cart
-            for(var i=0; i < patient.cart.length ; i++){
-                if (patient.cart[i] == req.body.timeslot._id){
-                    toRemove = i;
-                }
-            }
-            patient.cart.splice(toRemove,1);
-            patient.save().then(patient =>
-                res.json(patient)).catch(err => console.log(err));
-            res.json({
-                success: true,
-            })   
-        })
+            patient.cart.pull(req.body.timeslot._id)
+            Timeslot.findByIdAndRemove(req.body.timeslot._id)
+                .then(timeslot =>{
+                    patient.save();
+                    res.json(patient)
+                }).catch(err => res.status(404).json({
+                    success: false
+             }))
+        })  
 }
 
 //Returns Patient Cart

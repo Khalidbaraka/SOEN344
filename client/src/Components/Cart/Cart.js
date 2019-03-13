@@ -98,12 +98,12 @@ class Cart extends Component {
         let deleteAppointment = this.state.appointment;
         console.log(appointment);
 
-        axios.delete('api/patients/'+ healthCardNumber +'/cart/delete',{
-            data: {timeslot:deleteAppointment}
+        axios.put('api/patients/'+ healthCardNumber +'/cart/delete',{
+            timeslot:appointment
         })
             .then(res => {
                 if(res.data){
-
+                    this.getCartAppointments();
                 }
             })
             .catch(err => console.log(err))
