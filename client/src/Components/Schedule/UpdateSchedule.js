@@ -53,7 +53,6 @@ class UpdateSchedule extends React.Component {
 
     modifyTimeslot() {
         // todo do stuff with response
-
         let startDate = moment(this.state.date + ' ' + this.state.timeRange.start).toDate();
         let endDate = moment(this.state.date + ' ' + this.state.timeRange.end).toDate();
 
@@ -65,6 +64,7 @@ class UpdateSchedule extends React.Component {
 
         axios.put('/api/doctors/schedule/update', data).then(res => {
             console.log('res', res);
+            window.location.reload();
         }).catch(err => {
             console.log('error', err);
         })
@@ -72,12 +72,9 @@ class UpdateSchedule extends React.Component {
 
     deleteTimeslot() {
         // todo do stuff with response
-        let data = {
-            id: this.state.id,
-        };
-
         axios.delete(`/api/doctors/schedule/delete/${this.state.id}`).then(res => {
             console.log('res', res);
+            window.location.reload();
         }).catch(err => {
             console.log('error', err);
         })
