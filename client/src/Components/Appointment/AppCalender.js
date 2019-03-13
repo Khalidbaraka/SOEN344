@@ -1,6 +1,8 @@
 import 'rc-time-picker/assets/index.css';
+
 import { Alert, Button, Col, Form, Row } from 'react-bootstrap';
 import React, { Component } from 'react';
+
 import Calender from 'rc-calendar';
 import DatePicker from 'rc-calendar/lib/Picker';
 import TimePickerPanel from 'rc-time-picker/lib/Panel';
@@ -10,18 +12,18 @@ class AppCalender extends Component {
     constructor(props) {
         super(props);
     }
-
+    
     render() {
 
-        const { startTime } = this.props
+        const { startTime } = this.props;
 
         // rc-time-picker Panel
         const timePickerElement = <TimePickerPanel 
             format='HH:mm'
             defaultValue={moment().startOf('day')}
-            disabledHours={this.disabledHours}
-            disabledMinutes={this.disabledMinutes}
-            disabledSeconds={this.disabledSeconds}
+            disabledHours={this.props.disabledHours}
+            disabledMinutes={this.props.disabledMinutes}
+            disabledSeconds={this.props.disabledSeconds}
             minuteStep={this.props.type == "0" ? 20 : 60}
             />;
 
@@ -29,7 +31,7 @@ class AppCalender extends Component {
         const calendar = (<Calender
             showWeekNumber={false}
             disabledTime={false}
-            disabledDate={this.disabledDate}
+            disabledDate={this.props.disabledDate}
             format='YYYY-MM-DD HH:mm'
             timePicker={timePickerElement}
             showOk={true}
