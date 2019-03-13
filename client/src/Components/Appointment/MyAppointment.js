@@ -58,8 +58,6 @@ class MyAppointment extends Component {
             })
             .catch(err => console.log(err))
     }
-
-
     render() {
 
         const { appointments,message} = this.state;
