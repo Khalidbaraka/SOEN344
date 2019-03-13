@@ -21,7 +21,7 @@ class DoctorSchedule extends Component {
         this.state = {
             permitNumber: '',
             appointments: '',
-            schedules: '',
+            schedules: [],
             timeslot: [],
             isAuthenticated: true,
             viewModel: schedulerData
