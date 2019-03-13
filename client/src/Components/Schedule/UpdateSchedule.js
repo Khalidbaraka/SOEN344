@@ -1,10 +1,11 @@
 import React from 'react';
-import Form from 'react-bootstrap/Form'
-import Button from 'react-bootstrap/Button'
-import Modal from 'react-bootstrap/Modal'
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Modal from 'react-bootstrap/Modal';
+
+import TimeRangeSlider from 'react-time-range-slider';
 
 import moment from 'moment';
-import TimeRangeSlider from 'react-time-range-slider';
 
 class UpdateSchedule extends React.Component {
     constructor(props) {
@@ -22,7 +23,8 @@ class UpdateSchedule extends React.Component {
         this.dateChangeHandler = this.dateChangeHandler.bind(this);
         this.onOpen = this.onOpen.bind(this);
         this.timeChangeHandler = this.timeChangeHandler.bind(this);
-        this.submitForm = this.submitForm.bind(this);
+        this.modifyTimeslot = this.modifyTimeslot.bind(this);
+        this.deleteTimeslot = this.deleteTimeslot.bind(this);
     }
 
     onOpen() {
@@ -48,7 +50,11 @@ class UpdateSchedule extends React.Component {
         });
     }
 
-    submitForm() {
+    modifyTimeslot() {
+    //    TODO: submit the form
+    }
+
+    deleteTimeslot() {
     //    TODO: submit the form
     }
 
@@ -93,15 +99,14 @@ class UpdateSchedule extends React.Component {
                                 value={this.state.timeRange}/>
                         </Form.Group>
                     </Modal.Body>
-
-                    <Modal.Footer>
-                        <Button
-                            type="submit"
-                            onClick={this.submitForm}
-                        >
-                            Submit
-                        </Button>
-                    </Modal.Footer>
+                        <Modal.Footer>
+                            <Button variant="danger" type="submit" onClick={this.deleteTimeslot}>
+                                Delete
+                            </Button>
+                            <Button type="submit" onClick={this.modifyTimeslot}>
+                                Modify
+                            </Button>
+                        </Modal.Footer>
                     </Form>
                 </Modal>
             </div>

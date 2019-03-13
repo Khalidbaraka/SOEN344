@@ -16,9 +16,6 @@ class DoctorSchedule extends Component {
         super(props);
         let schedulerData = new SchedulerData(new moment().format(DATE_FORMAT), ViewTypes.Day);
 
-        this.routeChange = this.routeChange.bind(this);
-        this.eventClicked = this.eventClicked.bind(this);
-
         this.state = {
             permitNumber: '',
             appointments: '',
@@ -42,12 +39,12 @@ class DoctorSchedule extends Component {
 
         schedulerData.setResources(resources);
 
+        this.routeChange = this.routeChange.bind(this);
         this.openEdit = this.openEdit.bind(this);
         this.closeEdit = this.closeEdit.bind(this);
     }
 
     componentDidMount() {
-
         let string = localStorage.getItem('userToken');
         let jsonToken = JSON.parse(string);
 
@@ -55,8 +52,8 @@ class DoctorSchedule extends Component {
         axios.get(`/api/doctors/${jsonToken['permitNumber']}/schedule/get`)
             .then((res) => {
                 this.setState({
-                    schedules: res.data,
-                }, () => console.log(this.state)) // todo remove
+                    schedules: res.data
+                })
             }).catch(err =>
                 console.log(err)
             );
@@ -156,13 +153,7 @@ class DoctorSchedule extends Component {
         this.props.history.push(path);
     }
 
-    //open a modal, remove this function and use eventItemClick to open a modal in render function once clicked
-    eventClicked(schedulerData, event) {
-
-    };
-
     openEdit(schedulerData, event) {
-        console.log("the event timeslot in schedule", event); // todo remove
          this.setState({
              selectedTimeslot: event,
              showScheduleEditModal: true,
@@ -235,13 +226,10 @@ class DoctorSchedule extends Component {
 
                             </td>
                         </tr>
-
                     </tbody>
-
                 </table>
-
                 </div>
-
+                {/* The modal for editing a timeslot*/}
                 <UpdateSchedule
                     show={this.state.showScheduleEditModal}
                     onHide={this.closeEdit}
