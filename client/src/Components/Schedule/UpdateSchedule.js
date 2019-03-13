@@ -6,6 +6,7 @@ import Modal from 'react-bootstrap/Modal';
 import TimeRangeSlider from 'react-time-range-slider';
 
 import moment from 'moment';
+import axios from "axios";
 
 class UpdateSchedule extends React.Component {
     constructor(props) {
@@ -51,7 +52,25 @@ class UpdateSchedule extends React.Component {
     }
 
     modifyTimeslot() {
-    //    TODO: submit the form
+
+        // todo have to set the date and time back manually using date and time in form HH:mm
+        //var timeAndDate = moment(date+' '+time); //just have  to do this
+
+        let startDate = this.state.timeRange.start;
+        let endDate = this.state.timeRange.start;
+        
+        let data = {
+            id: this.state.id,
+            start: startDate,
+            end: endDate,
+        };
+
+
+        axios.put('/api/doctors/schedule/update', data).then(res => {
+            console.log('res', res);
+        }).catch(err => {
+            console.log('error', err);
+        })
     }
 
     deleteTimeslot() {
@@ -69,7 +88,7 @@ class UpdateSchedule extends React.Component {
                 >
                     <Form>
                     <Modal.Header closeButton>
-                        <Modal.Title>Edit Schedule Timeslot</Modal.Title>
+                        <Modal.Title>Edit Selected Timeslot</Modal.Title>
                     </Modal.Header>
 
                     <Modal.Body>
@@ -103,7 +122,7 @@ class UpdateSchedule extends React.Component {
                             <Button variant="danger" type="submit" onClick={this.deleteTimeslot}>
                                 Delete
                             </Button>
-                            <Button type="submit" onClick={this.modifyTimeslot}>
+                            <Button onClick={this.modifyTimeslot}>
                                 Modify
                             </Button>
                         </Modal.Footer>
