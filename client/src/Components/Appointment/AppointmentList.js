@@ -1,51 +1,53 @@
+import { Button, Table } from 'react-bootstrap';
 import React, { Component } from 'react';
-import { Table } from 'react-bootstrap';
 
-const AppointmentList = (props) => {
-    const appointments = props.appointments;
+class AppointmentList extends Component {
+    constructor(props) {
+        super(props);
+    }
 
+    formatType = (duration) => {
+        let type = '';
+        if (duration == 20) {
+            type = "Walk-in";
+        } else {
+            type = "Annual";
+        }
+        return type;
+    }
 
-    
+    formatDate = (date) => {
+        let d = new Date(date);
 
-    //formatting appointment data
-    for(let i = 0; i < appointments.length; i++){
-
-        appointments[i].duration += " minutes";
-        appointments[i].price += "$";
-
-        let d = new Date(appointments[i].start);
-
-        let date = ("0" + d.getDate().toString()).slice(-2);
+        let fdate = ("0" + d.getDate().toString()).slice(-2);
         let month = ("0" + (d.getMonth() + 1).toString()).slice(-2);
         let year = d.getUTCFullYear().toString();
         let hour = ("0" + (d.getUTCHours() - 4).toString()).slice(-2);
         let minute = ("0" + d.getUTCMinutes().toString()).slice(-2);
 
-        appointments[i].start = date + "/" +  month + "/"+ year + "  at " + hour + ":" + minute;
+        date = fdate + "/" +  month + "/"+ year + "  at " + hour + ":" + minute;
 
-        if(appointments[i].type === 0){
-            appointments[i].type = "Walk-in";
-        }
-        else if(appointments[i].type === 1){
-            appointments[i].type = "Annual";
-        }
+        return  date;
     }
 
+    render (){
+
+    let appointments = this.props.appointments;
     // Displaying the list of items. _id is unique to MongoDB (Primary Key)
     return (
-        <Table striped bordered hover variant="dark">
-            <thead>
-            <tr>
-                <th scope="col"> Doctor </th>
-                <th scope="col"> Type </th>
-                <th scope="col"> Date </th>
-                <th scope="col"> Duration </th>
-                <th scope="col"> Price </th>
-                <th scope="col"></th>
-                <th scope="col"></th>
-            </tr>
-            </thead>
-            <tbody>
+        <div>
+            <Table striped bordered hover variant="dark" className="text-center my-0">
+                    <thead>
+                        <tr>
+                            <th scope="col"> Doctor </th>
+                            <th scope="col"> Type </th>
+                            <th scope="col"> Date </th>
+                            <th scope="col"> Duration </th>
+                            <th scope="col"> Price </th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+             <tbody>
             {
                 appointments && appointments.length > 0 ?
                     (
@@ -53,12 +55,28 @@ const AppointmentList = (props) => {
                             return (
                                 <tr key={appointment._id}>
                                     <th> {appointment.doctor } </th>
-                                    <td> {appointment.type} </td>
-                                    <td> {appointment.start} </td>
-                                    <td> {appointment.duration} </td>
-                                    <td> {appointment.price} </td>
-                                   { <td> <button onClick={{ /*LINK ACCORDINGLY() => props.deleteItem(appointment._id)*/}} type="button" className="btn btn-outline-warning">Update</button> </td>}
-                                   { <td> <button onClick={{/*LINK ACCORDINGLY() => props.deleteItem(appointment._id)*/}} type="button" className="btn btn-outline-danger">Delete</button> </td>}
+                                    <td> {this.formatType(appointment.duration)} </td>
+                                    <td> {this.formatDate(appointment.start)} </td>
+                                    <td> {appointment.duration + " minutes"} </td>
+                                    <td> {appointment.duration+ "$"} </td>
+                                    <td> 
+                                        <Button 
+                                            onClick={() => this.props.onUpdateAppointment(appointment)}  
+                                            type="button" 
+                                            variant="outline-warning"
+                                            size="sm"
+                                            className="mr-2">
+                                            Update
+                                        </Button> 
+
+                                        <Button 
+                                            onClick = {() => this.props.deleteItem(appointment._id)} 
+                                            type="button" 
+                                            variant="outline-danger"
+                                            size="sm">
+                                            Delete
+                                        </Button> 
+                                    </td>
                                 </tr>
                             )
                         })
@@ -69,7 +87,8 @@ const AppointmentList = (props) => {
             </tbody>
 
         </Table>
-    )
+     </div>
+    )}
 }
 
 export default AppointmentList;
