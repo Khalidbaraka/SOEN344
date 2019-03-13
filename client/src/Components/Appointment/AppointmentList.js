@@ -36,11 +36,12 @@ class AppointmentList extends Component {
     // Displaying the list of items. _id is unique to MongoDB (Primary Key)
     return (
         <div>
-            <Table striped bordered hover variant="dark" className="text-center my-0">
+            <Table responsive striped bordered hover variant="dark" className="text-center my-0">
                     <thead>
                         <tr>
                             <th scope="col"> Doctor </th>
                             <th scope="col"> Type </th>
+                            <th scope="col"> Room N° </th>
                             <th scope="col"> Date </th>
                             <th scope="col"> Duration </th>
                             <th scope="col"> Price </th>
@@ -56,6 +57,7 @@ class AppointmentList extends Component {
                                 <tr key={appointment._id}>
                                     <th> {appointment.doctor } </th>
                                     <td> {this.formatType(appointment.duration)} </td>
+                                    <td> {appointment.room} </td>
                                     <td> {this.formatDate(appointment.start)} </td>
                                     <td> {appointment.duration + " minutes"} </td>
                                     <td> {appointment.duration+ "$"} </td>

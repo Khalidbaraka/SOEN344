@@ -259,7 +259,7 @@ exports.doctor_update_timeslot = (req, res) => {
     let newEnd = new Date(req.body.end);
 
     let timeslotToEdit;
-
+    let roomOccupied = [];
     Doctor.find().populate({
         path: 'schedules',
         populate: {path: 'doctor room'}
@@ -286,48 +286,64 @@ exports.doctor_update_timeslot = (req, res) => {
             }
 
             for (let scheduledTimeslot of allTimeslots) {
-
                 // true if the schedules take place in in different rooms and those rooms are for different doctors
                 let noRoomConflict = scheduledTimeslot.room.number !== timeslotToEdit.room.number &&
-                                     scheduledTimeslot.doctor.permitNumber !== timeslotToEdit.doctor.permitNumber;
+                    scheduledTimeslot.doctor.permitNumber !== timeslotToEdit.doctor.permitNumber;
 
                 // ignore the timeslot being edited or if no room conflict
                 if (scheduledTimeslot._id == timeslotToEditId || noRoomConflict) {
                     continue;
                 }
-                // check the schedules dont overlap
-                if (HelperController.overlaps(newStart, newEnd, scheduledTimeslot.start, scheduledTimeslot.end)) {
+
+                let roomNumber = scheduledTimeslot.room.number;
+                let isOverlapping = HelperController.overlaps(newStart, newEnd, scheduledTimeslot.start, scheduledTimeslot.end);
+                // check the schedules dont overlap and if there are any other rooms to occupy
+                if (isOverlapping && roomOccupied.length >= 5) {
                     return res.status(400).json({
                         success: false,
                         message: "The scheduled time conflicts with a time that's already scheduled",
                         conflictingSchedule: scheduledTimeslot,
                     });
                 }
+                if (isOverlapping && roomOccupied.length < 5) {
+                    roomOccupied.push(roomNumber);
+                }
             }
 
-            Doctor.findOne({ _id : timeslotToEdit.doctor._id}).populate('appointments')
-                .then(doctor => {
-                    for (let appointment of doctor.appointments) {
-                        // find an appointment apart of the schedule and make sure the new dates wont break it
-                        if (HelperController.overlaps(appointment.start, appointment.end, timeslotToEdit.start, timeslotToEdit.end)
-                        && !HelperController.within(appointment.start, appointment.end, newStart, newEnd)) {
-                            return res.status(400).json({
-                                success: false,
-                                message: 'You have an appointment that conflicts with this change',
-                                conflictingAppointment: appointment,
-                            });
-                        }
-                    }
+            let roomNumber = 1;
+            for (let o = 0; o <= roomOccupied.length; o++) {
+                if (!roomOccupied.includes(o + 1)) {
+                    roomNumber = o + 1;
+                    break;
+                }
+            }
 
-                    // if got here, we can do the update
-                    Timeslot.updateOne( { _id: timeslotToEditId },
-                        {"$set": {"start": newStart, "end": newEnd,}})
-                        .then(() => {
-                            return res.json({
-                                success: true,
-                                message: 'The scheduled time has been updated',
-                            });
-                        })
+            Doctor.findOne({_id: timeslotToEdit.doctor._id}).populate('appointments')
+                .then(doctor => {
+                    Room.findOne({
+                        number: roomNumber
+                    }).then(room => {
+                        for (let appointment of doctor.appointments) {
+                            // find an appointment apart of the schedule and make sure the new dates wont break it
+                            if (HelperController.overlaps(appointment.start, appointment.end, timeslotToEdit.start, timeslotToEdit.end)
+                                && !HelperController.within(appointment.start, appointment.end, newStart, newEnd)) {
+                                return res.status(400).json({
+                                    success: false,
+                                    message: 'You have an appointment that conflicts with this change',
+                                    conflictingAppointment: appointment,
+                                });
+                            }
+                        }
+                        // if got here, we can do the update
+                        Timeslot.updateOne({_id: timeslotToEditId},
+                            {"$set": {"start": newStart, "end": newEnd, "room": room._id}})
+                            .then(() => {
+                                return res.json({
+                                    success: true,
+                                    message: 'The scheduled time has been updated',
+                                });
+                            })
+                    })
                 })
-    })
+        })
 }

@@ -20,7 +20,7 @@ class AppCalender extends Component {
         // rc-time-picker Panel
         const timePickerElement = <TimePickerPanel 
             format='HH:mm'
-            defaultValue={moment().startOf('day')}
+            defaultValue={startTime}
             disabledHours={this.props.disabledHours}
             disabledMinutes={this.props.disabledMinutes}
             disabledSeconds={this.props.disabledSeconds}
@@ -29,6 +29,7 @@ class AppCalender extends Component {
 
         // rc-calendar
         const calendar = (<Calender
+            defaultValue={startTime}
             showWeekNumber={false}
             disabledTime={false}
             disabledDate={this.props.disabledDate}

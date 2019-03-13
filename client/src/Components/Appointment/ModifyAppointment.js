@@ -5,8 +5,6 @@ import AppCalender from './AppCalender';
 import axios from 'axios';
 import moment from 'moment';
 
-/* Import Components */
-
 class ModifyAppointment extends Component {
     constructor(props) {
         super(props);
@@ -23,13 +21,10 @@ class ModifyAppointment extends Component {
                 start: '',
                 type: ''
             },
-            onUpdate: false
-        };
-
-        // this.onSubmit = this.onSubmit.bind(this);
-
+            onUpdate: false, 
+        }
     }
-
+ 
     // Load the selected appointment, set the state of the component of the props.appointment value
     componentDidMount = () => {
         const appointment = this.props.appointment ? this.props.appointment : '';
@@ -146,10 +141,28 @@ class ModifyAppointment extends Component {
         const user = JSON.parse(localStorage.getItem('userToken'));
         const healthCardNumber = encodeURI(user.healthCardNumber);
 
-        // axios.get('/api/patients/'+ healthCardNumber+ '/appointment/update', {appointmentToUpdate})
-        //     .then(res => {
+        axios.put('/api/patients/'+ healthCardNumber+ '/appointment/update', {
+                appointmentId: appointmentToUpdate.appointmentId,
+                type: appointmentToUpdate.type,
+                startTime: appointmentToUpdate.startTime
+            })
+            .then(res => {
+                if (res.data.success) {
+                    let message = res.data.message;
+                    let variant = 'success';
+                    let toUpdate = false;
+                    this.props.onReset(message, variant, toUpdate);
                 
-        //     }).catch(err => console.log(err))
+                }
+            }).catch((error) => {
+                if (error.response) {
+
+                    let message = error.response.data.message;
+                    let variant = 'danger';
+                    let toUpdate = true;
+                    this.props.onReset(message, variant, toUpdate);                   
+                }  
+            });
 
     }
 

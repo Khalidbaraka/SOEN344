@@ -555,3 +555,174 @@ exports.patient_cart_save = (req,res)=>{
                 })
         })
 }
+
+//Updating a patient's appointment
+exports.patient_update_appointment = (req, res) => {
+// Request the basic information to update the appointment
+//let appointmentToUpdateId = req.body.appointmentToUpdate.appointmentId;
+//let newType = appointment.type;
+//let newStart = new Date(req.body.appointmentToUpdate.startTime);
+//let newEnd = new Date(req.body.appointmentToUpdate.startTime);
+
+//replace these 4 for postman tests.
+let appointmentToUpdateId = req.body.appointmentId;
+let newType = req.body.type;
+let newStart = new Date(req.body.startTime);
+let newEnd = new Date(req.body.startTime)
+
+let duration = 0;
+let price = 0;
+if(newType == 0) {
+    duration = 20;
+    price = 20;
+    newEnd = new Date(newEnd.setMinutes(newEnd.getMinutes() + duration)); 
+} else {
+    duration = 60;
+    price = 60;
+    newEnd = new Date(newEnd.setHours(newEnd.getHours() + 1));
+} 
+
+let appointmentToUpdate;
+Appointment.find().populate('doctor').populate('room')
+    .then(allAppointments => {
+        Patient.findOne({healthCardNumber: req.params.health_card_number}).populate('appointments')
+            .then(patient=>{
+                let foundRoomNoDoctor = false;
+                let roomOverlap = false; 
+                let doctorAvailable = false;
+                Room.find().sort({'_id': 1}).populate('appointments')
+                    .then(rooms =>{
+                        Doctor.find().sort({'_id': 1}).populate('schedules')
+                            .then(doctors =>{
+                                let k=0;j=0; y=0;x=0;
+                                appointmentToUpdate = allAppointments.find(appointment => appointment._id == appointmentToUpdateId);
+                                // make sure the appointment was found
+                                if (appointmentToUpdate === undefined) {
+                                    res.status(400).json({
+                                        success: false,
+                                        message: "The appointment was not found",
+                                    });
+                                    return;
+                                }
+                                //Return true if the newStart is the same as the start of the appointment to be updated.
+                                if (appointmentToUpdate.start.getTime() === newStart.getTime()){
+                                    res.status(400).json({
+                                        success: false,
+                                        message: "Error, you are trying to update an appointment to the same time",
+                                    });
+                                    return;
+                                }
+                                for (let scheduledAppointment of allAppointments) {
+                                    // true if the appointments take place in different rooms and those rooms are for different appointments
+                                    let noRoomConflict = scheduledAppointment.room.number !== appointmentToUpdate.room.number &&
+                                    scheduledAppointment._id !== appointmentToUpdate._id;   
+                                    // Ignore the appointment to be updated
+                                    if (scheduledAppointment._id == appointmentToUpdateId || noRoomConflict) {
+                                        continue;
+                                    }
+                                }
+                                //Check if patient already has annual check up appointment
+                                if(newType == 1){
+                                    for(let ptAppointment of patient.appointments){
+                                        if(ptAppointment.type == newType && ptAppointment.start.getYear() == newStart.getYear()){
+                                            res.status(400).json({
+                                                success: false,
+                                                message: "You already have an annual check-up appointment for the year"
+                                            })
+                                            return;
+                                        }
+                                    }
+                                }
+                                //Check if patient already have an appointment with the newStart 
+                                //if so make sure that it's not the same appointment that you want to update
+                                for(let ptAppointment of patient.appointments){
+                                    if(HelperController.overlaps(newStart, newEnd, ptAppointment.start, ptAppointment.end)
+                                    && (ptAppointment._id != appointmentToUpdateId)){
+                                        res.status(400).json({
+                                            success: false,
+                                            message: 'You have an appointment that conflicts with this change',
+                                        });
+                                        return;
+                                    }
+                                }
+                                //Checking for available rooms ate the selected time
+                                while(j<rooms.length){
+                                    if(rooms[j].appointments.length == 0){
+                                        roomOverlap = false;
+                                    }
+                                    else{
+                                        for (k=0;k<rooms[j].appointments.length; k++) {
+                                            console.log("here")
+                                            console.log(roomOverlap)
+                                            let start = rooms[j].appointments[k].start;
+                                            let end = rooms[j].appointments[k].end;
+                                            roomOverlap = HelperController.overlaps(newStart, newEnd, start, end);
+                                                if (roomOverlap == true){
+                                                    break;
+                                                }
+                                        }
+                                    }
+                                    if (roomOverlap == false){
+                                        //Checking for available doctor at the selected time
+                                        while(x<doctors.length){
+                                            if(doctors[x].schedules.length == 0){
+                                                doctorAvailable = false;
+                                            }
+                                            else{
+                                                for (y=0;y<doctors[x].schedules.length; y++) {
+                                                    let doctorStart = doctors[x].schedules[y].start;
+                                                    let doctorEnd = doctors[x].schedules[y].end;
+                                                    doctorRoom = doctors[x].schedules[y].room;
+                                                    doctorAvailable = HelperController.overlaps(newStart,  newEnd, doctorStart, doctorEnd);
+                                                        if (doctorAvailable == true && doctorRoom.equals(rooms[j]._id)){
+                                                            break;
+                                                        }
+                                                }
+                                                if(doctorAvailable == true && doctorRoom.equals(rooms[j]._id)){
+                                                    break;
+                                                }
+                                            }
+                                        x++;   
+                                        }
+                                        if(doctorAvailable == true && doctorRoom.equals(rooms[j]._id)){
+                                            // if got here, we can do the update
+                                            Appointment.updateOne( { _id: appointmentToUpdateId },
+                                                {"$set": {
+                                                    "start": newStart, 
+                                                    "end": newEnd, 
+                                                    "doctor": doctors[x]._id,
+                                                    "room": rooms[j]._id,
+                                                    "duration": duration.toString(),
+                                                    "price": price
+                                                }})
+                                                .then(() => {
+                                                    res.json({
+                                                        success: true,
+                                                        message: 'The appointment time has been updated succesfully',
+                                                    })
+                                                }) 
+                                        }
+                                        else{
+                                            foundRoomNoDoctor =true;
+                                        }                                
+                                        break;
+                                    }
+                                j++;
+                                }
+                                if(foundRoomNoDoctor == true){
+                                    return res.status(400).json({
+                                        success: false,
+                                        message: 'Sorry, a room is available but no doctors are available at the selected time '
+                                    });
+                                }
+                                if(roomOverlap == true){
+                                    return res.status(400).json({
+                                        success: false,
+                                        message: 'All rooms are occupied at the selected time'
+                                    });
+                                }
+                            })
+                    })
+            })   
+    })
+}

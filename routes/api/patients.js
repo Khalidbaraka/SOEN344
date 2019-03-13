@@ -66,4 +66,9 @@ router.put('/:health_card_number/cart/delete', patientController.patient_delete_
 // @access Public
 router.post('/:health_card_number/cart/save', patientController.patient_cart_save);
 
+// @route put api/patients/health_card_number/appointment/update
+// @desc  update patient
+// @access Public
+router.put('/:health_card_number/appointment/update', patientController.patient_update_appointment);
+
 module.exports = router;
