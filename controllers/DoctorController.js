@@ -1,5 +1,6 @@
 //Doctor Model
 const Doctor = require('./../models/Doctor');
+const Room = require('./../models/Room');
 const Timeslot = require('./../models/Timeslot');
 var bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -218,3 +219,112 @@ exports.doctor_create_timeslot= (req, res) => {
     })
 }
 
+exports.doctor_delete_timeslot = (req, res) => {
+    Timeslot.findById(req.body.id).populate({
+        path: 'doctor',
+        populate: {path: 'appointments'}
+    })
+        .then(timeslot => {
+            // check if the doctor has an appointment at the time
+            for (let appointment of timeslot.doctor.appointments) { // NOTE: Using array Iterator
+                if (HelperController.overlaps(appointment.start, appointment.end, timeslot.start, timeslot.end)) {
+                    return res.status(400).json({
+                        success: false,
+                        message: 'You have an appointment during this time',
+                    });
+                }
+            }
+
+            // if reach here, delete the timeslot (Note: pre is set in Timeslot.js to auto delete doctors reference to the timeslot)
+            timeslot.remove().then(() => {
+                res.json({
+                    success: true,
+                    message: 'The scheduled time has been removed',
+                });
+            });
+
+        }).catch(() => {
+            // unexpected error
+            res.status(404).json({
+                success: false,
+                message: 'The timeslot you wanted to remove was not found',
+            });
+    })
+}
+
+exports.doctor_update_timeslot = (req, res) => {
+    let timeslotToEditId = req.body.id;
+    let newStart = new Date(req.body.start);
+    let newEnd = new Date(req.body.end);
+
+    let timeslotToEdit;
+
+    Doctor.find().populate({
+        path: 'schedules',
+        populate: {path: 'doctor room'}
+    })
+        .then(allDoctors => {
+            // all doctors to all timeslots owned by a doctor
+            let allTimeslots = [];
+
+            //allTimeslots = allDoctors.flatMap(doctor => doctor.schedules); NOTE: Seems our version of Node.js doesn't support this
+            let arrayOfScheduleArrays = allDoctors.map(doctor => doctor.schedules);
+            for (let scheduleArray of arrayOfScheduleArrays) {
+                allTimeslots = allTimeslots.concat(scheduleArray);
+            }
+
+            // set the timeslot that wil be edited
+            timeslotToEdit = allTimeslots.find(ts => ts._id == timeslotToEditId);
+
+            // make sure the timeslot was found
+            if (timeslotToEdit === undefined) {
+                return res.status(400).json({
+                    success: false,
+                    message: "The timeslot was not found",
+                });
+            }
+
+            for (let scheduledTimeslot of allTimeslots) {
+
+                // true if the schedules take place in in different rooms and those rooms are for different doctors
+                let noRoomConflict = scheduledTimeslot.room.number !== timeslotToEdit.room.number &&
+                                     scheduledTimeslot.doctor.permitNumber !== timeslotToEdit.doctor.permitNumber;
+
+                // ignore the timeslot being edited or if no room conflict
+                if (scheduledTimeslot._id == timeslotToEditId || noRoomConflict) {
+                    continue;
+                }
+                // check the schedules dont overlap
+                if (HelperController.overlaps(newStart, newEnd, scheduledTimeslot.start, scheduledTimeslot.end)) {
+                    return res.status(400).json({
+                        success: false,
+                        message: "The scheduled time conflicts with a time that's already scheduled",
+                    });
+                }
+            }
+
+            Doctor.findOne({ _id : timeslotToEdit.doctor._id}).populate('appointments')
+                .then(doctor => {
+                    for (let appointment of doctor.appointments) {
+                        // find an appointment apart of the schedule and make sure the new dates wont break it
+                        if (HelperController.overlaps(appointment.start, appointment.end, timeslotToEdit.start, timeslotToEdit.end)
+                        && !HelperController.within(appointment.start, appointment.end, newStart, newEnd)) {
+                            return res.status(400).json({
+                                success: false,
+                                message: 'You have an appointment that conflicts with this change',
+                            });
+                        }
+                    }
+
+                    // if got here, we can do the update
+                    Timeslot.updateOne( { _id: timeslotToEditId },
+                        {"$set": {"start": newStart, "end": newEnd,}})
+                        .then(() => {
+                            return res.json({
+                                success: true,
+                                message: 'The scheduled time has been updated',
+                            });
+                        })
+                })
+    })
+}

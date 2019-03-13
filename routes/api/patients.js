@@ -26,7 +26,7 @@ router.delete('/:health_card_number/appointment/:id/delete', patientController.p
 router.get('/:health_card_number/appointment/get', patientController.patient_get_appointments);
 
 // Protecting the routes below. The order is important
-//router.use(decoder);
+//router.use(decoder); // Comment out for api testing
 
 // @route GET api/patients/patientsList
 // @desc loads patients table from db
@@ -46,7 +46,7 @@ router.put('/update/:id', patientController.patient_update);
 
 
 
-// @route post api/patients/health_card_number/cart/checkout
+// @route post api/patients/:health_card_number/cart/checkout
 // @desc  update patient
 // @access Public
 router.post('/:health_card_number/cart/checkout', patientController.patient_checkout_appointment);
@@ -61,10 +61,9 @@ router.get('/:health_card_number/cart/get', patientController.return_patient_car
 // @access Public
 router.put('/:health_card_number/cart/delete', patientController.patient_delete_cart_entry);
 
-// @route post api/patients/health_card_number/cart/save
+// @route post api/patients/:health_card_number/cart/save
 // @desc  update patient
 // @access Public
 router.post('/:health_card_number/cart/save', patientController.patient_cart_save);
 
 module.exports = router;
-

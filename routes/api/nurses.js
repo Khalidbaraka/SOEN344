@@ -40,6 +40,6 @@ router.delete('/delete', nurse_controller.nurse_delete);
 router.post('/:access_id/:health_card_number/create', nurse_controller.nurse_create_appointment);
 
 // Protecting the routes below. The order is important
-router.use(decoder);
+//router.use(decoder);
 
 module.exports = router;
