@@ -46,4 +46,9 @@ router.put('/update/:id', patientController.patient_update);
 // @access Public
 router.post('/:health_card_number/cart/checkout', patientController.patient_checkout_appointment);
 
+// @route post api/patients/health_card_number/cart/save
+// @desc  update patient
+// @access Public
+router.post('/:health_card_number/cart/save', patientController.patient_cart_save);
+
 module.exports = router;
