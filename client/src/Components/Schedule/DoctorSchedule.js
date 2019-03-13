@@ -54,11 +54,44 @@ class DoctorSchedule extends Component {
                 this.setState({
                     schedules: res.data
                 })
+            this.populateSchedules();
             }).catch(err =>
                 console.log(err)
             );
     }
 
+    populateSchedules()
+    {
+        let schedulerData = new SchedulerData(new moment().format(DATE_FORMAT), ViewTypes.Day);
+        let resources = [
+            {
+                id: 't',
+                name: 'Doctor'
+            },
+        ];
+        
+        schedulerData.setResources(resources);
+        for (let i = 0; i < this.state.schedules.length; i++) {
+            var timeSlotObject = {
+                id: this.state.schedules[i]['_id'],
+                start: moment(this.state.schedules[i]['start']).format("YYYY-MM-D h:mm:ss A"),
+                end: moment(this.state.schedules[i]['end']).format("YYYY-MM-D h:mm:ss A"),
+                resourceId: 't',
+                title: 'Reserved (click timeslot to modify)',
+                bgColor: '#FF0000'
+            }
+            this.state.timeslot.push(timeSlotObject);
+        }
+        schedulerData.setEvents(this.state.timeslot);
+
+        this.setState({
+            viewModel: schedulerData,
+            timeslot: []
+        })
+
+
+    }
+    
     prevClick = (schedulerData) => {
         schedulerData.prev();
         for (let i = 0; i < this.state.schedules.length; i++) {
