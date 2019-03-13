@@ -24,10 +24,7 @@ class AppNavbar extends Component {
     render() {
         const { isOpen } = this.state; 
         const user = JSON.parse(localStorage.getItem('userToken'));
-        if(user){
-
-        }
-      
+    
         return (
             <div>
                 <nav className="navbar navbar-expand-lg navbar-dark bg-dark">

@@ -1,6 +1,5 @@
+import { Button, Table } from 'react-bootstrap';
 import React, { Component } from 'react';
-
-import { Table } from 'react-bootstrap';
 
 const CartList = (props) => {
     
@@ -34,14 +33,13 @@ const CartList = (props) => {
 
     // Displaying the list of items. _id is unique to MongoDB (Primary Key)
     return (
-        <Table striped bordered hover variant="dark">
+        <Table striped bordered hover variant="dark my-0">
             <thead>
             <tr>
                 <th scope="col"> Type </th>
                 <th scope="col"> Date </th>
                 <th scope="col"> Duration </th>
                 <th scope="col"> Price </th>
-                <th scope="col"></th>
                 <th scope="col"></th>
             </tr>
             </thead>
@@ -56,13 +54,15 @@ const CartList = (props) => {
                                     <td> {formatDate(appointment.start)} </td>
                                     <td> {appointment.duration + " minutes"} </td>
                                     <td> {appointment.duration+ "$"} </td>
-                                    <td> <button onClick={() => props.handleShow(appointment)} type="button" className="btn btn-outline-success">Checkout</button> </td>
-                                    <td> <button onClick={() => props.handleDelete(appointment)} type="button" className="btn btn-outline-danger">Delete</button> </td>
+                                    <td> 
+                                        <Button onClick={() => props.handleShow(appointment)} type="button" variant="outline-success" className="mr-3">Checkout</Button> 
+                                        <Button onClick={() => props.handleDelete(appointment)} type="button" variant="danger">Delete</Button> 
+                                    </td>
                                 </tr>
                             )
                         })
                     ) : (
-                        <li> No appointments</li>
+                        ''                        
                     )
             }
             </tbody>

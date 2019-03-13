@@ -6,6 +6,7 @@ import { Route, Switch } from 'react-router-dom'
 
 import About from './Components/About';
 import AppNavbar from './Components/AppNavbar';
+import Cart from './Components/Cart/Cart';
 import DoctorHomepage from "./Components/Homepage/DoctorHomepage";
 import Home from './Components/Home';
 import Identification from './Components/Appointment/Identification';
@@ -16,7 +17,6 @@ import NurseHomepage from './Components/Homepage/NurseHomepage';
 import PatientHomepage from "./Components/Homepage/PatientHomepage";
 import PatientNavBar from "./Components/PatientNavBar";
 import SignUp from './Components/SignUp/SignUp'
-import Cart from './Components/Cart/Cart';
 
 class App extends Component {
   render() {
@@ -27,7 +27,6 @@ class App extends Component {
           {/* This file is the starting point, build components from there. 
             * Component Routes. Please check https://auth0.com/blog/react-router-4-practical-tutorial/ for Nested Routes
           */}
-
           
           <Switch>
             <Route exact path='/' component={ Home }/>

@@ -1,9 +1,8 @@
+import { Button, Card, Col, Dropdown, DropdownButton, Form, Modal, Row } from 'react-bootstrap';
 import React, { Component } from 'react';
-import { Button, Card, Col, Dropdown, DropdownButton, Form, Row, Modal } from 'react-bootstrap';
-import axios from 'axios';
-
 
 import CartList from './CartList';
+import axios from 'axios';
 
 class Cart extends Component {
 
@@ -11,10 +10,11 @@ class Cart extends Component {
         super(props);
 
         this.state = {
-            message: "Your Cart",
+            message: '',
             appointments:[],
             appointment:'',
-            show: false
+            show: false,
+            variant: '', 
         }
 
         this.handleShow = this.handleShow.bind(this);
@@ -34,9 +34,16 @@ class Cart extends Component {
 
         axios.get('/api/patients/'+ healthCardNumber+ '/cart/get')
             .then(res => {
-                if(res.data){
+                if (res.data) {
                     this.setState({
                         appointments: res.data
+                    })
+                } 
+
+                if (this.state.appointments.length == 0) {
+                    this.setState({
+                        message: "You do not have any appointment yet", 
+                        variant: "warning"
                     })
                 }
             })
@@ -60,8 +67,15 @@ class Cart extends Component {
             } else {
                 console.log("failure");
             }
-        }).catch(error => {
-            console.log(error.res);
+        }).catch((error) => {
+            // Error
+            if (error.response) {
+                this.setState({
+                    message: error.response.data.message,
+                    variant: "danger",
+                });
+                this.handleClose();
+            }  
         });
     };
 
@@ -95,68 +109,79 @@ class Cart extends Component {
             .catch(err => console.log(err))
     }
 
+    handleRedirectToSchedule = () => {
+        let path = `homepage/patient/scheduleAppointment`;
+        this.props.history.push(path);
+    }
+
     render() {
-        //this.formatAppointments();
-        const { appointments, message} = this.state;
+
+        const { appointments, message, variant} = this.state;
+
         return (
-                    <div className="container">
-                        <Modal show={this.state.show} onHide={this.handleClose}>
-                            <Modal.Header closeButton>
-                                <Modal.Title>Appointment Checkout </Modal.Title>
-                            </Modal.Header>
-                            <Modal.Body>
-                                Your total amount is : {this.state.appointment.duration}$
+            <div className="container">
+                <Modal show={this.state.show} onHide={this.handleClose}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Appointment Checkout </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                            <div>Your total amount is : {this.state.appointment.duration}$</div>
 
-                                    <Form noValidate onSubmit = {this.onSubmit} className="font-weight-bold">
-                                        <Form.Group controlId="credit_card">
-                                            <Form.Label>Credit Card Number</Form.Label>
-                                            <Form.Control maxLength={16} name="credit_card" type="text" placeholder="Enter Credit Card Number"/>
-                                            <Form.Text className="text-muted">
-                                                ex: 1111 2222 3333 4444
-                                            </Form.Text>
-                                        </Form.Group>
-                                        <Form.Group controlId="exp_datae">
-                                            <Form.Label>Expiration Date</Form.Label>
-                                            <Form.Control maxLength={4} name="exp_date" type="text" placeholder="Enter Expiration date"/>
-                                            <Form.Text className="text-muted">
-                                                ex: 0820 for August 2020
-                                            </Form.Text>
-                                        </Form.Group>
-                                        <Form.Group controlId="cvv">
-                                            <Form.Label>CVV</Form.Label>
-                                            <Form.Control maxLength={3} name="cvv" type="text" placeholder="Enter CVV"/>
-                                            <Form.Text className="text-muted">
-                                                ex: 567
-                                            </Form.Text>
-                                        </Form.Group>
-                                    </Form>
+                            <Form noValidate onSubmit = {this.onSubmit} className="font-weight-bold">
+                                <Form.Group controlId="credit_card">
+                                    <Form.Label>Credit Card Number</Form.Label>
+                                    <Form.Control maxLength={16} name="credit_card" type="text" placeholder="Enter Credit Card Number"/>
+                                    <Form.Text className="text-muted">
+                                        ex: 1111 2222 3333 4444
+                                    </Form.Text>
+                                </Form.Group>
+                                <Form.Group controlId="exp_datae">
+                                    <Form.Label>Expiration Date</Form.Label>
+                                    <Form.Control maxLength={4} name="exp_date" type="text" placeholder="Enter Expiration date"/>
+                                    <Form.Text className="text-muted">
+                                        ex: 0820 for August 2020
+                                    </Form.Text>
+                                </Form.Group>
+                                <Form.Group controlId="cvv">
+                                    <Form.Label>CVV</Form.Label>
+                                    <Form.Control maxLength={3} name="cvv" type="text" placeholder="Enter CVV"/>
+                                    <Form.Text className="text-muted">
+                                        ex: 567
+                                    </Form.Text>
+                                </Form.Group>
+                            </Form>
 
-                            </Modal.Body>
-                            <Modal.Footer>
-                                <Button variant="secondary" onClick={this.handleClose}>
-                                    Close
-                                </Button>
-                                <Button variant="primary" onClick={this.checkoutAppointment}>
-                                    Submit
-                                </Button>
-                            </Modal.Footer>
-                        </Modal>
-                        { message ?
-                            <Card border="danger" className="text-center my-3">
-                                <Card.Body>
-                                    <Card.Title><div className="text-monospace">{ message }</div> </Card.Title>
-                                </Card.Body>
-                            </Card>
-                            : ''}
-                        <Card className="my-5">
-                            <Card.Header>
-                                <Card.Title className="text-center text-monospace"> Appointments</Card.Title>
-                            </Card.Header>
-                            <CartList handleShow = {this.handleShow} handleDelete={this.handleDelete} appointments={appointments} />
-                        </Card>
-                    </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={this.handleClose}>
+                            Close
+                        </Button>
+                        <Button variant="primary" onClick={this.checkoutAppointment}>
+                            Submit
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
 
+                { message ? 
+                    <Card border={variant} className="text-center my-4"> 
+                        <Card.Body> 
+                            <Card.Title className="text-monospace"> { message }
+                                { variant == "warning" ? (
+                                    <Button variant="warning" className="mx-5" onClick={this.handleRedirectToSchedule}> Schedule an Appointment? </Button>
+                                ):''}
+                            </Card.Title>
+                        </Card.Body> 
+                    </Card>
+                : ''}
 
+                <Card className="my-5">
+                    <Card.Header>
+                        <Card.Title className="text-center text-monospace"> Your Cart - Appointments</Card.Title>
+                    </Card.Header>
+                    <CartList handleShow = {this.handleShow} handleDelete={this.handleDelete} appointments={appointments} />
+                </Card>
+
+            </div>
         );
     }
 }
