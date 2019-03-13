@@ -117,6 +117,18 @@ exports.doctor_update = (req, res) => {
     })
 }
 
+// Get list of timeslots available
+exports.doctor_get_schedule = (req, res) =>{
+    Doctor.findOne({permitNumber: req.params.permit_number})
+        .populate('schedules')
+            .then(doctor =>{
+                res.json(doctor.schedules);
+                })
+            .catch(err => res.status(404).json({
+                success: false
+         }))
+};
+
 //Delete
 exports.doctor_delete = (req, res) => {
     Doctor.findOne({permitNumber: req.params.permit_number})

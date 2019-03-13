@@ -30,3 +30,27 @@
     transform: rotate(360deg);
   }
 }
+
+.navbar-user{
+  height:1054px;
+  padding-bottom: 100px;
+  width: 175px;
+  display: inline-block;
+  text-align: center;
+}
+
+.nav-user{
+  margin-top:20px;
+}
+
+.scheduler{
+  vertical-align: top;
+ 
+}
+
+.test{
+overflow: scroll;
+  
+}
+
+

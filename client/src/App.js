@@ -9,15 +9,14 @@ import AppNavbar from './Components/AppNavbar';
 import Cart from './Components/Cart/Cart';
 import DoctorHomepage from "./Components/Homepage/DoctorHomepage";
 import Home from './Components/Home';
-import Identification from './Components/Appointment/Identification';
 import Items from './Components/Items/Items';
+import DoctorSchedule from './Components/Schedule/DoctorSchedule';
 import Login from './Components/Login/Login'
 import Logout from './Components/Logout';
 import NurseHomepage from './Components/Homepage/NurseHomepage';
 import PatientHomepage from "./Components/Homepage/PatientHomepage";
-import PatientNavBar from "./Components/PatientNavBar";
 import SignUp from './Components/SignUp/SignUp'
-import UpdateSchedule from "./Components/Schedule/UpdateSchedule";
+import CreateTimeslot from "./Components/Timeslots/CreateTimeslot";
 
 class App extends Component {
   render() {
@@ -41,9 +40,9 @@ class App extends Component {
             <Route path='/homepage/nurse' component={ NurseHomepage }/>
 
             {/* Doctor Routes */}
-            <Route path='/homepage/doctor' component={ DoctorHomepage }/>
-            {/* might be unneeded. TODO */}
-            {/*<Route path='/homepage/doctor/updateSchedule' component={ UpdateSchedule }/>*/}
+            <Route exact path='/homepage/doctor' component={ DoctorHomepage }/>
+            <Route exact path='/homepage/doctor/schedule' component={ DoctorSchedule }/>
+            <Route exact path='/timeslot/doctor' component={ CreateTimeslot }/>
 
             {/* Patient Routes */}
             <Route path='/homepage/patient' component={ PatientHomepage }/>

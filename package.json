@@ -20,7 +20,10 @@
     "cors": "^2.8.5",
     "express": "^4.16.4",
     "jsonwebtoken": "^8.5.0",
-    "mongoose": "^5.4.7"
+    "mongoose": "^5.4.7",
+    "react-big-calendar": "^0.20.3",
+    "react-big-scheduler": "^0.2.6",
+    "time-slots-generator": "^1.0.6"
   },
   "devDependencies": {
     "nodemon": "^1.18.9"
