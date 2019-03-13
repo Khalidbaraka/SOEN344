@@ -141,7 +141,7 @@ exports.nurse_delete = (req, res) => {
 
 //Nurse Creates Appointment for Patient
 exports.nurse_create_appointment  = (req,res)=>{
-    Nurse.findOne({accessID: req.params.accessID})
+    Nurse.findOne({accessID: req.params.access_id})
     .then(nurse => {
         Patient.findOne({healthCardNumber: req.params.health_card_number}).populate('appointments')
         .then(patient =>{
