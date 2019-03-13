@@ -1,11 +1,11 @@
+import { Button, Card, Col, Form, Row } from 'react-bootstrap';
 import React, {Component} from 'react';
-import axios from 'axios';
-/* Import Components */
+
 import AppCalender from './AppCalender';
-import { Form, Button, Card, Col, Row } from 'react-bootstrap';
+import axios from 'axios';
 import moment from 'moment';
 
-
+/* Import Components */
 
 class ModifyAppointment extends Component {
     constructor(props) {
@@ -27,7 +27,6 @@ class ModifyAppointment extends Component {
         };
 
         // this.onSubmit = this.onSubmit.bind(this);
-        this.onChange = this.onChange.bind(this);
 
     }
 
@@ -92,6 +91,7 @@ class ModifyAppointment extends Component {
         e.preventDefault();
 
         const momentDate = moment(this.state.start,'YYYY-MM-DD HH:mm');
+
         const updatedAppointment = {
             type: this.state.type,
             momentDate
@@ -150,11 +150,8 @@ class ModifyAppointment extends Component {
 
         return (
             <div>
-                <h1>Modify Appointment</h1>
-                <br/>
                 <Card.Body>
                     <Form>
-
                        <Form.Group as={Col} controlId="formGridState">
                             <Form.Label>Select an appointment type</Form.Label>
                             <Form.Control as="select" onChange={this.onAppointmentTypeHandler} value={appointment.type}>
@@ -164,7 +161,7 @@ class ModifyAppointment extends Component {
                        </Form.Group>
 
                         { onUpdate == false ? (
-                            <Form.Group controlId="">
+                            <Form.Group as={Col} controlId="">
                                 <Form.Label>Start time</Form.Label>
                                 <Form.Control type="text" value={appointment.start.toString()} onClick={this.onUpdateTimeHandler} />
                             </Form.Group>
@@ -184,17 +181,16 @@ class ModifyAppointment extends Component {
                             </div>
                         )}
 
-
                         <Row>
                             <Col>
-                                <Form.Group controlId="">
+                                <Form.Group as={Col} controlId="">
                                     <Form.Label>Price</Form.Label>
                                     <Form.Control type="text" readOnly  value={appointment.type == 0 ? "20" + " min" : "60" + " $"} disabled />
                                 </Form.Group>
                             </Col>
                         </Row>
 
-                        <Button variant="outline-info" className="float-right my-3" type="submit">
+                        <Button variant="outline-info" className="float-right my-3 mr-3" type="submit">
                             Submit
                         </Button>
                 </Form>

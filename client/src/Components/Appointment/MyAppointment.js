@@ -2,13 +2,10 @@ import 'rc-calendar/assets/index.css';
 
 import { Button, Card, Col, Dropdown, DropdownButton, Form, Row } from 'react-bootstrap';
 import React, { Component } from 'react';
+
 import AppointmentList from './AppointmentList';
-import axios from 'axios';
 import ModifyAppointment from './ModifyAppointment';
-import { Redirect } from 'react-router-dom'
-
-
-
+import axios from 'axios';
 
 class MyAppointment extends Component {
     constructor(props) {
@@ -75,35 +72,41 @@ class MyAppointment extends Component {
                             <Card.Title><div className="text-monospace">{ message }</div> </Card.Title>
                         </Card.Body>
                     </Card>
-                    : ''}
-            <Card className="my-5">
-             { !toUpdate ? (
-            <div>
-                <Card.Header>
-                        <Card.Title className="text-center text-monospace">Your Appointments</Card.Title>
-                </Card.Header>
+                : ''}
 
-                <AppointmentList appointments = {appointments}
-                                 onUpdateAppointment = {this.onUpdateAppointment}
-                                 toUpdate = {this.state.toUpdate} />
-            </div>) : (
+                    <Card className="my-5">
+                    
+                    { !toUpdate ? (
+                        <div>
+                            <Card.Header>
+                                    <Card.Title className="text-center text-monospace">Your Appointments</Card.Title>
+                            </Card.Header>
 
-              <div>
-               <Card.Header>
-                   <Row>
-                     <Col md={1}>
-                         <Button variant="outline-info" onClick={this.onReturn.bind(this)}> <i className="fa fa-chevron-left" aria-hidden="true"></i> </Button>
-                     </Col>
-                     <Col md={11}>
-                          <Card.Title className="text-center text-monospace">Modify the Appointment</Card.Title>
-                     </Col>
-                   </Row>
-               </Card.Header>
-                 <ModifyAppointment appointment = {appointment}/>
-              </div>
-            )}
+                            <AppointmentList 
+                                appointments = {appointments}
+                                onUpdateAppointment = {this.onUpdateAppointment}
+                                toUpdate = {this.state.toUpdate} />
+                        </div>
 
-           </Card>
+                    ) : (
+                        
+                        <div>
+                            <Card.Header>
+                                <Row>
+                                    <Col md={1}>
+                                        <Button variant="outline-info" onClick={this.onReturn.bind(this)}> <i className="fa fa-chevron-left" aria-hidden="true"></i> </Button>
+                                    </Col>
+                                    <Col md={11}>
+                                        <Card.Title className="text-center text-monospace">Modify the Appointment</Card.Title>
+                                    </Col>
+                                </Row>
+                            </Card.Header>
+
+                            <ModifyAppointment appointment = {appointment}/>
+                        </div>
+                    )}
+
+                </Card>
            </div>
         );
     }
