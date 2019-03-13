@@ -93,7 +93,7 @@ class MyAppointment extends Component {
                     </Card>
                 : ''}
 
-                    <Card className="my-5">
+                    <Card className="my-5" style={{width:1000}}>
                     
                     { !toUpdate ? (
                         <div>
