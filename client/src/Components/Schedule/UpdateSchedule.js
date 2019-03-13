@@ -62,7 +62,7 @@ class UpdateSchedule extends React.Component {
             start: startDate,
             end: endDate,
         };
-        
+
         axios.put('/api/doctors/schedule/update', data).then(res => {
             console.log('res', res);
         }).catch(err => {
@@ -116,7 +116,7 @@ class UpdateSchedule extends React.Component {
                         </Form.Group>
                     </Modal.Body>
                         <Modal.Footer>
-                            <Button variant="danger" type="submit" onClick={this.deleteTimeslot}>
+                            <Button variant="danger" onClick={this.deleteTimeslot}>
                                 Delete
                             </Button>
                             <Button onClick={this.modifyTimeslot}>

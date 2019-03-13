@@ -231,6 +231,7 @@ exports.doctor_delete_timeslot = (req, res) => {
                     return res.status(400).json({
                         success: false,
                         message: 'You have an appointment during this time',
+                        conflictingAppointment: appointment,
                     });
                 }
             }
@@ -299,6 +300,7 @@ exports.doctor_update_timeslot = (req, res) => {
                     return res.status(400).json({
                         success: false,
                         message: "The scheduled time conflicts with a time that's already scheduled",
+                        conflictingSchedule: scheduledTimeslot,
                     });
                 }
             }
@@ -312,6 +314,7 @@ exports.doctor_update_timeslot = (req, res) => {
                             return res.status(400).json({
                                 success: false,
                                 message: 'You have an appointment that conflicts with this change',
+                                conflictingAppointment: appointment,
                             });
                         }
                     }
