@@ -1,6 +1,5 @@
+import { Button, Table } from 'react-bootstrap';
 import React, { Component } from 'react';
-
-import { Table } from 'react-bootstrap';
 
 class AppointmentList extends Component {
     constructor(props) {
@@ -37,7 +36,7 @@ class AppointmentList extends Component {
     // Displaying the list of items. _id is unique to MongoDB (Primary Key)
     return (
         <div>
-            <Table striped bordered hover variant="dark">
+            <Table striped bordered hover variant="dark" className="text-center my-0">
                     <thead>
                         <tr>
                             <th scope="col"> Doctor </th>
@@ -45,7 +44,6 @@ class AppointmentList extends Component {
                             <th scope="col"> Date </th>
                             <th scope="col"> Duration </th>
                             <th scope="col"> Price </th>
-                            <th scope="col"></th>
                             <th scope="col"></th>
                         </tr>
                     </thead>
@@ -61,8 +59,24 @@ class AppointmentList extends Component {
                                     <td> {this.formatDate(appointment.start)} </td>
                                     <td> {appointment.duration + " minutes"} </td>
                                     <td> {appointment.duration+ "$"} </td>
-                                   { <td> <button onClick={() => this.props.onUpdateAppointment(appointment)}  type="button" className="btn btn-outline-warning">Update</button> </td>}
-                                   { <td> <button onClick={{/*LINK ACCORDINGLY() => props.deleteItem(appointment._id)*/}} type="button" className="btn btn-outline-danger">Delete</button> </td>}
+                                    <td> 
+                                        <Button 
+                                            onClick={() => this.props.onUpdateAppointment(appointment)}  
+                                            type="button" 
+                                            variant="outline-warning"
+                                            size="sm"
+                                            className="mr-2">
+                                            Update
+                                        </Button> 
+
+                                        <Button 
+                                            onClick = {() => this.props.deleteItem(appointment._id)} 
+                                            type="button" 
+                                            variant="outline-danger"
+                                            size="sm">
+                                            Delete
+                                        </Button> 
+                                    </td>
                                 </tr>
                             )
                         })

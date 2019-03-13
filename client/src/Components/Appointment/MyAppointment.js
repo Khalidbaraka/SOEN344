@@ -24,6 +24,26 @@ class MyAppointment extends Component {
         this.getAppointments();
     }
 
+    deleteItem(id) {
+
+        let string = localStorage.getItem('userToken');
+        let jsonToken = JSON.parse(string);
+
+        axios.delete(`/api/patients/${jsonToken['healthCardNumber']}/appointment/${id}/delete`)
+            .then(res => {
+                if(res.data){
+                    console.log(res.data);
+                    this.setState({
+                        appointments: res.data,
+                        message: res.data.message
+                    })
+                }
+            })
+            .catch(err => console.log(err))
+
+        window.location.reload()
+    }
+
     getAppointments () {
         const user = JSON.parse(localStorage.getItem('userToken'));
         const healthCardNumber = encodeURI(user.healthCardNumber);
@@ -84,7 +104,8 @@ class MyAppointment extends Component {
                             <AppointmentList 
                                 appointments = {appointments}
                                 onUpdateAppointment = {this.onUpdateAppointment}
-                                toUpdate = {this.state.toUpdate} />
+                                toUpdate = {this.state.toUpdate}
+                                deleteItem = {this.deleteItem} />
                         </div>
 
                     ) : (

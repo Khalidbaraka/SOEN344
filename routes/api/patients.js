@@ -15,6 +15,11 @@ router.post('/register', patientController.patient_register);
 // @access Public
 router.post('/login', patientController.patient_login);
 
+// @route post api/patients/appointment/delete
+// @desc  Delete Appointment
+// @access Public
+router.delete('/:health_card_number/appointment/:id/delete', patientController.patient_delete_appointment);
+
 // @route get api/patients/health_card_number/appointment/get
 // @desc  update patient
 // @access Public
