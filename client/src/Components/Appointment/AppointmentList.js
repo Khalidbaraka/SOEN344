@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import { Table } from 'react-bootstrap';
 
 class AppointmentList extends Component {
@@ -10,7 +11,7 @@ class AppointmentList extends Component {
         let type = '';
         if (duration == 20) {
             type = "Walk-in";
-        } else if (type == 60) {
+        } else {
             type = "Annual";
         }
         return type;
@@ -58,13 +59,10 @@ class AppointmentList extends Component {
                             return (
                                 <tr key={appointment._id}>
                                     <th> {appointment.doctor } </th>
-                                    <td> {appointment.type} </td>
                                     <td> {this.formatType(appointment.duration)} </td>
                                     <td> {this.formatDate(appointment.start)} </td>
                                     <td> {appointment.duration + " minutes"} </td>
                                     <td> {appointment.duration+ "$"} </td>
-                                    <td> {appointment.duration} </td>
-                                    <td> {appointment.price} </td>
                                    { <td> <button onClick={() => this.props.onUpdateAppointment(appointment)}  type="button" className="btn btn-outline-warning">Update</button> </td>}
                                    { <td> <button onClick={{/*LINK ACCORDINGLY() => props.deleteItem(appointment._id)*/}} type="button" className="btn btn-outline-danger">Delete</button> </td>}
                                 </tr>

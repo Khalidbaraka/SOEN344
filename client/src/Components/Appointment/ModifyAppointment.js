@@ -84,23 +84,6 @@ class ModifyAppointment extends Component {
         return current.isBefore(date.setDate(date.getDate() - 1));
     }
 
-
-    onSubmit= (e) => {
-        // Form submission logic
-
-        e.preventDefault();
-
-        const momentDate = moment(this.state.start,'YYYY-MM-DD HH:mm');
-
-        const updatedAppointment = {
-            type: this.state.type,
-            momentDate
-        };
-
-        axios.post('api/modifyAppointment', {updatedAppointment})
-
-    }
-
     onChange = (value) => {
         console.log("Moment", value.toDate());
 
@@ -145,6 +128,23 @@ class ModifyAppointment extends Component {
         this.setState(nextState);
     }
 
+    
+    onSubmit= (e) => {
+        // Form submission logic
+
+        e.preventDefault();
+
+        const momentDate = moment(this.state.start,'YYYY-MM-DD HH:mm');
+
+        const updatedAppointment = {
+            type: this.state.type,
+            momentDate
+        };
+
+        axios.post('api/modifyAppointment', {updatedAppointment})
+
+    }
+
     render() {
         const { appointment, onUpdate } = this.state;
 
@@ -152,7 +152,28 @@ class ModifyAppointment extends Component {
             <div>
                 <Card.Body>
                     <Form>
-                       <Form.Group as={Col} controlId="formGridState">
+                        <Form.Group controlId="">
+                            <Form.Label>Clinic</Form.Label>
+                            <Form.Control type="text" readOnly value={appointment.clinic} disabled />
+                        </Form.Group>
+
+                        <Row>
+                            <Col>
+                                <Form.Group controlId="">
+                                    <Form.Label>Doctor</Form.Label>
+                                    <Form.Control type="text" readOnly  value={appointment.doctor} disabled />
+                                </Form.Group>
+                            </Col>
+
+                            <Col>
+                                <Form.Group controlId="">
+                                    <Form.Label>Room</Form.Label>
+                                    <Form.Control type="text" value={appointment.room} disabled />
+                                </Form.Group>
+                            </Col>
+                        </Row>
+
+                         <Form.Group controlId="formGridState">
                             <Form.Label>Select an appointment type</Form.Label>
                             <Form.Control as="select" onChange={this.onAppointmentTypeHandler} value={appointment.type}>
                                 <option value="0"> Walk-in </option>
@@ -161,7 +182,7 @@ class ModifyAppointment extends Component {
                        </Form.Group>
 
                         { onUpdate == false ? (
-                            <Form.Group as={Col} controlId="">
+                            <Form.Group controlId="">
                                 <Form.Label>Start time</Form.Label>
                                 <Form.Control type="text" value={appointment.start.toString()} onClick={this.onUpdateTimeHandler} />
                             </Form.Group>
@@ -181,16 +202,27 @@ class ModifyAppointment extends Component {
                             </div>
                         )}
 
+                        <Form.Group controlId="">
+                            <Form.Label>End time</Form.Label>
+                            <Form.Control type="text" readOnly value={appointment.end.toString()} disabled />
+                        </Form.Group>
+
                         <Row>
                             <Col>
-                                <Form.Group as={Col} controlId="">
+                                <Form.Group controlId="">
+                                    <Form.Label>Duration</Form.Label>
+                                    <Form.Control type="text" readOnly  value={appointment.type == 0 ? "20" + " min" : "60" + " min"} disabled />
+                                </Form.Group>
+                            </Col>
+                            <Col>
+                                <Form.Group controlId="">
                                     <Form.Label>Price</Form.Label>
                                     <Form.Control type="text" readOnly  value={appointment.type == 0 ? "20" + " min" : "60" + " $"} disabled />
                                 </Form.Group>
                             </Col>
                         </Row>
 
-                        <Button variant="outline-info" className="float-right my-3 mr-3" type="submit">
+                        <Button variant="outline-info" className="float-right my-3" type="submit">
                             Submit
                         </Button>
                 </Form>
