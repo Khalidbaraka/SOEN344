@@ -4,6 +4,7 @@ import { Button, Card, Col, Dropdown, DropdownButton, Form, Row } from 'react-bo
 import React, { Component } from 'react';
 
 import AppCalender from './AppCalender';
+import { Redirect } from 'react-router-dom'
 import axios from 'axios';
 import moment from 'moment';
 
@@ -15,7 +16,8 @@ class Identification extends Component {
             appointmentType: "0", 
             startTime: moment().startOf('day'),
             message: '',
-            variant: ''
+            variant: '', 
+            redirectToCart: false
         }
 
     }
@@ -99,9 +101,21 @@ class Identification extends Component {
             }  
         });
     }
+
+    handleRedirectToCart = () => {
+        
+        this.setState({
+            redirectToCart: true
+        })
+    }
     
     render() {        
-        const { appointmentType, startTime, message, variant } = this.state;
+        const { appointmentType, startTime, message, variant, redirectToCart } = this.state;
+
+        if (redirectToCart) {
+            //direct to nurse homepage
+            return <Redirect to = '/cart' /> ;
+        }
 
         return (
             <div className="container">
@@ -110,7 +124,7 @@ class Identification extends Component {
                         <Card.Body> 
                             <Card.Title className="text-monospace"> { message }
                                 { variant == "success" ? (
-                                    <Button variant="outline-info" className="mx-4"> Go to Cart</Button>
+                                    <Button variant="outline-info" className="mx-4" onClick={this.handleRedirectToCart}> Go to Cart</Button>
                                 ):''}
                             </Card.Title>
                         </Card.Body> 

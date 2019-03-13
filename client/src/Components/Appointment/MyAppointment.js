@@ -60,7 +60,6 @@ class MyAppointment extends Component {
         this.setState(nextState);
     }
 
-
     render() {
 
         const { appointments,message,appointment,toUpdate} = this.state;

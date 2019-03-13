@@ -31,8 +31,6 @@ class AppointmentList extends Component {
         return  date;
     }
 
-
-
     render (){
 
     let appointments = this.props.appointments;
