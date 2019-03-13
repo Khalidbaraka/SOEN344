@@ -9,6 +9,6 @@ module.exports = {
 
     //Method verifies if an appintments date lies within a timeslot
     within: function(appStart, appEnd, start, end) {
-        return (appStart >= start && appEnd <= end);
+        return ((appStart >= start) && (appEnd <= end));
     },
 };

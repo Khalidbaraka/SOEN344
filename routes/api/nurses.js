@@ -15,7 +15,7 @@ router.post('/register', nurse_controller.nurse_register);
 router.post('/login', nurse_controller.nurse_login);
 
 // Protecting the routes below. The order is important
-router.use(decoder);
+router.use(decoder); // Comment out for api testing
 
 // @route GET api/nurses/nursesList
 // @desc get list of nurses from db

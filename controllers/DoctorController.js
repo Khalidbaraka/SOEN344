@@ -223,7 +223,7 @@ exports.doctor_delete_timeslot = (req, res) => {
                 }
             }
 
-            // if reach here, delete the timeslot (Note: pre is set in Timeslot.js to auto delete doctors refrence to the timeslot)
+            // if reach here, delete the timeslot (Note: pre is set in Timeslot.js to auto delete doctors reference to the timeslot)
             timeslot.remove().then(() => {
                 res.json({
                     success: true,
@@ -247,16 +247,39 @@ exports.doctor_update_timeslot = (req, res) => {
 
     let timeslotToEdit;
 
-    Timeslot.find().populate('doctor').populate('room')
-        .then(allTimeslots => {
+    Doctor.find().populate({
+        path: 'schedules',
+        populate: {path: 'doctor room'}
+    })
+        .then(allDoctors => {
+            // all doctors to all timeslots owned by a doctor
+            let allTimeslots = [];
+
+            //allTimeslots = allDoctors.flatMap(doctor => doctor.schedules); NOTE: Seems our version of Node.js doesn't support this
+            let arrayOfScheduleArrays = allDoctors.map(doctor => doctor.schedules);
+            for (let scheduleArray of arrayOfScheduleArrays) {
+                allTimeslots = allTimeslots.concat(scheduleArray);
+            }
+
             // set the timeslot that wil be edited
             timeslotToEdit = allTimeslots.find(ts => ts._id == timeslotToEditId);
 
+            // make sure the timeslot was found
+            if (timeslotToEdit === undefined) {
+                return res.status(400).json({
+                    success: false,
+                    message: "The timeslot was not found",
+                });
+            }
+
             for (let scheduledTimeslot of allTimeslots) {
 
-                // ignore timeslot being edited or if rooms dont match
-                if (scheduledTimeslot._id == timeslotToEditId
-                    || scheduledTimeslot.room.number !== timeslotToEdit.room.number) {
+                // true if the schedules take place in in different rooms and those rooms are for different doctors
+                let noRoomConflict = scheduledTimeslot.room.number !== timeslotToEdit.room.number &&
+                                     scheduledTimeslot.doctor.permitNumber !== timeslotToEdit.doctor.permitNumber;
+
+                // ignore the timeslot being edited or if no room conflict
+                if (scheduledTimeslot._id == timeslotToEditId || noRoomConflict) {
                     continue;
                 }
                 // check the schedules dont overlap
@@ -268,15 +291,7 @@ exports.doctor_update_timeslot = (req, res) => {
                 }
             }
 
-            // make sure the timeslot was found
-            if (timeslotToEdit === undefined) {
-                return res.status(400).json({
-                    success: false,
-                    message: "The timeslot was not found",
-                });
-            }
-
-            timeslotToEdit.doctor.populate('appointments')
+            Doctor.findOne({ _id : timeslotToEdit.doctor._id}).populate('appointments')
                 .then(doctor => {
                     for (let appointment of doctor.appointments) {
                         // find an appointment apart of the schedule and make sure the new dates wont break it
