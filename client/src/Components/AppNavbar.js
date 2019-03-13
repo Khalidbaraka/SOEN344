@@ -24,10 +24,7 @@ class AppNavbar extends Component {
     render() {
         const { isOpen } = this.state; 
         const user = JSON.parse(localStorage.getItem('userToken'));
-        if(user){
-
-        }
-      
+    
         return (
             <div>
                 <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -63,6 +60,13 @@ class AppNavbar extends Component {
                       <li className="nav-item">
                         <span className="nav-link"> { user.firstName } { user.lastName } </span>
                       </li>
+                        {user.healthCardNumber ? (
+                            <li className="nav-item">
+                                <Link to={'/cart'} className="nav-link"> Cart </Link>
+                            </li>
+                            )
+                            : ""
+                        }
                       <li className="nav-item">
                         <Link to={'/logout'} className="nav-link"> Logout </Link>
                       </li>
