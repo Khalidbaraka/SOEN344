@@ -42,7 +42,7 @@ class Cart extends Component {
 
                 if (this.state.appointments.length == 0) {
                     this.setState({
-                        message: "You do not have any appointment yet", 
+                        message: "Your cart is empty", 
                         variant: "warning"
                     })
                 }
