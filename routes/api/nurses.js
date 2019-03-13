@@ -37,7 +37,7 @@ router.delete('/delete', nurse_controller.nurse_delete);
 // @route post api/nurses/access_id/health_card_number/create
 // @desc  create new appointment for patient 
 // @access Public
-router.post('/:access_id/:health_card_number/create', nurse_controller.nurse_create_appointment);
+router.post('/:access_id/:health_card_number/appointment/create', nurse_controller.nurse_create_appointment);
 
 // Protecting the routes below. The order is important
 //router.use(decoder);
