@@ -55,9 +55,9 @@ router.delete('/delete/:permit_number', doctorController.doctor_delete);
 // @access Public
 router.put('/schedule/update', doctorController.doctor_update_timeslot);
 
-// @route post api/doctors/schedule/delete
+// @route post api/doctors/schedule/delete/:timeslotId
 // @desc  Delete a doctor's scheduled timeslot
 // @access Public
-router.delete('/schedule/delete', doctorController.doctor_delete_timeslot);
+router.delete('/schedule/delete/:timeslotId', doctorController.doctor_delete_timeslot);
 
 module.exports = router;

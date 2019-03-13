@@ -220,7 +220,7 @@ exports.doctor_create_timeslot= (req, res) => {
 }
 
 exports.doctor_delete_timeslot = (req, res) => {
-    Timeslot.findById(req.body.id).populate({
+    Timeslot.findById(req.params.timeslotId).populate({
         path: 'doctor',
         populate: {path: 'appointments'}
     })

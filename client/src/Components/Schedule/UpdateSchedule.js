@@ -71,7 +71,16 @@ class UpdateSchedule extends React.Component {
     }
 
     deleteTimeslot() {
-    //    TODO: submit the form
+        // todo do stuff with response
+        let data = {
+            id: this.state.id,
+        };
+
+        axios.delete(`/api/doctors/schedule/delete/${this.state.id}`).then(res => {
+            console.log('res', res);
+        }).catch(err => {
+            console.log('error', err);
+        })
     }
 
     render() {
