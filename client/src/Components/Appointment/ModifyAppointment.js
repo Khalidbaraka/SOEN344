@@ -130,18 +130,26 @@ class ModifyAppointment extends Component {
 
     
     onSubmit= (e) => {
-        // Form submission logic
 
         e.preventDefault();
 
-        const momentDate = moment(this.state.start,'YYYY-MM-DD HH:mm');
+        // const momentDate = moment(this.state.start,'YYYY-MM-DD HH:mm');
 
-        const updatedAppointment = {
-            type: this.state.type,
-            momentDate
+        const appointmentToUpdate = {
+            appointmentId: this.state.appointment._id,
+            type: this.state.appointment.type,
+            startTime: this.state.appointment.start
         };
 
-        axios.post('api/modifyAppointment', {updatedAppointment})
+        console.log("Appointment To Update", appointmentToUpdate);
+
+        const user = JSON.parse(localStorage.getItem('userToken'));
+        const healthCardNumber = encodeURI(user.healthCardNumber);
+
+        // axios.get('/api/patients/'+ healthCardNumber+ '/appointment/update', {appointmentToUpdate})
+        //     .then(res => {
+                
+        //     }).catch(err => console.log(err))
 
     }
 
@@ -222,8 +230,8 @@ class ModifyAppointment extends Component {
                             </Col>
                         </Row>
 
-                        <Button variant="outline-info" className="float-right my-3" type="submit">
-                            Submit
+                        <Button variant="outline-info" className="float-right my-3" type="button" onClick={this.onSubmit}>
+                            Proceed
                         </Button>
                 </Form>
                 </Card.Body>
