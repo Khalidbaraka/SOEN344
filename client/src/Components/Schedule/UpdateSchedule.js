@@ -2,6 +2,7 @@ import React from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
+import Alert from "react-bootstrap/Alert";
 
 import TimeRangeSlider from 'react-time-range-slider';
 
@@ -19,6 +20,7 @@ class UpdateSchedule extends React.Component {
                 start: "08:00",
                 end: "20:00"
             },
+            error: null,
         };
 
         this.dateChangeHandler = this.dateChangeHandler.bind(this);
@@ -52,7 +54,8 @@ class UpdateSchedule extends React.Component {
     }
 
     modifyTimeslot() {
-        // todo do stuff with response
+        this.setState({error: null});
+
         let startDate = moment(this.state.date + ' ' + this.state.timeRange.start).toDate();
         let endDate = moment(this.state.date + ' ' + this.state.timeRange.end).toDate();
 
@@ -63,20 +66,18 @@ class UpdateSchedule extends React.Component {
         };
 
         axios.put('/api/doctors/schedule/update', data).then(res => {
-            console.log('res', res);
             window.location.reload();
         }).catch(err => {
-            console.log('error', err);
+            this.setState({error: err});
         })
     }
 
     deleteTimeslot() {
-        // todo do stuff with response
+        this.setState({error: null});
         axios.delete(`/api/doctors/schedule/delete/${this.state.id}`).then(res => {
-            console.log('res', res);
             window.location.reload();
         }).catch(err => {
-            console.log('error', err);
+            this.setState({error: err});
         })
     }
 
@@ -95,6 +96,9 @@ class UpdateSchedule extends React.Component {
                     </Modal.Header>
 
                     <Modal.Body>
+                        { this.state.error ?
+                            <Alert dismissible variant="danger">{this.state.error.response.data.message}</Alert> : null
+                        }
                         <Form.Group>
                             <Form.Label>Date</Form.Label>
                             <Form.Control
