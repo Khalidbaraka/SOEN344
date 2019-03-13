@@ -11,6 +11,7 @@ class UpdateSchedule extends React.Component {
         super(props);
 
         this.state = {
+            id: "",
             date: "",
             timeRange: {
                 start: "08:00",
@@ -31,6 +32,7 @@ class UpdateSchedule extends React.Component {
         };
 
         this.setState({
+            id: this.props.timeslot.id,
             date: moment(this.props.timeslot.start).format(moment.HTML5_FMT.DATE),
             timeRange: initialTimeRange,
         });

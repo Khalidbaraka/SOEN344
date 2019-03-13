@@ -8,6 +8,7 @@ import Scheduler, { SchedulerData, ViewTypes, DATE_FORMAT } from 'react-big-sche
 import 'react-big-scheduler/lib/css/style.css';
 import Button from 'react-bootstrap/Button';
 import { Redirect } from 'react-router-dom';
+import UpdateSchedule from "./UpdateSchedule";
 
 class DoctorSchedule extends Component {
 
@@ -23,8 +24,13 @@ class DoctorSchedule extends Component {
             appointments: '',
             schedules: '',
             timeslot: [],
+            viewModel: schedulerData,
+
+            // Modal related variables
+            selectedTimeslot: null,
+            showScheduleEditModal: false,
+
             isAuthenticated: true,
-            viewModel: schedulerData
         };
 
         let resources = [
@@ -35,6 +41,9 @@ class DoctorSchedule extends Component {
         ];
 
         schedulerData.setResources(resources);
+
+        this.openEdit = this.openEdit.bind(this);
+        this.closeEdit = this.closeEdit.bind(this);
     }
 
     componentDidMount() {
@@ -46,9 +55,8 @@ class DoctorSchedule extends Component {
         axios.get(`/api/doctors/${jsonToken['permitNumber']}/schedule/get`)
             .then((res) => {
                 this.setState({
-                    schedules: res.data
-
-                })
+                    schedules: res.data,
+                }, () => console.log(this.state)) // todo remove
             }).catch(err =>
                 console.log(err)
             );
@@ -149,11 +157,24 @@ class DoctorSchedule extends Component {
     }
 
     //open a modal, remove this function and use eventItemClick to open a modal in render function once clicked
-    eventClicked() {
-        let path = `/homepage/doctor/`;
-        this.props.history.push(path);
+    eventClicked(schedulerData, event) {
 
     };
+
+    openEdit(schedulerData, event) {
+        console.log("the event timeslot in schedule", event); // todo remove
+         this.setState({
+             selectedTimeslot: event,
+             showScheduleEditModal: true,
+         });
+    }
+
+    closeEdit() {
+        this.setState({
+            selectedTimeslot: null,
+            showScheduleEditModal: false,
+        });
+    }
 
     render() {
         const { viewModel } = this.state;
@@ -209,14 +230,23 @@ class DoctorSchedule extends Component {
                                     nextClick={this.nextClick}
                                     onSelectDate={this.onSelectDate}
                                     onViewChange={this.onViewChange}
-                                    eventItemClick={this.eventClicked}
+                                    eventItemClick={this.openEdit}
                                 />
 
                             </td>
                         </tr>
+
                     </tbody>
+
                 </table>
+
                 </div>
+
+                <UpdateSchedule
+                    show={this.state.showScheduleEditModal}
+                    onHide={this.closeEdit}
+                    timeslot={this.state.selectedTimeslot}
+                />
             </div>
 
         );
