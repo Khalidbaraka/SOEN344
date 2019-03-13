@@ -18,7 +18,6 @@ class DoctorSchedule extends Component {
         this.routeChange = this.routeChange.bind(this);
         this.eventClicked = this.eventClicked.bind(this);
 
-
         this.state = {
             permitNumber: '',
             appointments: '',
@@ -36,11 +35,6 @@ class DoctorSchedule extends Component {
         ];
 
         schedulerData.setResources(resources);
-
-
-
-
-
     }
 
     componentDidMount() {
@@ -58,10 +52,6 @@ class DoctorSchedule extends Component {
             }).catch(err =>
                 console.log(err)
             );
-
-
-
-
     }
 
     prevClick = (schedulerData) => {
@@ -158,8 +148,6 @@ class DoctorSchedule extends Component {
         this.props.history.push(path);
     }
 
-
-
     //open a modal, remove this function and use eventItemClick to open a modal in render function once clicked
     eventClicked() {
         let path = `/homepage/doctor/`;
@@ -167,12 +155,7 @@ class DoctorSchedule extends Component {
 
     };
 
-
-
-
     render() {
-
-
         const { viewModel } = this.state;
 
         let stylePosition = {
@@ -183,8 +166,6 @@ class DoctorSchedule extends Component {
             height: 100,
             width: 100,
         };
-
-    
 
         //in for loop set timeslot object values
         //push these objects to events array
@@ -240,14 +221,5 @@ class DoctorSchedule extends Component {
 
         );
     }
-
-
-
 }
-
-
-
-
-
-
 export default DragDropContext(HTML5Backend)(DoctorSchedule);
