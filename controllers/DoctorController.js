@@ -297,8 +297,9 @@ exports.doctor_update_timeslot = (req, res) => {
 
                 let roomNumber = scheduledTimeslot.room.number;
                 let isOverlapping = HelperController.overlaps(newStart, newEnd, scheduledTimeslot.start, scheduledTimeslot.end);
-                // check the schedules dont overlap and if there are any other rooms to occupy
-                if (isOverlapping && roomOccupied.length >= 5) {
+                // check the schedules dont overlap and if it's a different doctor, check if another room is available
+                if (isOverlapping &&
+                    (scheduledTimeslot.doctor.permitNumber === timeslotToEdit.doctor.permitNumber || roomOccupied.length >= 5)) {
                     return res.status(400).json({
                         success: false,
                         message: "The scheduled time conflicts with a time that's already scheduled",
