@@ -139,6 +139,18 @@ exports.patient_update = (req, res) => {
     }).then(patient => res.json(patient));
 }
 
+exports.patient_delete_appointment = (req, res) => {
+    Patient.findOne({healthCardNumber: req.params.health_card_number}).populate('appointments')
+        .then(patient => {
+            patient.appointments.pull(req.params.id);
+            patient.save();
+            Appointment.findOneAndDelete({_id: req.params.id})
+                .then(res.json({
+                    success: true
+                }));
+        });
+};
+
 //Get list of appointments
 exports.patient_get_appointments = (req, res) =>{
     Patient.findOne({healthCardNumber: req.params.health_card_number}).populate('appointments')

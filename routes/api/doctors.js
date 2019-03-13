@@ -23,7 +23,7 @@ router.post('/:permit_number/schedule/create', doctorController.doctor_create_ti
 
 
 // Protecting the routes below. The order is important
-router.use(decoder); // Comment out for api testing
+//router.use(decoder); // Comment out for api testing
 
 // @route GET api/doctors/getDoctorsList
 // @desc Get doctor by permit number

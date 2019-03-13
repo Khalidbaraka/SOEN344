@@ -24,7 +24,8 @@ class Identification extends Component {
 
     onAppointmentTypeHandler = (event) => {
         this.setState({
-            appointmentType: event.target.value
+            appointmentType: event.target.value,
+            startTime: moment().startOf('day')
         })
     }
 
@@ -33,7 +34,6 @@ class Identification extends Component {
     }
 
     disabledMinutes = () => {
-        
         if (this.state.startTime.toDate().getHours() == 0) {
             return [0, 20, 40];
         }
