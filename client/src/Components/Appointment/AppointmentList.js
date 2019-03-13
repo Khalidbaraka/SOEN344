@@ -1,22 +1,22 @@
+import { Button, Table } from 'react-bootstrap';
 import React, { Component } from 'react';
-import { Table } from 'react-bootstrap';
 
-const AppointmentList = (props) => {
-    const appointments = props.appointments;
+class AppointmentList extends Component {
+    constructor(props) {
+        super(props);
+    }
 
-
-
-    function formatType(type) {
-
-        if (type === 0) {
+    formatType = (duration) => {
+        let type = '';
+        if (duration == 20) {
             type = "Walk-in";
-        } else if (type === 1) {
+        } else {
             type = "Annual";
         }
         return type;
     }
 
-    function formatDate(date) {
+    formatDate = (date) => {
         let d = new Date(date);
 
         let fdate = ("0" + d.getDate().toString()).slice(-2);
@@ -30,21 +30,24 @@ const AppointmentList = (props) => {
         return  date;
     }
 
+    render (){
+
+    let appointments = this.props.appointments;
     // Displaying the list of items. _id is unique to MongoDB (Primary Key)
     return (
-        <Table striped bordered hover variant="dark">
-            <thead>
-            <tr>
-                <th scope="col"> Doctor </th>
-                <th scope="col"> Type </th>
-                <th scope="col"> Date </th>
-                <th scope="col"> Duration </th>
-                <th scope="col"> Price </th>
-                <th scope="col"></th>
-                <th scope="col"></th>
-            </tr>
-            </thead>
-            <tbody>
+        <div>
+            <Table striped bordered hover variant="dark" className="text-center my-0">
+                    <thead>
+                        <tr>
+                            <th scope="col"> Doctor </th>
+                            <th scope="col"> Type </th>
+                            <th scope="col"> Date </th>
+                            <th scope="col"> Duration </th>
+                            <th scope="col"> Price </th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+             <tbody>
             {
                 appointments && appointments.length > 0 ?
                     (
@@ -52,12 +55,28 @@ const AppointmentList = (props) => {
                             return (
                                 <tr key={appointment._id}>
                                     <th> {appointment.doctor } </th>
-                                    <td> {formatType(appointment.type)} </td>
-                                    <td> {formatDate(appointment.start)} </td>
+                                    <td> {this.formatType(appointment.duration)} </td>
+                                    <td> {this.formatDate(appointment.start)} </td>
                                     <td> {appointment.duration + " minutes"} </td>
-                                    <td> {appointment.price+ "$"} </td>
-                                   { <td> <button onClick={{ /*LINK ACCORDINGLY() => props.deleteItem(appointment._id)*/}} type="button" className="btn btn-outline-warning">Update</button> </td>}
-                                   { <td> <button onClick = { () => props.deleteItem(appointment._id) } type="button" className="btn btn-outline-danger">Delete</button> </td>}
+                                    <td> {appointment.duration+ "$"} </td>
+                                    <td> 
+                                        <Button 
+                                            onClick={() => this.props.onUpdateAppointment(appointment)}  
+                                            type="button" 
+                                            variant="outline-warning"
+                                            size="sm"
+                                            className="mr-2">
+                                            Update
+                                        </Button> 
+
+                                        <Button 
+                                            onClick = {() => this.props.deleteItem(appointment._id)} 
+                                            type="button" 
+                                            variant="outline-danger"
+                                            size="sm">
+                                            Delete
+                                        </Button> 
+                                    </td>
                                 </tr>
                             )
                         })
@@ -68,7 +87,8 @@ const AppointmentList = (props) => {
             </tbody>
 
         </Table>
-    )
+     </div>
+    )}
 }
 
 export default AppointmentList;

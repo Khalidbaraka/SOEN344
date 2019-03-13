@@ -33,7 +33,7 @@ const CartList = (props) => {
 
     // Displaying the list of items. _id is unique to MongoDB (Primary Key)
     return (
-        <Table striped bordered hover variant="dark my-0">
+        <Table striped bordered hover variant="dark" className="text-center my-0">
             <thead>
             <tr>
                 <th scope="col"> Type </th>
@@ -55,8 +55,21 @@ const CartList = (props) => {
                                     <td> {appointment.duration + " minutes"} </td>
                                     <td> {appointment.duration+ "$"} </td>
                                     <td> 
-                                        <Button onClick={() => props.handleShow(appointment)} type="button" variant="outline-success" className="mr-3">Checkout</Button> 
-                                        <Button onClick={() => props.handleDelete(appointment)} type="button" variant="danger">Delete</Button> 
+                                        <Button 
+                                            onClick={() => props.handleShow(appointment)} 
+                                            type="button" 
+                                            variant="outline-success" 
+                                            className="mr-3"
+                                            size="sm">
+                                            Checkout
+                                        </Button> 
+                                        <Button 
+                                            onClick={() => props.handleDelete(appointment)} 
+                                            type="button" 
+                                            variant="outline-danger"
+                                            size="sm">
+                                            Delete
+                                        </Button> 
                                     </td>
                                 </tr>
                             )
