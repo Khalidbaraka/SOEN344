@@ -13,9 +13,10 @@ class MyAppointment extends Component {
 
         this.state = {
             appointments: [],
-            message: "",
             appointment: '',
-            toUpdate: false
+            toUpdate: false, 
+            variant: '', 
+            message: ''
         }
 
     }
@@ -35,7 +36,7 @@ class MyAppointment extends Component {
                     console.log(res.data);
                     this.setState({
                         appointments: res.data,
-                        message: res.data.message
+                        // message: res.data.message
                     })
                 }
             })
@@ -53,8 +54,7 @@ class MyAppointment extends Component {
                 if(res.data){
                     console.log(res.data);
                     this.setState({
-                        appointments: res.data,
-                        message: res.data.message
+                        appointments: res.data
                     })
                 }
             })
@@ -67,7 +67,8 @@ class MyAppointment extends Component {
 
         this.setState({
             toUpdate: true,
-            appointment: appointment
+            appointment: appointment,
+            message: ''
         });
     }
 
@@ -80,16 +81,28 @@ class MyAppointment extends Component {
         this.setState(nextState);
     }
 
+    onReset = (message, variant, toUpdate) => {
+        this.setState({
+            toUpdate: toUpdate,
+            message: message, 
+            variant: variant
+        })
+
+        this.getAppointments();
+    }
+
     render() {
 
-        const { appointments,message,appointment,toUpdate} = this.state;
+        const { appointments, message, appointment, toUpdate, variant} = this.state;
         return (
             <div className="container">
-                { message ?
-                    <Card border="danger" className="text-center my-3">
-                        <Card.Body>
-                            <Card.Title><div className="text-monospace">{ message }</div> </Card.Title>
-                        </Card.Body>
+                { message ? 
+                    <Card border={variant} className="text-center my-4"> 
+                        <Card.Body> 
+                            <Card.Title className="text-monospace"> { message }
+                                
+                            </Card.Title>
+                        </Card.Body> 
                     </Card>
                 : ''}
 
@@ -122,7 +135,7 @@ class MyAppointment extends Component {
                                 </Row>
                             </Card.Header>
 
-                            <ModifyAppointment appointment = {appointment}/>
+                            <ModifyAppointment appointment = {appointment} onReset={this.onReset}/>
                         </div>
                     )}
 
