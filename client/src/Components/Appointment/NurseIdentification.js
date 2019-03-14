@@ -117,7 +117,7 @@ class NurseIdentification extends Component {
 
         if (redirectToAppointments) {
             //direct to nurse homepage
-            return <Redirect to = '/' /> ;
+            return <Redirect to = '/homepage/nurse' /> ;
         }
 
         return (
