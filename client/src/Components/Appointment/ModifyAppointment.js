@@ -56,7 +56,7 @@ class ModifyAppointment extends Component {
 
     disabledMinutes = () => {
 
-        if (this.state.appointment.start.toDate().getHours() == 0) {
+        if (this.state.appointment.start.toDate().getHours() === 0) {
             return [0, 20, 40];
         }
     }
@@ -139,7 +139,13 @@ class ModifyAppointment extends Component {
         console.log("Appointment To Update", appointmentToUpdate);
 
         const user = JSON.parse(localStorage.getItem('userToken'));
-        const healthCardNumber = encodeURI(user.healthCardNumber);
+        let healthCardNumber;
+
+        if (this.props.healthCardNumber) {
+            healthCardNumber = this.props.healthCardNumber
+        } else {
+            healthCardNumber = encodeURI(user.healthCardNumber);
+        }
 
         axios.put('/api/patients/'+ healthCardNumber+ '/appointment/update', {
                 appointmentId: appointmentToUpdate.appointmentId,
@@ -202,7 +208,7 @@ class ModifyAppointment extends Component {
                             </Form.Control>
                        </Form.Group>
 
-                        { onUpdate == false ? (
+                        { onUpdate === false ? (
                             <Form.Group controlId="">
                                 <Form.Label>Start time</Form.Label>
                                 <Form.Control type="text" value={appointment.start.toString()} onClick={this.onUpdateTimeHandler} />
@@ -232,13 +238,13 @@ class ModifyAppointment extends Component {
                             <Col>
                                 <Form.Group controlId="">
                                     <Form.Label>Duration</Form.Label>
-                                    <Form.Control type="text" readOnly  value={appointment.type == 0 ? "20" + " min" : "60" + " min"} disabled />
+                                    <Form.Control type="text" readOnly  value={appointment.type === 0 ? "20 min" : "60 min"} disabled />
                                 </Form.Group>
                             </Col>
                             <Col>
                                 <Form.Group controlId="">
                                     <Form.Label>Price</Form.Label>
-                                    <Form.Control type="text" readOnly  value={appointment.type == 0 ? "20" + " min" : "60" + " $"} disabled />
+                                    <Form.Control type="text" readOnly  value={appointment.type === 0 ? "20 $" : "60 $"} disabled />
                                 </Form.Group>
                             </Col>
                         </Row>

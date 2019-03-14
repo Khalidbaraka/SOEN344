@@ -33,10 +33,8 @@ class MyAppointment extends Component {
         axios.delete(`/api/patients/${jsonToken['healthCardNumber']}/appointment/${id}/delete`)
             .then(res => {
                 if(res.data){
-                    console.log(res.data);
                     this.setState({
-                        appointments: res.data,
-                        // message: res.data.message
+                        message: "Appointment successfully deleted"
                     })
                 }
             })
