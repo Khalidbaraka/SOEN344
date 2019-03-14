@@ -6,6 +6,7 @@ var bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('./../config/keys');
 const HelperController = require('./HelperController');
+const userFactory = require('./userFactoryController');
 
 //  Callback functions for the routes
 
@@ -21,7 +22,8 @@ exports.doctor_register = (req, res) => {
                     permitNumber: 'Doctor with this permit number already exists'
                 });
             } else {
-                const newDoctor = new Doctor({
+
+                let object = {
                     permitNumber: req.body.permitNumber,
                     password: req.body.password,
                     firstName: req.body.firstName,
@@ -30,7 +32,9 @@ exports.doctor_register = (req, res) => {
                     city: req.body.city,
                     appointments: [],
                     schedules: []
-                });
+                }
+
+                const newDoctor = userFactory(object, "doctor");
 
                 bcryptjs.genSalt(10, (err, salt) => {
                     bcryptjs.hash(newDoctor.password, salt, (err, hash) => {

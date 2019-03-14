@@ -12,6 +12,7 @@ const HelperController = require('./HelperController');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.Types.ObjectId;
+const userFactory = require('./userFactoryController');
 //  Callback functions that they will invoke on our routes
 
 // Display list of all items.
@@ -31,7 +32,8 @@ exports.patient_register = (req, res) => {
                     healthCardNumber: 'Patient file already exists'
                 });
             } else {
-                const newPatient = new Patient({
+
+                let object = {
                     healthCardNumber: req.body.healthCardNumber,
                     birthday: req.body.birthday,
                     gender: req.body.gender,
@@ -41,9 +43,13 @@ exports.patient_register = (req, res) => {
                     firstName: req.body.firstName,
                     lastName: req.body.lastName,
                     password: req.body.password, 
-                    appointments: []
-                });
+                    appointments: [],
+                    cart: []
+                }
 
+                const newPatient = userFactory(object, "patient");
+     
+                    console.log(newPatient);
                 bcryptjs.genSalt(10, (err, salt) => {
                     bcryptjs.hash(newPatient.password, salt, (err, hash) => {
                         if (err) {
