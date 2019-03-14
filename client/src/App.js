@@ -11,12 +11,14 @@ import DoctorHomepage from "./Components/Homepage/DoctorHomepage";
 import Home from './Components/Home';
 import Identification from './Components/Appointment/Identification';
 import Items from './Components/Items/Items';
+import DoctorSchedule from './Components/Schedule/DoctorSchedule';
 import Login from './Components/Login/Login'
 import Logout from './Components/Logout';
 import NurseHomepage from './Components/Homepage/NurseHomepage';
 import PatientHomepage from "./Components/Homepage/PatientHomepage";
 import PatientNavBar from "./Components/PatientNavBar";
 import SignUp from './Components/SignUp/SignUp'
+import CreateTimeslot from "./Components/Timeslots/CreateTimeslot";
 
 class App extends Component {
   render() {
@@ -37,7 +39,12 @@ class App extends Component {
 
             <Route path='/logout' component={ Logout }/>
             <Route path='/homepage/nurse' component={ NurseHomepage }/>
-            <Route path='/homepage/doctor' component={ DoctorHomepage }/>
+
+            
+            <Route exact path='/homepage/doctor' component={ DoctorHomepage }/>
+            <Route exact path='/homepage/doctor/schedule' component={ DoctorSchedule }/>
+            <Route exact path='/timeslot/doctor' component={ CreateTimeslot }/>
+
 
             <Route path='/homepage/patient' component={ PatientHomepage }/>
             <Route exact path='/homepage/patient/scheduleAppointment' component={ PatientHomepage }/>
