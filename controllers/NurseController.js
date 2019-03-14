@@ -97,7 +97,15 @@ exports.nurse_register = (req, res) => {
                             throw err;
                         }
                         newNurse.password = hash;
-                        newNurse.save().then(nurse => res.json(nurse)).catch(err => console.log(err));
+                        newNurse.save().then(nurse => res.json({
+                            success: true,
+                            message: 'Signed up!'
+                        })).catch(err => {
+                            res.json({
+                                success: false,
+                                message: 'Error: Server error'
+                            });
+                        })
                     })
                 })
             }
