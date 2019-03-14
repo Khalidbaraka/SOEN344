@@ -624,7 +624,7 @@ Appointment.find().populate('doctor').populate('room')
                                 //Check if patient already has annual check up appointment
                                 if(newType == 1){
                                     for(let ptAppointment of patient.appointments){
-                                        if(ptAppointment.type == newType && ptAppointment.start.getYear() == newStart.getYear()){
+                                        if(ptAppointment.type == newType && ptAppointment.start.getYear() == newStart.getYear() && ptAppointment._id != appointmentToUpdateId){
                                             res.status(400).json({
                                                 success: false,
                                                 message: "You already have an annual check-up appointment for the year"
@@ -686,6 +686,8 @@ Appointment.find().populate('doctor').populate('room')
                                         }
                                         if(doctorAvailable == true && doctorRoom.equals(rooms[j]._id)){
                                             // if got here, we can do the update
+                                            console.log("New type", newType);
+                                            
                                             Appointment.updateOne( { _id: appointmentToUpdateId },
                                                 {"$set": {
                                                     "start": newStart, 
@@ -693,7 +695,8 @@ Appointment.find().populate('doctor').populate('room')
                                                     "doctor": doctors[x]._id,
                                                     "room": rooms[j]._id,
                                                     "duration": duration.toString(),
-                                                    "price": price
+                                                    "price": price,
+                                                    "type" : newType
                                                 }})
                                                 .then(() => {
                                                     res.json({

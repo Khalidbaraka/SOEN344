@@ -1,86 +1,189 @@
 import 'rc-calendar/assets/index.css';
 
-import { Button, Card, Col, Dropdown, DropdownButton, Form, Row } from 'react-bootstrap';
+import { Button, Card, Col, Form, InputGroup, Row } from 'react-bootstrap';
 import React, { Component } from 'react';
+
 import AppointmentList from './AppointmentList';
+import ModifyAppointment from './ModifyAppointment';
 import axios from 'axios';
-import moment from "./Identification";
 
-
-
-
-class MyAppointment extends Component {
+class NurseAppointment extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
             appointments: [],
             healthCardNumber: "",
-            message: ""
+            message: "", 
+            onShow: false, 
+            toUpdate: false,
+            variant: '', 
         }
     }
 
-    componentDidMount() {
-        this.getAppointments();
-    }
-
-    getAppointments (healthCardNumber) {
+    getAppointments = (healthCardNumber) => {
 
         axios.get('/api/patients/'+ healthCardNumber+ '/appointment/get')
             .then(res => {
                 if(res.data){
-                    console.log(res.data);
                     console.log(res.data.message);
                     this.setState({
-                        appointments: res.data,
-                        message: res.data.message
+                        appointments: res.data
                     })
                 }
             })
             .catch(err => console.log(err))
     }
 
+    deleteItem = (id) => {
+
+        let string = localStorage.getItem('userToken');
+        let jsonToken = JSON.parse(string);
+
+        const { healthCardNumber } = this.state
+
+        axios.delete(`/api/patients/${healthCardNumber}/appointment/${id}/delete`)
+            .then(res => {
+                if(res.data.success){
+                    const nextState = {
+                        ...this.state,
+                        onShow: true
+                    }
+            
+                    this.setState(nextState);
+                }
+            }).catch(err => console.log(err))
+
+        window.location.reload();
+    }
+
     onChange = (e) => {
         this.setState({
-            [e.target.name]: e.target.value
+            healthCardNumber: e.target.value, 
         })
+    }
+    
+    onUpdateAppointment = (appointment) => {
+
+        console.log("Appointment on Update", appointment );
+
+        this.setState({
+            toUpdate: true,
+            appointment: appointment,
+            message: ''
+        });
+    }
+
+    onReturn = () => {
+        const nextState = {
+            ...this.state,
+            toUpdate: false
+        }
+
+        this.setState(nextState);
+    }
+
+    onReset = (message, variant, toUpdate) => {
+        this.setState({
+            toUpdate: toUpdate,
+            message: message, 
+            variant: variant
+        })
+
+        this.getAppointments(this.state.healthCardNumber);
     }
 
     onSubmit = (event) => {
 
         event.preventDefault();
-        this.setState({
-            appointments: []
-        });
-        console.log(this.state.healthCardNumber);
+        
+        const nextState = {
+            ...this.state,
+            appointments: [],
+            onShow: true
+        }
+
+        this.setState(nextState);
+
         this.getAppointments(this.state.healthCardNumber);
     }
 
 
+    renderFields = () => {
+        if (!this.state.toUpdate) {
+            if (this.state.onShow === true) {
+                return (
+                    <AppointmentList 
+                        appointments={this.state.appointments}
+                        onUpdateAppointment = {this.onUpdateAppointment}
+                        toUpdate = {this.state.toUpdate}
+                        deleteItem = {this.deleteItem} 
+                    />
+                )
+            }
+        } else {
+            return (
+                <div>
+                    <Card.Header>
+                        <Row>
+                            <Col md={1}>
+                                <Button variant="outline-info" onClick={this.onReturn.bind(this)}> <i className="fa fa-chevron-left" aria-hidden="true"></i> </Button>
+                            </Col>
+                            <Col md={11}>
+                                <Card.Title className="text-center text-monospace">Modify the Appointment</Card.Title>
+                            </Col>
+                        </Row>
+                    </Card.Header>
+
+                    <ModifyAppointment 
+                        healthCardNumber = {this.state.healthCardNumber}
+                        appointment = {this.state.appointment} 
+                        onReset={this.onReset}/>
+                </div>
+            )
+        }
+    }
+
     render() {
 
-        const { appointments,message} = this.state;
+        const { message, variant} = this.state;
+
         return (
             <div className="container">
+                { message ? 
+                    <Card border={variant} className="text-center my-4"> 
+                        <Card.Body> 
+                            <Card.Title className="text-monospace"> { message }
+                                
+                            </Card.Title>
+                        </Card.Body> 
+                    </Card>
+                : ''}
 
                 <Card className="my-5">
                     <Card.Header>
                         <Card.Title className="text-center text-monospace">Search Appointments</Card.Title>
                     </Card.Header>
                     <Card.Body>
-                    <Form noValidate className="font-weight-bold">
+                    <Form noValidate className="font-weight-bold" onSubmit={this.onSubmit}>
                         <Form.Group controlId="formBasicUsername">
                             <Form.Label>Health Card Number</Form.Label>
-                            <Form.Control name="healthCardNumber" type="text" placeholder="Enter Patient's Health Card Number" value = {this.state.healthCardNumber} onChange={this.onChange}/>
+                            <InputGroup>
+                                <Form.Control name="healthCardNumber" type="text" placeholder="Enter Patient's Health Card Number" value = {this.state.healthCardNumber} onChange={this.onChange}/>
+                                <InputGroup.Append>
+                                    <Button variant="outline-info" type="submit" className="float-right">
+                                        Search
+                                    </Button>
+                                </InputGroup.Append>
+                            </InputGroup>
                             <Form.Text className="text-muted">
                                 ex: DOEJ 9610 3101
                             </Form.Text>
                         </Form.Group>
                     </Form>
-                    <AppointmentList appointments={appointments} />
-                        <Button variant="outline-info" type="button" onClick={this.onSubmit} className="float-right mt-3">
-                            Search
-                        </Button>
+
+                    {this.renderFields()}
+                
                     </Card.Body>
                 </Card>
             </div>
@@ -88,4 +191,4 @@ class MyAppointment extends Component {
     }
 }
 
-export default MyAppointment;
+export default NurseAppointment;

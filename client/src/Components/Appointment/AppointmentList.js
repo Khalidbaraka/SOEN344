@@ -8,11 +8,15 @@ class AppointmentList extends Component {
 
     formatType = (duration) => {
         let type = '';
-        if (duration == 20) {
+        console.log("Duration", duration);
+        
+        
+        if (duration === "20") {
             type = "Walk-in";
         } else {
             type = "Annual";
         }
+        console.log("Type", type);
         return type;
     }
 
@@ -66,11 +70,11 @@ class AppointmentList extends Component {
                                             onClick={() => this.props.onUpdateAppointment(appointment)}  
                                             type="button" 
                                             variant="outline-warning"
-                                            size="sm"
-                                            className="mr-2">
+                                            size="sm">
                                             Update
                                         </Button> 
-
+                                    </td>
+                                    <td>
                                         <Button 
                                             onClick = {() => this.props.deleteItem(appointment._id)} 
                                             type="button" 
@@ -83,7 +87,7 @@ class AppointmentList extends Component {
                             )
                         })
                     ) : (
-                        <li> No appointments</li>
+                        <td colSpan="8"> <div className="my-3 font-weight-bold">No Appointment</div> </td>
                     )
             }
             </tbody>
