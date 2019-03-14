@@ -48,18 +48,7 @@ exports.patient_register = (req, res) => {
                 }
 
                 const newPatient = userFactory(object, "patient");
-              /*   const newPatient = new Patient({
-                    healthCardNumber: req.body.healthCardNumber,
-                    birthday: req.body.birthday,
-                    gender: req.body.gender,
-                    phoneNumber: req.body.phoneNumber,
-                    physicalAddress: req.body.physicalAddress,
-                    emailAddress: req.body.emailAddress,
-                    firstName: req.body.firstName,
-                    lastName: req.body.lastName,
-                    password: req.body.password, 
-                    appointments: []
-                }); */
+     
                     console.log(newPatient);
                 bcryptjs.genSalt(10, (err, salt) => {
                     bcryptjs.hash(newPatient.password, salt, (err, hash) => {
