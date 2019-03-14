@@ -10,6 +10,8 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const config = require('./../config/keys');
 const HelperController = require('./HelperController');
+const userFactory = require('./userFactoryController');
+
 // Display list of all Nurse
 exports.nurse_list = (req, res) => {
     Nurse.find()
@@ -70,46 +72,38 @@ exports.nurse_login = (req, res) => {
 
 // Create/Register nurse
 exports.nurse_register = (req, res) => {
-
-    const nurseData = {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        accessID: req.body.accessID,
-        password: req.body.password
-    }
-
     Nurse.findOne({
             accessID: req.body.accessID
         })
         .then(nurse => {
-            if (!nurse) {
-                bcrypt.hash(req.body.password, 10, (err, hash) => {
-                    nurseData.password = hash;
-                    Nurse.create(nurseData)
-                        .then(nurse => {
-                            res.json({
-                                success: true,
-                                message: 'Signed up!'
-                            });
-                        })
-                        .catch(err => {
-                            res.json({
-                                success: false,
-                                message: 'Error: Server error'
-                            });
-                        })
-                })
-            } else {
-                res.json({
-                    success: false,
-                    message: 'Nurse already exists'
+            if (nurse) {
+                return res.status(400).json({
+                    permitNumber: 'Nurse with this accessID number already exists'
                 });
+            } else {
+
+                let object = {
+                    firstName: req.body.firstName,
+                    lastName: req.body.lastName,
+                    accessID: req.body.accessID,
+                    password: req.body.password
+                }
+
+                const newNurse = userFactory(object, "nurse");
+
+                bcryptjs.genSalt(10, (err, salt) => {
+                    bcryptjs.hash(newNurse.password, salt, (err, hash) => {
+                        if (err) {
+                            throw err;
+                        }
+                        newNurse.password = hash;
+                        newNurse.save().then(nurse => res.json(nurse)).catch(err => console.log(err));
+                    })
+                })
             }
-        })
-        .catch(err => {
-            res.send('error: ' + err)
-        })
-};
+        });
+}
+
 
 // Edit Password
 exports.change_nurse_password = (req, res) => {
