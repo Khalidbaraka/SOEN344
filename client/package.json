@@ -18,7 +18,8 @@
     "react-big-scheduler": "^0.2.6",
     "react-timeslot-calendar": "^0.2.0",
     "react-dnd": "^5.0.0",
-    "react-dnd-html5-backend": "5.0.1"
+    "react-dnd-html5-backend": "5.0.1",
+    "react-time-range-slider": "^1.1.1"
   },
   "scripts": {
     "start": "react-scripts start",
