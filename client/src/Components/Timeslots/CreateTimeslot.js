@@ -59,8 +59,8 @@ class CreateTimeslot extends Component {
         e.preventDefault();
         const timeslot = {
             doctor: this.state.doctor,
-            start: this.state.start.toDate(),
-            end: this.state.end.toDate(),
+            start: this.state.start,
+            end: this.state.end,
             duration: this.state.duration
         };
 
