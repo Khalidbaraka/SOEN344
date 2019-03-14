@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const nurse_controller = require ('./../../controllers/NurseController.js');
+const patient_controller = require ('./../../controllers/PatientController.js');
 const decoder = require('../../middleware');
 
 // @route POST api/nurses/register
@@ -38,6 +39,11 @@ router.delete('/delete', nurse_controller.nurse_delete);
 // @desc  create new appointment for patient 
 // @access Public
 router.post('/:access_id/:health_card_number/appointment/create', nurse_controller.nurse_create_appointment);
+
+// @route post api/patients/appointment/delete
+// @desc  Delete Appointment
+// @access Public
+router.delete('/:health_card_number/appointment/:id/delete', patient_controller.patient_delete_appointment);
 
 // Protecting the routes below. The order is important
 //router.use(decoder);

@@ -1,7 +1,8 @@
 import 'rc-calendar/assets/index.css';
 
-import { Card, Form} from 'react-bootstrap';
+import { Card, Form } from 'react-bootstrap';
 import React, { Component } from 'react';
+
 import NurseIdentification from './NurseIdentification'
 import moment from 'moment';
 
@@ -27,7 +28,7 @@ class NurseMakeAppointment extends Component {
 
     render() {
 
-        const { healthCardNumber,message} = this.state;
+        const { healthCardNumber} = this.state;
         return (
             <div className="container">
 
