@@ -50,10 +50,11 @@ class DoctorLogin extends Component{
                     });
                 } else {
                     this.setState({
-                        permitNumber: '',
                         password: '',
                         message: res.data.message
                     });
+
+                    this.props.updateMessage(this.state.message);
                 }
 
             })
@@ -65,10 +66,7 @@ class DoctorLogin extends Component{
 
 	render() {
 
-        const {
-            isAuthenticated,
-            message
-        } = this.state;
+        const { isAuthenticated } = this.state;
 
         const { fromPath } = this.props.fromPath || { fromPath: { pathname: '/homepage/doctor' } };
 
@@ -81,13 +79,6 @@ class DoctorLogin extends Component{
             <div>
                 <Card className="p-4">
                     <Form noValidate onSubmit = {this.onSubmit} className="font-weight-bold">
-                        { message ? 
-                            <Card border="danger" className="text-center my-3"> 
-                                <Card.Body> 
-                                    <Card.Title><div className="text-monospace">{ message }</div> </Card.Title>
-                                </Card.Body> 
-                            </Card>
-                        : ''}
                         <Form.Group controlId="formBasicUsername">
                             <Form.Label>Permit Number</Form.Label>
                             <Form.Control name="permitNumber" type="text" placeholder="Enter 7-digits Permit Number" value = {this.state.permitNumber} onChange={this.onChange}/>

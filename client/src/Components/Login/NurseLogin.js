@@ -51,10 +51,11 @@ class NurseLogin extends Component {
                     });
                 } else {
                     this.setState({
-                        accessID: '',
                         password: '',
                         message: res.data.message
                     });
+
+                    this.props.updateMessage(this.state.message);
                 }
 
             })
@@ -66,10 +67,7 @@ class NurseLogin extends Component {
     
     render() {
 
-        const {
-            isAuthenticated,
-            message
-        } = this.state;
+        const { isAuthenticated } = this.state;
 
         const { fromPath } = this.props.fromPath || { fromPath: { pathname: '/homepage/nurse' } };
 
@@ -82,14 +80,6 @@ class NurseLogin extends Component {
             <div>
                 <Card className="p-4">
                     <Form noValidate onSubmit = {this.onSubmit} className="font-weight-bold">
-                        { message ? 
-                            <Card border="danger" className="text-center my-3"> 
-                                <Card.Body> 
-                                    <Card.Title><div className="text-monospace">{ message }</div> </Card.Title>
-                                </Card.Body> 
-                            </Card>
-                        : ''}
-                        
                         <Form.Group controlId="formBasicUsername">
                             <Form.Label>Access ID</Form.Label>
                             <Form.Control name="accessID" type="text" placeholder="Enter Access ID" value = {this.state.accessID} onChange={this.onChange}/>

@@ -1,4 +1,4 @@
-import {Button, Card, Col, Row, Tab, Tabs} from 'react-bootstrap';
+import {Alert, Col, Row, Tab, Tabs} from 'react-bootstrap';
 import React, { Component } from 'react';
 
 import DoctorLogin from './DoctorLogin';
@@ -33,7 +33,13 @@ class Login extends Component{
         message: message
       })
     }
-  }
+  };
+
+  updateMessage = (message) => {
+    this.setState({
+      message: message
+    })
+  };
   
   render() {
 
@@ -45,14 +51,10 @@ class Login extends Component{
           <Col md={{ span: 8, offset: 2}}>
 
             { message ?
-              <Card border="danger" className="text-center my-4">
-                <Card.Body>
-                  <Card.Title className="text-monospace">
-                    { message }
-                  </Card.Title>
-                </Card.Body>
-              </Card>
-              : ''}
+                <Alert variant="light" className="mt-4">
+                  <h5 style={{color: "#800020"}} className="text-monospace text-center">{ message }</h5>
+                </Alert>
+                : ''}
             <Tabs 
               fill 
               className="mt-5" 
@@ -60,13 +62,13 @@ class Login extends Component{
               onSelect={ tab => this.setState({ tab }) }
               id="uncontrolled-tab-example" unmountOnExit="True">
               <Tab eventKey="doctor" title="Doctor">
-                <DoctorLogin fromPath = {this.props.location.state} />
+                <DoctorLogin fromPath = {this.props.location.state} updateMessage={this.updateMessage} />
               </Tab>
               <Tab eventKey="nurse" title="Nurse">
-                <NurseLogin fromPath = {this.props.location.state}/>
+                <NurseLogin fromPath = {this.props.location.state} updateMessage={this.updateMessage}/>
               </Tab>
               <Tab eventKey="patient" title="Patient">
-                <PatientLogin fromPath = {this.props.location.state} />
+                <PatientLogin fromPath = {this.props.location.state} updateMessage={this.updateMessage} />
               </Tab>
             </Tabs>
           </Col>
