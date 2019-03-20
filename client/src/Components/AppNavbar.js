@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
 import { Link } from 'react-router-dom';
-import Login from './Login/Login';
 
 class AppNavbar extends Component {
     constructor(props) {
@@ -14,12 +13,12 @@ class AppNavbar extends Component {
 
     toggle = (e) => {
       e.preventDefault();
-      var isOpen = this.state.isOpen;
+      const isOpen = this.state.isOpen;
 
       this.setState({
         isOpen: !isOpen
-      })
-    }
+      });
+    };
     
     render() {
         const { isOpen } = this.state; 

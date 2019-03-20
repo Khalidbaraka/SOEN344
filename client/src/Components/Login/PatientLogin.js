@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken');
 class PatientLogin extends Component{
 
     constructor() {
-        super()
+        super();
         this.state = {
             healthCardNumber: '',
             password: '',
@@ -41,11 +41,13 @@ class PatientLogin extends Component{
                     const decoded = jwt.decode(res.data.token, {
                         complete: true
                     });
+
                     localStorage.setItem('userToken', JSON.stringify(decoded.payload));
                     
                     this.setState({
                         isAuthenticated: true
                     });
+
                 } else {
                     this.setState({
                         healthCardNumber: '',
@@ -67,9 +69,11 @@ class PatientLogin extends Component{
             message
         } = this.state;
 
+        const { fromPath } = this.props.fromPath || { fromPath: { pathname: '/homepage/patient' } };
+
         if (isAuthenticated) {
-            //direct to patient homepage
-            return <Redirect to = '/homepage/patient' /> ;
+            // direct the patient to the patient home page or he is taken back to the initial page he was trying to access before he was redirected.
+            return <Redirect to={fromPath} />;
         }
 
 		return (

@@ -1,4 +1,4 @@
-import {Col, Row, Tab, Tabs} from 'react-bootstrap';
+import {Button, Card, Col, Row, Tab, Tabs} from 'react-bootstrap';
 import React, { Component } from 'react';
 
 import DoctorLogin from './DoctorLogin';
@@ -10,13 +10,14 @@ class Login extends Component{
     super(props);
 
     this.state = {
-      tab: ''
+      tab: '',
+      message: '',
     }
   }
 
   componentDidMount = () => {
-    const tab = this.props.location.state ? this.props.location.state.tab : '';
-    
+    const { tab, message } = this.props.location.state ? this.props.location.state : '';
+
     if (tab) {
       this.setState({
         tab: tab
@@ -26,15 +27,32 @@ class Login extends Component{
         tab: "patient"
       })
     }
+
+    if (message) {
+      this.setState({
+        message: message
+      })
+    }
   }
   
   render() {
-    const { tab } = this.state    
+
+    const { tab, message } = this.state;
 
     return (
       <div className="container">
         <Row>
           <Col md={{ span: 8, offset: 2}}>
+
+            { message ?
+              <Card border="danger" className="text-center my-4">
+                <Card.Body>
+                  <Card.Title className="text-monospace">
+                    { message }
+                  </Card.Title>
+                </Card.Body>
+              </Card>
+              : ''}
             <Tabs 
               fill 
               className="mt-5" 
@@ -42,13 +60,13 @@ class Login extends Component{
               onSelect={ tab => this.setState({ tab }) }
               id="uncontrolled-tab-example" unmountOnExit="True">
               <Tab eventKey="doctor" title="Doctor">
-                <DoctorLogin />
+                <DoctorLogin fromPath = {this.props.location.state} />
               </Tab>
               <Tab eventKey="nurse" title="Nurse">
-                <NurseLogin />
+                <NurseLogin fromPath = {this.props.location.state}/>
               </Tab>
               <Tab eventKey="patient" title="Patient">
-                <PatientLogin />
+                <PatientLogin fromPath = {this.props.location.state} />
               </Tab>
             </Tabs>
           </Col>

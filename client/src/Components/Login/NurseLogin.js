@@ -71,9 +71,11 @@ class NurseLogin extends Component {
             message
         } = this.state;
 
+        const { fromPath } = this.props.fromPath || { fromPath: { pathname: '/homepage/nurse' } };
+
         if (isAuthenticated) {
-            //direct to nurse homepage
-            return <Redirect to = '/homepage/nurse' /> ;
+            // direct the nurse to the nurse home page or he is taken back to the initial page he was trying to access before he was redirected.
+            return <Redirect to={fromPath} />;
         }
 
 		return (

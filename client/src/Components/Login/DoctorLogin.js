@@ -43,7 +43,6 @@ class DoctorLogin extends Component{
                     const decoded = jwt.decode(res.data.token, {
                         complete: true
                     });
-                    localStorage.setItem('rawUserToken', res.data.token);
                     localStorage.setItem('userToken', JSON.stringify(decoded.payload));
 
                     this.setState({
@@ -71,9 +70,11 @@ class DoctorLogin extends Component{
             message
         } = this.state;
 
+        const { fromPath } = this.props.fromPath || { fromPath: { pathname: '/homepage/doctor' } };
+
         if (isAuthenticated) {
-            //direct to doctor homepage
-            return <Redirect to = '/homepage/doctor' /> ;
+            // direct the doctor to the doctor home page or he is taken back to the initial page he was trying to access before he was redirected.
+            return <Redirect to={fromPath} />;
         }
 
 		return(
