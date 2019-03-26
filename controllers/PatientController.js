@@ -335,17 +335,14 @@ exports.patient_checkout_appointment = (req, res) =>{
                                             doctors[k].save();
                                             patient.appointments.push(newAppointment);
                                             //deleting the timeslot from patient's cart
-                                            for(var q=0; q < patient.cart.length ; q++)
-                                            {
-                                                if (patient.cart[q] == timeslot._id)
-                                                {
-                                                    toRemove = q;
-                                                }
-                                            }
-                                            patient.cart.splice(toRemove,1);
-                                            patient.save();                                                                                                                                                 
-                                            //res.json({success:true})
-                                            res.json(rooms[i])
+                                            patient.cart.pull(req.body.timeslot._id)
+                                            Timeslot.findByIdAndRemove(req.body.timeslot._id)
+                                                .then(timeslot =>{
+                                                    patient.save();
+                                                    res.json(patient)
+                                                }).catch(err => res.status(404).json({
+                                                success: false
+                                            }))
                                         }
                                         else{
                                             foundRoomNoDoctor =true;
