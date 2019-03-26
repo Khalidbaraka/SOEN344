@@ -39,7 +39,7 @@ const DoctorSchema = new Schema ({
             ref: 'timeslot' 
     }],
     clinic: {
-        required: true,
+        //required: true,
         type: Schema.Types.ObjectId,
         ref: 'clinic'
     }

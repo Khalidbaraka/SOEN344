@@ -14,7 +14,7 @@ const AppointmentSchema = new Schema ({
         max: 1
     },
     clinic: { 
-        required: true,
+        //required: true,
         type: Schema.Types.ObjectId, ref: 'clinic'
     },
     doctor: { 

@@ -27,7 +27,7 @@ const ClinicSchema = new Schema ({
     }],
     // A clinic has a number of rooms. This is required.
     rooms: [{
-        required: true,
+        //required: true,
         type: Schema.Types.ObjectId,
         ref: 'room'
     }]

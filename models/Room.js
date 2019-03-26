@@ -12,8 +12,9 @@ const RoomSchema = new Schema ({
     	ref: 'appointment' 
     }],
     clinic: {
-        required: true,
-        type: Schema.Types.ObjectId
+        //required: true,
+        type: Schema.Types.ObjectId,
+        ref: 'clinic'
     }
 });
 
