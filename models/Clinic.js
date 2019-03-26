@@ -15,9 +15,21 @@ const ClinicSchema = new Schema ({
     	type: Schema.Types.ObjectId, 
     	ref: 'doctor' 
     }],
+    nurses: [{
+        type: Schema.Types.ObjectId,
+        ref: 'nurse'
+    }],
+    /* While appointment model does have the information about a dcotor and room,
+    * we assumed that a clinic has a set of predefined doctors and rooms. */
     appointments: [{
     	type: Schema.Types.ObjectId, 
     	ref: 'appointment' 
+    }],
+    // A clinic has a number of rooms. This is required.
+    rooms: [{
+        required: true,
+        type: Schema.Types.ObjectId,
+        ref: 'room'
     }]
 });
 

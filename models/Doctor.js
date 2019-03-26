@@ -7,7 +7,7 @@ const DoctorSchema = new Schema ({
         required: true,
         unique: true,
         type: Number,
-        min : 0000001,
+        min : 0,
         max : 9999999
     }, 
     password: {
@@ -34,11 +34,15 @@ const DoctorSchema = new Schema ({
         type: Schema.Types.ObjectId, 
         ref: 'appointment' 
     }],
-    
     schedules: [{
             type: Schema.Types.ObjectId, 
             ref: 'timeslot' 
-    }]
+    }],
+    clinic: {
+        required: true,
+        type: Schema.Types.ObjectId,
+        ref: 'clinic'
+    }
 
 });
 

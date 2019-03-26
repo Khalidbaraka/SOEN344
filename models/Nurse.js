@@ -20,6 +20,11 @@ const NurseSchema = new Schema ({
     lastName: {
         type: String,
         required: true
+    },
+    clinic: {
+        required: true,
+        type: Schema.Types.ObjectId,
+        ref: 'clinic'
     }
 });
 
