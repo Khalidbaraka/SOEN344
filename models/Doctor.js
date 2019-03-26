@@ -7,7 +7,7 @@ const DoctorSchema = new Schema ({
         required: true,
         unique: true,
         type: Number,
-        min : 0,
+        min : 0000000,
         max : 9999999
     }, 
     password: {
