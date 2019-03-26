@@ -3,23 +3,24 @@ const router = express.Router();
 
 //loading the model
 const doctorController = require('../../controllers/DoctorController');
+const controller = require('../../controllers/Controller');
 const decoder = require('../../middleware');
 
 
 // @route post api/doctors/register
 // @desc  Register Doctor
 // @access Public
-router.post('/register', doctorController.doctor_register);
+router.post('/register', controller.doctorLogin);
 
 // @route post api/doctors/login
 // @desc  Login Doctor
 // @access Public
-router.post('/login', doctorController.doctor_login);
+router.post('/login', controller.doctorLogin);
 
 // @route post api/doctors/:permit_number/schedule/create
 // @desc Create Timeslot
 // @access Public
-router.post('/:permit_number/schedule/create', doctorController.doctor_create_timeslot);
+router.post('/:permit_number/schedule/create', controller.createTimeslot);
 
 
 // Protecting the routes below. The order is important
@@ -28,36 +29,36 @@ router.post('/:permit_number/schedule/create', doctorController.doctor_create_ti
 // @route GET api/doctors/getDoctorsList
 // @desc Get doctor by permit number
 // @access Public
-router.get('/getDoctorsList', doctorController.doctor_get_list);
+router.get('/getDoctorsList', controller.doctorList);
 
 // @route GET api/doctors/getDoctorByPermit
 // @desc Loads doctors table from db
 // @access Public
-router.get('/getDoctorByPermit', doctorController.doctor_get_by_permit);
+// router.get('/getDoctorByPermit', doctorController.doctor_get_by_permit);
 
 // @route GET api/doctors/permit_number/schedule/get
 // @desc Get schedule of doctor
 // @access Public
-router.get('/:permit_number/schedule/get', doctorController.doctor_get_schedule);
+router.get('/:permit_number/schedule/get', controller.getSchedule);
 
 // @route put api/doctors/update/permit_number
 // @desc  Update Doctor
 // @access Public
-router.put('/update/:permit_number', doctorController.doctor_update);
+// router.put('/update/:permit_number', doctorController.doctor_update);
 
 // @route post api/doctors/delete
 // @desc  Delete Doctor
 // @access Public
-router.delete('/delete/:permit_number', doctorController.doctor_delete);
+// router.delete('/delete/:permit_number', doctorController.doctor_delete);
 
 // @route put api/doctors/schedule/update
 // @desc  Update a doctor's scheduled timeslot
 // @access Public
-router.put('/schedule/update', doctorController.doctor_update_timeslot);
+router.put('/schedule/update', controller.updateTimeslot);
 
 // @route post api/doctors/schedule/delete/:timeslotId
 // @desc  Delete a doctor's scheduled timeslot
 // @access Public
-router.delete('/schedule/delete/:timeslotId', doctorController.doctor_delete_timeslot);
+router.delete('/schedule/delete/:timeslotId', controller.deleteTimeslot);
 
 module.exports = router;

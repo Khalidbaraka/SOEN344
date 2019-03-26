@@ -1,4 +1,6 @@
 const PatientController = require('./PatientController');
+const DoctorController = require('./DoctorController');
+const NurseController = require('./NurseController');
 
 module.exports = {
     // Patient
@@ -15,6 +17,25 @@ module.exports = {
     getAllAppointments: PatientController.patient_get_appointments,
     deleteAppointment: PatientController.patient_delete_appointment,
     checkoutAppointment: PatientController.patient_checkout_appointment,
-    updateAppointment: PatientController.patient_update_appointment
+    updateAppointment: PatientController.patient_update_appointment,
+
+    // Doctor
+    doctorRegister: DoctorController.doctor_register,
+    doctorLogin: DoctorController.doctor_login,
+    doctorList: DoctorController.doctor_get_list,
+
+    // Schedule
+    getSchedule: DoctorController.doctor_get_schedule,
+    createTimeslot: DoctorController.doctor_create_timeslot,
+    deleteTimeslot: DoctorController.doctor_delete_timeslot,
+    updateTimeslot: DoctorController.doctor_update_timeslot,
+
+    // Nurse
+    nurseRegister: NurseController.nurse_register,
+    nurseLogin: NurseController.nurse_login,
+    nurseList: NurseController.nurse_list,
+    createAppointment: NurseController.nurse_create_appointment,
+
+
 
 }
