@@ -20,7 +20,7 @@ import CreateTimeslot from "./Components/Timeslots/CreateTimeslot";
 import PatientRoute from "./Components/PrivateRoute/PatientRoute";
 import DoctorRoute from "./Components/PrivateRoute/DoctorRoute";
 import NurseRoute from "./Components/PrivateRoute/NurseRoute";
-
+import Error from "./Components/Error";
 
 class App extends Component {
   render() {
@@ -39,6 +39,7 @@ class App extends Component {
             <Route path='/login' component={ Login }/>
             <Route path='/signup' component={ SignUp }/>
             <Route path='/logout' component={ Logout }/>
+            <Route path='/error' component={ Error } />
 
             {/* Nurse Routes */}
             <NurseRoute path='/homepage/nurse' component={ NurseHomepage }/>

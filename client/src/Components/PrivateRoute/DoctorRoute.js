@@ -9,11 +9,9 @@ const DoctorRoute = ({ component: Component, ...rest }) => (
                 <Component {...props} />
             ) : (
                 <Redirect to={{
-                    pathname: '/login',
+                    pathname: '/error',
                     state: {
-                        message: "Sorry, you do not have permission to access this page. You are not logged in as a Doctor. Please try again",
-                        fromPath: props.location,
-                        tab: 'doctor'
+                        message: "Sorry, you do not have permission to access this page. You are not logged in as a Doctor. Please log out first and try again"
                     }
                 }} />
             )) : (
