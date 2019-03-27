@@ -12,21 +12,35 @@ class Identification extends Component {
     constructor(props) {
         super(props);
         
-        this.state = {
-            appointmentType: "0", 
-            startTime: moment().startOf('day'),
-            message: '',
-            variant: '', 
-            redirectToCart: false
-        }
+        this.state = this.getInitialState();
 
     }
 
+    getInitialState = () => {
+        const initialState = {
+            appointmentType: "0",
+            startTime: moment().startOf('day'),
+            message: '',
+            variant: '',
+            redirectToCart: false
+        };
+        return initialState;
+    }
+
+    setTimeout = (() => {
+        window.location.reload(true);
+    }, 3000);
+
     onAppointmentTypeHandler = (event) => {
+
         this.setState({
             appointmentType: event.target.value,
             startTime: moment().startOf('day')
         })
+    }
+
+    resetState = () => {
+        this.setState(this.getInitialState());
     }
 
     disabledHours = () => {
@@ -59,7 +73,7 @@ class Identification extends Component {
 
     onChange = (value) => {       
         console.log("Moment", value.toDate());
-        
+
         const nextState = {
             ...this.state,
             startTime: value
@@ -86,6 +100,10 @@ class Identification extends Component {
                     message: "Appointment successfully added", 
                     variant: "success"
                 });
+
+                setTimeout(function() {
+                    window.location.reload();
+                }, 3000);
             }
         }).catch((error) => {
             // Error

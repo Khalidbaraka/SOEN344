@@ -10,8 +10,6 @@ const jwt = require('jsonwebtoken');
 const config = require('./../config/keys');
 const HelperController = require('./HelperController');
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
-const ObjectId = mongoose.Types.ObjectId;
 const userFactory = require('./userFactoryController');
 //  Callback functions that they will invoke on our routes
 
@@ -48,8 +46,6 @@ exports.patient_register = (req, res) => {
                 }
 
                 const newPatient = userFactory(object, "patient");
-     
-                    console.log(newPatient);
                 bcryptjs.genSalt(10, (err, salt) => {
                     bcryptjs.hash(newPatient.password, salt, (err, hash) => {
                         if (err) {
@@ -226,7 +222,7 @@ exports.return_patient_cart = (req, res) =>{
 
 //Checkout appointments from the cart.
 exports.patient_checkout_appointment = (req, res) =>{
-    Patient.findOne({healthCardNumber: req.params.health_card_number}).populate('cart')
+    Patient.findOne({healthCardNumber: req.params.health_card_number}).populate('cart').populate('appointments')
         .then(patient => {
             var timeslot = req.body.timeslot;
             var appStart = new Date(timeslot.start);
@@ -235,7 +231,6 @@ exports.patient_checkout_appointment = (req, res) =>{
             //appStart = new Date(req.body.start);
             //appEnd = new Date(req.body.end);
             let annualCheckUpFound = false;
-            let foundRoomNoDoctor = false;
             let roomOverlap = false; 
             let doctorAvailable = false;
             var duration = ((appEnd.getHours() - appStart.getHours()) * 60 )+ (appEnd.getMinutes() - appStart.getMinutes())
@@ -254,69 +249,32 @@ exports.patient_checkout_appointment = (req, res) =>{
                     message: 'duration of appointment not 20 nor 60 minutes'
                 })
             }
-            let toRemove =0;
             //from https://stackoverflow.com/questions/21069813/mongoose-multiple-query-populate-in-a-single-call
             //var populateQuery = [{path:'room', select:''}]
             Room.find().sort({'_id': 1}).populate('appointments')
                 .then(rooms =>{
                     Doctor.find().populate('schedules')
                         .then(doctors =>{
-                            let doctorRoom ="0";
                             let i = 0; //room index
-                            let j=0; // appointments index
                             let k=0; //doctor index
-                            let l=0; // schedules index
-                            let h = 0;
                             //Check if patient already has annual check up appointment
                             if(type == 1){
-                                 while(h<patient.appointments.length){
-                                        let ptAppointmentType = patient.appointments[h].type;
-                                        let ptAppointmentStart = patient.appointments[h].start;
-                                    if(ptAppointmentType == type && ptAppointmentStart.getYear() == startTime.getYear()){
-                                        annualCheckUpFound = true;
-                                        break;
-                                    }
-                                h++;
-                                }
+                                 annualCheckUpFound = HelperController.check_annual_checkup(patient,type,appStart);
                             }
                             if(annualCheckUpFound == false){
                                 while(i<rooms.length){
-                                    if(rooms[i].appointments.length == 0){
-                                        console.log("Im here")
-                                        roomOverlap = false;
-                                    }
-                                    else{
-                                        for (j=0;j<rooms[i].appointments.length; j++) {
-                                        let start = rooms[i].appointments[j].start;
-                                        let end = rooms[i].appointments[j].end;
-                                        roomOverlap = HelperController.overlaps(appStart, appEnd, start, end);
-                                        if (roomOverlap == true){
-                                            break;
-                                        }
-                                        }
-                                    }
+                                    
+                                    roomOverlap=HelperController.check_room_overlap(rooms[i],appStart, appEnd);
+
                                     if (roomOverlap == false){
                                         while(k<doctors.length){
-                                            if(doctors[k].schedules.length == 0){
-                                                doctorAvailable = true;
-                                            }
-                                            else{
-                                                for (l=0;l<doctors[k].schedules.length; l++) {
-                                                let doctorStart = doctors[k].schedules[l].start;
-                                                let doctorEnd = doctors[k].schedules[l].end;
-                                                doctorRoom = doctors[k].schedules[l].room;
-                                                doctorAvailable = HelperController.overlaps(appStart, appEnd, doctorStart, doctorEnd);
-                                                    if (doctorAvailable == true && doctorRoom.equals(rooms[i]._id)){
-                                                        break;
-                                                    }
-                                                }
-                                                if(doctorAvailable == true && doctorRoom.equals(rooms[i]._id)){
-                                                    break;
-                                                }
+                                            doctorAvailable = HelperController.check_doctor_available(doctors[k],appStart,appEnd);
+                                            if(doctorAvailable.answer&& doctorAvailable.roomFound.equals(rooms[i]._id)){
+                                                break;
                                             }
                                         k++;   
                                         }
-                                        if(doctorAvailable ==true && doctorRoom.equals(rooms[i]._id)){
+                                        if(doctorAvailable.answer ==true && doctorAvailable.roomFound.equals(rooms[i]._id)){
                                             var newAppointment = new Appointment({
                                                 type: type,
                                                 clinic: null,
@@ -339,42 +297,36 @@ exports.patient_checkout_appointment = (req, res) =>{
                                             Timeslot.findByIdAndRemove(req.body.timeslot._id)
                                                 .then(timeslot =>{
                                                     patient.save();
-                                                    res.json(patient)
+                                                    return res.json(patient)
                                                 }).catch(err => res.status(404).json({
-                                                success: false
-                                            }))
+                                                    success: false
+                                             }))
                                         }
                                         else{
-                                            foundRoomNoDoctor =true;
+                                            return res.status(400).json({
+                                                success: false,
+                                                message: 'Sorry, a room is available but no doctors are available at the selected time '
+                                            });
                                         }                                
                                         break;
+                                    }
+                                    else if (roomOverlap==true && i>rooms.length){
+                                        return res.status(400).json({
+                                            success: false,
+                                            message: 'All rooms are occupied at the selected time'
+                                        });
                                     }
                                 i++;
                                 }
                             }
-                            //Handling the reponse from the checks
-                            if(annualCheckUpFound == true){
-                                res.status(400).json({
+                            else{
+                                return res.status(400).json({
                                     success: false,
                                     message: 'You already have an annual check up for the year. '
                                 });
                             }
-                            if(foundRoomNoDoctor == true){
-                                res.status(400).json({
-                                    success: false,
-                                    message: 'Sorry, a room is available but no doctors are available at the selected time '
-                                });
-                            }
-                            if(roomOverlap == true){
-                                res.status(400).json({
-                                    success: false,
-                                    message: 'All rooms are occupied at the selected time'
-                                });
-                            }
                         })
-                    
                 })
-            
         })
 }
 
@@ -397,107 +349,43 @@ exports.patient_cart_save = (req,res)=>{
                 price = 60;
                 endTime = new Date(endTime.setHours(endTime.getHours() + 1));
             }  
-            let annualCheckUpFound = false;
-            let isInCart = false;
-            let personalAppointmentOverlap = false;
-            let foundRoomNoDoctor = false;
-            let roomOverlap = false; 
-            let doctorAvailable = false;
+            let annualCheckUpFound = false; isInCart = false; personalAppointmentOverlap = false;
+            let roomOverlap = false; doctorAvailable = false;
+
             Room.find().sort({'_id': 1}).populate('appointments')
                 .then(rooms =>{
                     Doctor.find().populate('schedules')
                         .then(doctors =>{
-                            let doctorRoom ="0";
-                            let i = 0; //room index
-                            let j=0; // appointments index
+                            let i = 0; //room index 
                             let k=0; //doctor index
-                            let l=0; // schedules index
-                            let h = 0;
                             //Check if patient already has annual check up appointment
                             if(type == 1){
-                                 while(h<patient.appointments.length){
-                                        let ptAppointmentType = patient.appointments[h].type;
-                                        let ptAppointmentStart = patient.appointments[h].start;
-                                    if(ptAppointmentType == type && ptAppointmentStart.getYear() == startTime.getYear()){
-                                        annualCheckUpFound = true;
-                                        break;
-                                    }
-                                h++;
-                                }
+                                 annualCheckUpFound = HelperController.check_annual_checkup(patient,type,startTime);       
                             }
                             if(annualCheckUpFound == false){
                                 //second check, check if a timeslot with same startTime is in the cart
-                                if(patient.cart.length == 0){
-                                    isInCart = false;
-                                }
-                                else{
-                                    for(let n = 0; n<patient.cart.length; n++){
-                                        let cartStart = patient.cart[n].start;
-                                        let cartEnd = patient.cart[n].end;
-
-                                        isInCart = HelperController.overlaps(startTime, endTime, cartStart, cartEnd);
-
-                                        if (isInCart == true){
-                                            break;
-                                        }
-                                    }
-                                }
-                                    if(isInCart == false){
-                                        //Third check, check if patient already has an appointment at the selected startTime
-                                        if(patient.appointments.length == 0){
-                                            personalAppointmentOverlap = false;
-                                        }
-                                        else{
-                                            for(let m=0; m<patient.appointments.length; m++){
-                                                let patientAppointmentStart = patient.appointments[m].start;
-                                                let patientAppointmentEnd = patient.appointments[m].end;
-                                                personalAppointmentOverlap = HelperController.overlaps(startTime, endTime, patientAppointmentStart, patientAppointmentEnd);
-
-                                                if (personalAppointmentOverlap == true){
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                        
-                                        if (personalAppointmentOverlap == false){
-                                            //Fourth check, checking for available rooms at the selected time
-                                            while(i<rooms.length){
-                                                if(rooms[i].appointments.length == 0){
-                                                    roomOverlap = false;
-                                                }
-                                                else{
-                                                    for (j=0;j<rooms[i].appointments.length; j++) {
-                                                    let start = rooms[i].appointments[j].start;
-                                                    let end = rooms[i].appointments[j].end;
-                                                    roomOverlap = HelperController.overlaps(startTime, endTime, start, end);
-                                                        if (roomOverlap == true){
-                                                            break;
-                                                        }
+                                isInCart = HelperController.check_is_in_cart(patient,startTime,endTime);
+                                
+                                if(isInCart == false){
+                                    //Third check, check if patient already has an appointment at the selected startTime
+                                    
+                                    personalAppointmentOverlap = HelperController.check_personal_overlap(patient,startTime,endTime);
+                                    
+                                    if (personalAppointmentOverlap == false){
+                                        //Fourth check, checking for available rooms at the selected time
+                                        while(i<rooms.length){
+                                            roomOverlap=HelperController.check_room_overlap(rooms[i],startTime, endTime);
+                                            if (roomOverlap == false){
+                                                //Fifth check, checking for available doctor at the selected time
+                                                while(k<doctors.length){
+                                                    doctorAvailable = HelperController.check_doctor_available(doctors[k],startTime,endTime)
+                                                    if(doctorAvailable.answer&& doctorAvailable.roomFound.equals(rooms[i]._id)){
+                                                        break;
                                                     }
-                                                }
-                                                if (roomOverlap == false){
-                                                    //Fifth check, checking for available doctor at the selected time
-                                                    while(k<doctors.length){
-                                                        if(doctors[k].schedules.length == 0){
-                                                            doctorAvailable = false;
-                                                        }
-                                                        else{
-                                                            for (l=0;l<doctors[k].schedules.length; l++) {
-                                                            let doctorStart = doctors[k].schedules[l].start;
-                                                            let doctorEnd = doctors[k].schedules[l].end;
-                                                            doctorRoom = doctors[k].schedules[l].room;
-                                                            doctorAvailable = HelperController.overlaps(startTime, endTime, doctorStart, doctorEnd);
-                                                                if (doctorAvailable == true && doctorRoom.equals(rooms[i]._id)){
-                                                                    break;
-                                                                }
-                                                            }
-                                                            if(doctorAvailable == true && doctorRoom.equals(rooms[i]._id)){
-                                                                break;
-                                                            }
-                                                        }
                                                     k++;   
-                                                    }
-                                                if(doctorAvailable == true && doctorRoom.equals(rooms[i]._id)){
+                                                }
+
+                                                if(doctorAvailable.answer == true && doctorAvailable.roomFound.equals(rooms[i]._id)){
                                                     var newTimeslot = new Timeslot({
                                                         doctor: doctors[k]._id,
                                                         start: startTime,
@@ -508,227 +396,186 @@ exports.patient_cart_save = (req,res)=>{
                                                     newTimeslot.save();
                                                     patient.cart.push(newTimeslot);
                                                     patient.save()
-                                                    res.json(patient.cart) 
+                                                    return res.json(patient.cart) 
                                                 }
                                                 else{
-                                                    foundRoomNoDoctor =true;
-                                                }                                
-                                                    break;
-                                                }
-                                             i++;
+                                                    return res.status(400).json({
+                                                        success: false,
+                                                        message: 'Sorry, a room is available but no doctors are available at the selected time '
+                                                    });
+                                                } 
                                             }
+                                            else if (roomOverlap==true && i>rooms.length){
+                                                return res.status(400).json({
+                                                        success: false,
+                                                        message: 'All rooms are occupied at the selected time'
+                                                        });
+                                            }
+                                            i++;
                                         }
                                     }
-                                 
+                                    else{
+                                        return res.status(400).json({
+                                                success: false,
+                                                message: 'Error. You already have an appointment for the selected time.'
+                                                });
+                                    }
+                                }
+                                else{
+                                    return res.status(400).json({
+                                            success: false,
+                                            message: 'An appointment with the same time is already in the cart '
+                                            });
+                                } 
                             }
-
-                            //Handling the reponse from the checks
-                            if(annualCheckUpFound == true){
-                                res.status(400).json({
-                                    success: false,
-                                    message: 'You already have an annual check up for the year. '
-                                });
-                            }          
-                            if(isInCart == true){
-                                res.status(400).json({
-                                    success: false,
-                                    message: 'An appointment with the same time is already in the cart '
-                                });
-                            }
-                            if(personalAppointmentOverlap == true){
-                                res.status(400).json({
-                                    success: false,
-                                    message: 'Error. You already have an appointment for the selected time.'
-                                });
-                            }
-                            if(foundRoomNoDoctor == true){
-                                res.status(400).json({
-                                    success: false,
-                                    message: 'Sorry, a room is available but no doctors are available at the selected time '
-                                });
-                            }
-                            if(roomOverlap == true){
-                                res.status(400).json({
-                                    success: false,
-                                    message: 'All rooms are occupied at the selected time'
-                                });
+                            else{
+                                return res.status(400).json({
+                                        success: false,
+                                        message: 'You already have an annual check up for the year. '
+                                        });
                             }
                         })
-                    
                 })
         })
 }
 
 //Updating a patient's appointment
 exports.patient_update_appointment = (req, res) => {
-// Request the basic information to update the appointment
-//let appointmentToUpdateId = req.body.appointmentToUpdate.appointmentId;
-//let newType = appointment.type;
-//let newStart = new Date(req.body.appointmentToUpdate.startTime);
-//let newEnd = new Date(req.body.appointmentToUpdate.startTime);
+    // Request the basic information to update the appointment
+    //let appointmentToUpdateId = req.body.appointmentToUpdate.appointmentId;
+    //let newType = appointment.type;
+    //let newStart = new Date(req.body.appointmentToUpdate.startTime);
+    //let newEnd = new Date(req.body.appointmentToUpdate.startTime);
 
-//replace these 4 for postman tests.
-let appointmentToUpdateId = req.body.appointmentId;
-let newType = req.body.type;
-let newStart = new Date(req.body.startTime);
-let newEnd = new Date(req.body.startTime)
+    //replace these 4 for postman tests.
+    let appointmentToUpdateId = req.body.appointmentId;
+    let newType = req.body.type;
+    let newStart = new Date(req.body.startTime);
+    let newEnd = new Date(req.body.startTime)
 
-let duration = 0;
-let price = 0;
-if(newType == 0) {
-    duration = 20;
-    price = 20;
-    newEnd = new Date(newEnd.setMinutes(newEnd.getMinutes() + duration)); 
-} else {
-    duration = 60;
-    price = 60;
-    newEnd = new Date(newEnd.setHours(newEnd.getHours() + 1));
-} 
+    let duration = 0;
+    let price = 0;
+    if(newType == 0) {
+        duration = 20;
+        price = 20;
+        newEnd = new Date(newEnd.setMinutes(newEnd.getMinutes() + duration)); 
+    } else {
+        duration = 60;
+        price = 60;
+        newEnd = new Date(newEnd.setHours(newEnd.getHours() + 1));
+    } 
 
-let appointmentToUpdate;
-Appointment.find().populate('doctor').populate('room')
-    .then(allAppointments => {
-        Patient.findOne({healthCardNumber: req.params.health_card_number}).populate('appointments')
-            .then(patient=>{
-                let foundRoomNoDoctor = false;
-                let roomOverlap = false; 
-                let doctorAvailable = false;
-                Room.find().sort({'_id': 1}).populate('appointments')
-                    .then(rooms =>{
-                        Doctor.find().sort({'_id': 1}).populate('schedules')
-                            .then(doctors =>{
-                                let k=0;j=0; y=0;x=0;
-                                appointmentToUpdate = allAppointments.find(appointment => appointment._id == appointmentToUpdateId);
-                                // make sure the appointment was found
-                                if (appointmentToUpdate === undefined) {
-                                    res.status(400).json({
-                                        success: false,
-                                        message: "The appointment was not found",
-                                    });
-                                    return;
-                                }
-                                //Return true if the newStart is the same as the start of the appointment to be updated.
-                                if (appointmentToUpdate.start.getTime() === newStart.getTime()){
-                                    res.status(400).json({
-                                        success: false,
-                                        message: "Error, you are trying to update an appointment to the same time",
-                                    });
-                                    return;
-                                }
-                                for (let scheduledAppointment of allAppointments) {
-                                    // true if the appointments take place in different rooms and those rooms are for different appointments
-                                    let noRoomConflict = scheduledAppointment.room.number !== appointmentToUpdate.room.number &&
-                                    scheduledAppointment._id !== appointmentToUpdate._id;   
-                                    // Ignore the appointment to be updated
-                                    if (scheduledAppointment._id == appointmentToUpdateId || noRoomConflict) {
-                                        continue;
-                                    }
-                                }
-                                //Check if patient already has annual check up appointment
-                                if(newType == 1){
-                                    for(let ptAppointment of patient.appointments){
-                                        if(ptAppointment.type == newType && ptAppointment.start.getYear() == newStart.getYear() && ptAppointment._id != appointmentToUpdateId){
-                                            res.status(400).json({
-                                                success: false,
-                                                message: "You already have an annual check-up appointment for the year"
-                                            })
-                                            return;
-                                        }
-                                    }
-                                }
-                                //Check if patient already have an appointment with the newStart 
-                                //if so make sure that it's not the same appointment that you want to update
-                                for(let ptAppointment of patient.appointments){
-                                    if(HelperController.overlaps(newStart, newEnd, ptAppointment.start, ptAppointment.end)
-                                    && (ptAppointment._id != appointmentToUpdateId)){
+    let appointmentToUpdate;
+    Appointment.find().populate('doctor').populate('room')
+        .then(allAppointments => {
+            Patient.findOne({healthCardNumber: req.params.health_card_number}).populate('appointments')
+                .then(patient=>{
+                    let roomOverlap = false; 
+                    let doctorAvailable = false;
+                    Room.find().sort({'_id': 1}).populate('appointments')
+                        .then(rooms =>{
+                            Doctor.find().sort({'_id': 1}).populate('schedules')
+                                .then(doctors =>{
+                                    let j=0; y=0;x=0;
+                                    appointmentToUpdate = allAppointments.find(appointment => appointment._id == appointmentToUpdateId);
+                                    // make sure the appointment was found
+                                    if (appointmentToUpdate === undefined) {
                                         res.status(400).json({
                                             success: false,
-                                            message: 'You have an appointment that conflicts with this change',
+                                            message: "The appointment was not found",
                                         });
                                         return;
                                     }
-                                }
-                                //Checking for available rooms ate the selected time
-                                while(j<rooms.length){
-                                    if(rooms[j].appointments.length == 0){
-                                        roomOverlap = false;
+                                    //Return true if the newStart is the same as the start of the appointment to be updated.
+                                    if (appointmentToUpdate.start.getTime() === newStart.getTime()){
+                                        res.status(400).json({
+                                            success: false,
+                                            message: "Error, you are trying to update an appointment to the same time",
+                                        });
+                                        return;
                                     }
-                                    else{
-                                        for (k=0;k<rooms[j].appointments.length; k++) {
-                                            console.log("here")
-                                            console.log(roomOverlap)
-                                            let start = rooms[j].appointments[k].start;
-                                            let end = rooms[j].appointments[k].end;
-                                            roomOverlap = HelperController.overlaps(newStart, newEnd, start, end);
-                                                if (roomOverlap == true){
-                                                    break;
-                                                }
+                                    for (let scheduledAppointment of allAppointments) {
+                                        // true if the appointments take place in different rooms and those rooms are for different appointments
+                                        let noRoomConflict = scheduledAppointment.room.number !== appointmentToUpdate.room.number &&
+                                        scheduledAppointment._id !== appointmentToUpdate._id;   
+                                        // Ignore the appointment to be updated
+                                        if (scheduledAppointment._id == appointmentToUpdateId || noRoomConflict) {
+                                            continue;
                                         }
                                     }
-                                    if (roomOverlap == false){
-                                        //Checking for available doctor at the selected time
-                                        while(x<doctors.length){
-                                            if(doctors[x].schedules.length == 0){
-                                                doctorAvailable = false;
+                                    //Check if patient already has annual check up appointment
+                                    if(newType == 1){
+                                        for(let ptAppointment of patient.appointments){
+                                            if(ptAppointment.type == newType && ptAppointment.start.getYear() == newStart.getYear() && ptAppointment._id != appointmentToUpdateId){
+                                                res.status(400).json({
+                                                    success: false,
+                                                    message: "You already have an annual check-up appointment for the year"
+                                                })
+                                                return;
+                                            }
+                                        }
+                                    }
+                                    //Check if patient already have an appointment with the newStart 
+                                    //if so make sure that it's not the same appointment that you want to update
+                                    for(let ptAppointment of patient.appointments){
+                                        if(HelperController.overlaps(newStart, newEnd, ptAppointment.start, ptAppointment.end)
+                                        && (ptAppointment._id != appointmentToUpdateId)){
+                                            return res.status(400).json({
+                                                success: false,
+                                                message: 'You have an appointment that conflicts with this change',
+                                            });
+                                        }
+                                    }
+                                    //Checking for available rooms ate the selected time
+                                    while(j<rooms.length){
+                                        roomOverlap = HelperController.check_room_overlap(rooms[j], newStart, newEnd)
+                                        if (roomOverlap == false){
+                                            //Checking for available doctor at the selected time
+                                            while(x<doctors.length){
+                                    
+                                                doctorAvailable = HelperController.check_doctor_available(doctors[x], newStart, newEnd);
+                                                if(doctorAvailable.answer&& doctorAvailable.roomFound.equals(rooms[j]._id)){
+                                                    break;
+                                                }
+                                            x++;   
+                                            }
+                                            if(doctorAvailable.answer == true && doctorAvailable.roomFound.equals(rooms[j]._id)){
+                                                // if got here, we can do the update
+                                                
+                                                Appointment.updateOne( { _id: appointmentToUpdateId },
+                                                    {"$set": {
+                                                        "start": newStart, 
+                                                        "end": newEnd, 
+                                                        "doctor": doctors[x]._id,
+                                                        "room": rooms[j]._id,
+                                                        "duration": duration.toString(),
+                                                        "price": price,
+                                                        "type" : newType
+                                                    }})
+                                                    .then(() => {
+                                                    }) 
+                                                    return res.json({
+                                                            success: true,
+                                                            message: 'The appointment time has been updated succesfully',
+                                                        });
                                             }
                                             else{
-                                                for (y=0;y<doctors[x].schedules.length; y++) {
-                                                    let doctorStart = doctors[x].schedules[y].start;
-                                                    let doctorEnd = doctors[x].schedules[y].end;
-                                                    doctorRoom = doctors[x].schedules[y].room;
-                                                    doctorAvailable = HelperController.overlaps(newStart,  newEnd, doctorStart, doctorEnd);
-                                                        if (doctorAvailable == true && doctorRoom.equals(rooms[j]._id)){
-                                                            break;
-                                                        }
-                                                }
-                                                if(doctorAvailable == true && doctorRoom.equals(rooms[j]._id)){
-                                                    break;
-                                                }
+                                                return res.status(400).json({
+                                                    success: false,
+                                                    message: 'Sorry, a room is available but no doctors are available at the selected time '
+                                                });
                                             }
-                                        x++;   
                                         }
-                                        if(doctorAvailable == true && doctorRoom.equals(rooms[j]._id)){
-                                            // if got here, we can do the update
-                                            console.log("New type", newType);
-                                            
-                                            Appointment.updateOne( { _id: appointmentToUpdateId },
-                                                {"$set": {
-                                                    "start": newStart, 
-                                                    "end": newEnd, 
-                                                    "doctor": doctors[x]._id,
-                                                    "room": rooms[j]._id,
-                                                    "duration": duration.toString(),
-                                                    "price": price,
-                                                    "type" : newType
-                                                }})
-                                                .then(() => {
-                                                    res.json({
-                                                        success: true,
-                                                        message: 'The appointment time has been updated succesfully',
-                                                    })
-                                                }) 
+                                        else if (roomOverlap==true && j>rooms.length){
+                                            return res.status(400).json({
+                                                success: false,
+                                                message: 'All rooms are occupied at the selected time'
+                                            });
                                         }
-                                        else{
-                                            foundRoomNoDoctor =true;
-                                        }                                
-                                        break;
+                                        j++;
                                     }
-                                j++;
-                                }
-                                if(foundRoomNoDoctor == true){
-                                    return res.status(400).json({
-                                        success: false,
-                                        message: 'Sorry, a room is available but no doctors are available at the selected time '
-                                    });
-                                }
-                                if(roomOverlap == true){
-                                    return res.status(400).json({
-                                        success: false,
-                                        message: 'All rooms are occupied at the selected time'
-                                    });
-                                }
-                            })
-                    })
-            })   
-    })
+                                })
+                        })
+                })   
+        })
 }
