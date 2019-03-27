@@ -535,7 +535,7 @@ exports.patient_update_appointment = (req, res) => {
                                             while(x<doctors.length){
                                     
                                                 doctorAvailable = HelperController.check_doctor_available(doctors[x], newStart, newEnd);
-                                                if(doctorAvailable.answer&& doctorAvailable.roomFound.equals(rooms[i]._id)){
+                                                if(doctorAvailable.answer&& doctorAvailable.roomFound.equals(rooms[j]._id)){
                                                     break;
                                                 }
                                             x++;   
