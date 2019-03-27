@@ -15,8 +15,11 @@ module.exports = {
         for(let i=0; i<patient.appointments.length; i++){
             let ptAppointmentType = patient.appointments[i].type;
             let ptAppointmentStart = patient.appointments[i].start;
-            return (ptAppointmentType == type && ptAppointmentStart.getYear() == startTime.getYear())
+            if (ptAppointmentType == type && ptAppointmentStart.getYear() == startTime.getYear()){
+                return true;
+            }
         }
+        return false;
     },
     check_is_in_cart: function(patient,startTime,endTime){
         if(patient.cart.length == 0){
@@ -27,8 +30,11 @@ module.exports = {
                 let cartStart = patient.cart[i].start;
                 let cartEnd = patient.cart[i].end;
 
-                return (module.exports.overlaps(startTime, endTime, cartStart, cartEnd));
+                if (module.exports.overlaps(startTime, endTime, cartStart, cartEnd)){
+                    return true;
+                }
             }
+            return false;
         }
     },
     check_personal_overlap: function(patient,startTime,endTime){
@@ -39,8 +45,11 @@ module.exports = {
             for(let m=0; m<patient.appointments.length; m++){
                 let patientAppointmentStart = patient.appointments[m].start;
                 let patientAppointmentEnd = patient.appointments[m].end;
-                return (module.exports.overlaps(startTime, endTime, patientAppointmentStart, patientAppointmentEnd));
+                if (module.exports.overlaps(startTime, endTime, patientAppointmentStart, patientAppointmentEnd)){
+                    return true;
+                }
             }
+            return false;
         }
     },
     check_room_overlap: function(rooms,appStart, appEnd){
@@ -51,8 +60,11 @@ module.exports = {
             for (let i =0;i <rooms.appointments.length; i++) {
                 let start = rooms.appointments[i].start;
                 let end = rooms.appointments[i].end;
-                return (module.exports.overlaps(appStart, appEnd, start, end));
+                if (module.exports.overlaps(appStart, appEnd, start, end)){
+                    return true;
+                }
             }
+            return false;
         } 
     },
     check_doctor_available: function(doctors, startTime, endTime){
@@ -66,10 +78,19 @@ module.exports = {
             let doctorStart = doctors.schedules[i].start;
             let doctorEnd = doctors.schedules[i].end;
             let doctorRoom = doctors.schedules[i].room;
-            return ({answer: module.exports.overlaps(startTime, endTime, doctorStart, doctorEnd),
-                    roomFound: doctorRoom
-                    });        
+
+            console.log(" Start "+ doctorStart)
+            console.log(" end " + doctorEnd)
+            console.log("dorctor Room "+ doctorRoom)
+                if(module.exports.overlaps(startTime, endTime, doctorStart, doctorEnd)){
+                    return ({answer: module.exports.overlaps(startTime, endTime, doctorStart, doctorEnd),
+                            roomFound: doctorRoom
+                            });        
+                }
             }
+            return({answer: false,
+                    roomFound: -1
+                    }); 
         }
     }
 };

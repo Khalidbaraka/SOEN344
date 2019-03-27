@@ -269,7 +269,7 @@ exports.patient_checkout_appointment = (req, res) =>{
                                     if (roomOverlap == false){
                                         while(k<doctors.length){
                                             doctorAvailable = HelperController.check_doctor_available(doctors[k],appStart,appEnd);
-                                            if(doctorAvailable.answer){
+                                            if(doctorAvailable.answer&& doctorAvailable.roomFound.equals(rooms[i]._id)){
                                                 break;
                                             }
                                         k++;   
@@ -310,7 +310,7 @@ exports.patient_checkout_appointment = (req, res) =>{
                                         }                                
                                         break;
                                     }
-                                    else if (roomOverlap==true && j>rooms.length){
+                                    else if (roomOverlap==true && i>rooms.length){
                                         return res.status(400).json({
                                             success: false,
                                             message: 'All rooms are occupied at the selected time'
@@ -379,11 +379,13 @@ exports.patient_cart_save = (req,res)=>{
                                                 //Fifth check, checking for available doctor at the selected time
                                                 while(k<doctors.length){
                                                     doctorAvailable = HelperController.check_doctor_available(doctors[k],startTime,endTime)
-                                                    if(doctorAvailable.answer){
+                                                    if(doctorAvailable.answer&& doctorAvailable.roomFound.equals(rooms[i]._id)){
                                                         break;
                                                     }
                                                     k++;   
                                                 }
+
+                                                console.log('rooms[i]' + rooms[i])
                                                 if(doctorAvailable.answer == true && doctorAvailable.roomFound.equals(rooms[i]._id)){
                                                     var newTimeslot = new Timeslot({
                                                         doctor: doctors[k]._id,
@@ -404,7 +406,7 @@ exports.patient_cart_save = (req,res)=>{
                                                     });
                                                 } 
                                             }
-                                            else if (roomOverlap==true && j>rooms.length){
+                                            else if (roomOverlap==true && i>rooms.length){
                                                 return res.status(400).json({
                                                         success: false,
                                                         message: 'All rooms are occupied at the selected time'
@@ -533,7 +535,7 @@ exports.patient_update_appointment = (req, res) => {
                                             while(x<doctors.length){
                                     
                                                 doctorAvailable = HelperController.check_doctor_available(doctors[x], newStart, newEnd);
-                                                if(doctorAvailable.answer){
+                                                if(doctorAvailable.answer&& doctorAvailable.roomFound.equals(rooms[i]._id)){
                                                     break;
                                                 }
                                             x++;   

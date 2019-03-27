@@ -187,7 +187,7 @@ exports.nurse_create_appointment  = (req,res)=>{
                                             //Fourth check, check for available doctor at the selected time
                                             while(k<doctors.length){
                                                 doctorAvailable = HelperController.check_doctor_available(doctors[k],startTime,endTime)
-                                                if(doctorAvailable.answer){
+                                                if(doctorAvailable.answer&& doctorAvailable.roomFound.equals(rooms[i]._id)){
                                                     break;
                                                 }
                                             k++;   
@@ -221,7 +221,7 @@ exports.nurse_create_appointment  = (req,res)=>{
                                                 });
                                             } 
                                         }
-                                        else if (roomOverlap==true && j>rooms.length){
+                                        else if (roomOverlap==true && i>rooms.length){
                                             return res.status(400).json({
                                                 success: false,
                                                 message: 'All rooms are occupied at the selected time'
