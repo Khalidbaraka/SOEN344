@@ -11,6 +11,8 @@ const config = require('./../config/keys');
 const HelperController = require('./HelperController');
 const mongoose = require('mongoose');
 const userFactory = require('./userFactoryController');
+const timeFactory = require('./timeFactoryController');
+
 //  Callback functions that they will invoke on our routes
 
 // Display list of all items.
@@ -385,13 +387,23 @@ exports.patient_cart_save = (req,res)=>{
                                                     k++;   
                                                 }
                                                 if(doctorAvailable.answer == true && doctorAvailable.roomFound.equals(rooms[i]._id)){
-                                                    var newTimeslot = new Timeslot({
+                                                   
+                                                   
+                                                    let object = {
+                                                        type: type,
+                                                        
+                                                        clinic: null,
                                                         doctor: doctors[k]._id,
-                                                        start: startTime,
-                                                        end: endTime,
+                                                        room: rooms[i]._id,
+                                                        start: appStart,
+                                                        patient: patient._id,
+                                                        end: appEnd,
                                                         duration: duration.toString(),
-                                                        room: rooms[i]._id
-                                                    })
+                                                        price: price
+                                                    }
+                                                    console.log(object+ " aaa");
+                                                    newAppointment = timeFactory(object, "appointment");
+
                                                     newTimeslot.save();
                                                     patient.cart.push(newTimeslot);
                                                     patient.save()
