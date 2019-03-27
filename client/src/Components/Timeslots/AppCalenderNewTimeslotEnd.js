@@ -89,8 +89,8 @@ class AppCalender extends Component {
                             return (
                                 <Form>
                                     <Form.Row noGutters={true}>
-                                        <Col md={12}><Form.Label>Please select the end of the timeslot</Form.Label></Col>
-                                        <Col md={3}><Form.Control value={this.state.endDate.format("YYYY-MM-DD HH:mm")} /></Col>
+                                        <Col md={12}><Form.Label>End Time</Form.Label></Col>
+                                        <Col md={10}><Form.Control value={this.state.endDate.format("YYYY-MM-DD HH:mm")} /></Col>
                                         <Button variant="outline-info"><i className="fa fa-calendar-plus-o" aria-hidden="true"></i></Button>
                                     </Form.Row>
                                 </Form>

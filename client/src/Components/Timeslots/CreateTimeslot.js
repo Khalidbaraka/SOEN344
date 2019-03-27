@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import {Button, Card, Form} from "react-bootstrap";
+import {Button, Card, Form, Row, Col} from "react-bootstrap";
 import 'rc-calendar/assets/index.css';
 import AppCalenderNewTimeslotEnd from "../Timeslots/AppCalenderNewTimeslotEnd";
 import AppCalenderNewTimeslotStart from "../Timeslots/AppCalenderNewTimeslotStart";
@@ -94,34 +94,41 @@ class CreateTimeslot extends Component {
         } = this.state;
 
         return (
-            <div>
-                <h1> Doctor Homepage </h1>
-                <br />
-                <h3> Enter Details for creating your schedule below: </h3>
+            <div className="container">
+                <Card className="my-5">
+                    <Card.Body>
+                        <h4 className="text-center text-monospace"> Enter Details for creating your schedule below: </h4>
+                        <hr/>
+                        <Form noValidate onSubmit = {this.onSubmit} className="font-weight-bold">
+                            { message ?
+                                <Card border="danger" className="text-center my-3">
+                                    <Card.Body>
+                                        <Card.Title><div className="text-monospace">{ message }</div> </Card.Title>
+                                    </Card.Body>
+                                </Card>
+                                : ''}
+                            <Row>
+                                <Col>
+                                    <AppCalenderNewTimeslotStart
+                                        value={this.state.start}
+                                        onChange={this.onChangeStart}
+                                    />
+                                </Col>
 
-                <Form noValidate onSubmit = {this.onSubmit} className="font-weight-bold">
-                    { message ?
-                        <Card border="danger" className="text-center my-3">
-                            <Card.Body>
-                                <Card.Title><div className="text-monospace">{ message }</div> </Card.Title>
-                            </Card.Body>
-                        </Card>
-                        : ''}
-                    <AppCalenderNewTimeslotStart
-                        value = { this.state.start}
-                        onChange = { this.onChangeStart }
-                    />
+                                <Col>
+                                    <AppCalenderNewTimeslotEnd
+                                        value={this.state.end}
+                                        onChange={this.onChangeEnd}
+                                    />
+                                </Col>
+                            </Row>
 
-                    <AppCalenderNewTimeslotEnd
-                        value = { this.state.end }
-                        onChange = { this.onChangeEnd }
-                    />
-
-                    <Button variant="outline-info" type="submit" className="float-right mt-3">
-                        Submit
-                    </Button>
-                </Form>
-
+                            <Button variant="outline-info" type="submit" className="float-right mt-3">
+                                Submit
+                            </Button>
+                        </Form>
+                    </Card.Body>
+                </Card>
             </div>
         );
     }
