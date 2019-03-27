@@ -198,6 +198,7 @@ exports.doctor_create_timeslot= (req, res) => {
             else{
                 roomAvailable = parsedRoomNumber[0].concat("_0");
                 for(var j = 0; j<=roomOccupied.length; j++){
+                    number=j+1;
                     if(!roomOccupied.includes(
                         parsedRoomNumber[0].concat('_'+number.toString()))){
                         roomAvailable = parsedRoomNumber[0].concat('_'+number.toString());

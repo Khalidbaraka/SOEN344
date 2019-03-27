@@ -123,7 +123,7 @@ class CreateTimeslot extends Component {
                                 </Col>
                             </Row>
 
-                            <Button variant="outline-info" type="submit" className="float-right mt-3">
+                            <Button variant="outline-info" type="submit" className="float-right mt-4">
                                 Submit
                             </Button>
                         </Form>
