@@ -222,7 +222,7 @@ exports.return_patient_cart = (req, res) =>{
 
 //Checkout appointments from the cart.
 exports.patient_checkout_appointment = (req, res) =>{
-    Patient.findOne({healthCardNumber: req.params.health_card_number}).populate('cart')
+    Patient.findOne({healthCardNumber: req.params.health_card_number}).populate('cart').populate('appointments')
         .then(patient => {
             var timeslot = req.body.timeslot;
             var appStart = new Date(timeslot.start);
@@ -385,7 +385,6 @@ exports.patient_cart_save = (req,res)=>{
                                                     k++;   
                                                 }
 
-                                                console.log('rooms[i]' + rooms[i])
                                                 if(doctorAvailable.answer == true && doctorAvailable.roomFound.equals(rooms[i]._id)){
                                                     var newTimeslot = new Timeslot({
                                                         doctor: doctors[k]._id,

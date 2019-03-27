@@ -14,8 +14,8 @@ module.exports = {
     check_annual_checkup: function(patient,type,startTime){
         for(let i=0; i<patient.appointments.length; i++){
             let ptAppointmentType = patient.appointments[i].type;
-            let ptAppointmentStart = patient.appointments[i].start;
-            if (ptAppointmentType == type && ptAppointmentStart.getYear() == startTime.getYear()){
+            let ptAppointmentStart = new Date(patient.appointments[i].start).getFullYear();
+            if (ptAppointmentType == type && ptAppointmentStart == startTime.getFullYear()){
                 return true;
             }
         }
@@ -78,10 +78,6 @@ module.exports = {
             let doctorStart = doctors.schedules[i].start;
             let doctorEnd = doctors.schedules[i].end;
             let doctorRoom = doctors.schedules[i].room;
-
-            console.log(" Start "+ doctorStart)
-            console.log(" end " + doctorEnd)
-            console.log("dorctor Room "+ doctorRoom)
                 if(module.exports.overlaps(startTime, endTime, doctorStart, doctorEnd)){
                     return ({answer: module.exports.overlaps(startTime, endTime, doctorStart, doctorEnd),
                             roomFound: doctorRoom
