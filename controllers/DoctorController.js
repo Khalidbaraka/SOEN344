@@ -157,6 +157,7 @@ exports.doctor_create_timeslot= (req, res) => {
         let answer = false
         let roomOccupied = [];
         let personalTimeConflict = false;
+        let parsedRoomNumber = "";
 
         Timeslot.find().populate('doctor').populate('room')
         .then(timeslot => {
@@ -164,6 +165,7 @@ exports.doctor_create_timeslot= (req, res) => {
                 let start = timeslot[i].start;
                 let end = timeslot[i].end;
                 roomNumber = timeslot[i].room.number;
+                parsedRoomNumber = roomNumber.split("_");
                 answer = HelperController.overlaps(appStart, appEnd, start, end); 
      
                 if(answer == true && timeslot[i].doctor.permitNumber==doctor.permitNumber){
@@ -194,13 +196,14 @@ exports.doctor_create_timeslot= (req, res) => {
                 });
             }
             else{
-                roomAvailable = 1;
+                roomAvailable = parsedRoomNumber[0].concat("_0");
                 for(var j = 0; j<=roomOccupied.length; j++){
-                    if(!roomOccupied.includes(j+1)){
-                        roomAvailable = j+1
+                    if(!roomOccupied.includes(
+                        parsedRoomNumber[0].concat('_'+number.toString()))){
+                        roomAvailable = parsedRoomNumber[0].concat('_'+number.toString());
                         break;
                     }    
-                    }
+                }
                 Room.findOne({
                     number : roomAvailable
                 }).then( room => { 
