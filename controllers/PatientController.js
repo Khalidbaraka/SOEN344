@@ -271,7 +271,7 @@ exports.patient_checkout_appointment = (req, res) =>{
                                     if (roomOverlap == false){
                                         while(k<doctors.length){
                                             doctorAvailable = HelperController.check_doctor_available(doctors[k],appStart,appEnd);
-                                            if(doctorAvailable){
+                                            if(doctorAvailable.answer){
                                                 break;
                                             }
                                         k++;   
@@ -381,7 +381,7 @@ exports.patient_cart_save = (req,res)=>{
                                                 //Fifth check, checking for available doctor at the selected time
                                                 while(k<doctors.length){
                                                     doctorAvailable = HelperController.check_doctor_available(doctors[k],startTime,endTime)
-                                                    if(doctorAvailable){
+                                                    if(doctorAvailable.answer){
                                                         break;
                                                     }
                                                     k++;   
@@ -545,7 +545,7 @@ exports.patient_update_appointment = (req, res) => {
                                             while(x<doctors.length){
                                     
                                                 doctorAvailable = HelperController.check_doctor_available(doctors[x], newStart, newEnd);
-                                                if(doctorAvailable){
+                                                if(doctorAvailable.answer){
                                                     break;
                                                 }
                                             x++;   

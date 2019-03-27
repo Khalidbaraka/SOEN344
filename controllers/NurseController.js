@@ -187,7 +187,7 @@ exports.nurse_create_appointment  = (req,res)=>{
                                             //Fourth check, check for available doctor at the selected time
                                             while(k<doctors.length){
                                                 doctorAvailable = HelperController.check_doctor_available(doctors[k],startTime,endTime)
-                                                if(doctorAvailable){
+                                                if(doctorAvailable.answer){
                                                     break;
                                                 }
                                             k++;   
