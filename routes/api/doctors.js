@@ -8,7 +8,7 @@ const decoder = require('../../middleware');
 // @route post api/doctors/register
 // @desc  Register Doctor
 // @access Public
-router.post('/register', controller.doctorLogin);
+router.post('/:clinic_id/register', controller.doctorRegister);
 
 // @route post api/doctors/login
 // @desc  Login Doctor
