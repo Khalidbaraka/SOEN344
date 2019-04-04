@@ -17,6 +17,10 @@ import NurseHomepage from './Components/Homepage/NurseHomepage';
 import PatientHomepage from "./Components/Homepage/PatientHomepage";
 import SignUp from './Components/SignUp/SignUp'
 import CreateTimeslot from "./Components/Timeslots/CreateTimeslot";
+import PatientRoute from "./Components/PrivateRoute/PatientRoute";
+import DoctorRoute from "./Components/PrivateRoute/DoctorRoute";
+import NurseRoute from "./Components/PrivateRoute/NurseRoute";
+import Error from "./Components/Error";
 
 class App extends Component {
   render() {
@@ -35,22 +39,23 @@ class App extends Component {
             <Route path='/login' component={ Login }/>
             <Route path='/signup' component={ SignUp }/>
             <Route path='/logout' component={ Logout }/>
+            <Route path='/error' component={ Error } />
 
             {/* Nurse Routes */}
-            <Route path='/homepage/nurse' component={ NurseHomepage }/>
+            <NurseRoute path='/homepage/nurse' component={ NurseHomepage }/>
+            <NurseRoute exact path='/homepage/nurse/scheduleAppointment' component={ NurseHomepage }/>
+            <NurseRoute exact path='/homepage/nurse/ViewAppointment' component={ NurseHomepage }/>
 
             {/* Doctor Routes */}
-            <Route exact path='/homepage/doctor' component={ DoctorHomepage }/>
-            <Route exact path='/homepage/doctor/schedule' component={ DoctorSchedule }/>
-            <Route exact path='/timeslot/doctor' component={ CreateTimeslot }/>
+            <DoctorRoute exact path='/homepage/doctor' component={ DoctorHomepage }/>
+            <DoctorRoute exact path='/homepage/doctor/schedule' component={ DoctorSchedule }/>
+            <DoctorRoute exact path='/timeslot/doctor' component={ CreateTimeslot }/>
 
             {/* Patient Routes */}
-            <Route path='/homepage/patient' component={ PatientHomepage }/>
-            <Route exact path='/homepage/patient/scheduleAppointment' component={ PatientHomepage }/>
-            <Route exact path='/homepage/patient/myAppointment' component={ PatientHomepage }/>
-            <Route exact path='/homepage/nurse/scheduleAppointment' component={ NurseHomepage }/>
-            <Route exact path='/homepage/nurse/ViewAppointment' component={ NurseHomepage }/>
-            <Route exact path='/cart' component={ Cart }/>
+            <PatientRoute path='/homepage/patient' component={ PatientHomepage }/>
+            <PatientRoute exact path='/homepage/patient/scheduleAppointment' component={ PatientHomepage }/>
+            <PatientRoute exact path='/homepage/patient/myAppointment' component={ PatientHomepage }/>
+            <PatientRoute exact path='/cart' component={ Cart }/>
 
             <Route render={() => (<div> Sorry, this page does not exist. </div>)} />
           </Switch>

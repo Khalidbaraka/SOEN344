@@ -1,4 +1,4 @@
-import { Button, Card, Form } from 'react-bootstrap';
+import { Button, Card, Form, Alert } from 'react-bootstrap';
 import React, { Component } from 'react';
 
 import { Redirect } from 'react-router-dom';
@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken');
 class PatientLogin extends Component{
 
     constructor() {
-        super()
+        super();
         this.state = {
             healthCardNumber: '',
             password: '',
@@ -41,17 +41,20 @@ class PatientLogin extends Component{
                     const decoded = jwt.decode(res.data.token, {
                         complete: true
                     });
+
                     localStorage.setItem('userToken', JSON.stringify(decoded.payload));
                     
                     this.setState({
                         isAuthenticated: true
                     });
+
                 } else {
                     this.setState({
-                        healthCardNumber: '',
                         password: '',
                         message: res.data.message
                     });
+
+                    this.props.updateMessage(this.state.message);
                 }
 
             })
@@ -62,28 +65,19 @@ class PatientLogin extends Component{
     
     render(){
 
-        const {
-            isAuthenticated,
-            message
-        } = this.state;
+        const { isAuthenticated } = this.state;
+
+        const { fromPath } = this.props.fromPath || { fromPath: { pathname: '/homepage/patient' } };
 
         if (isAuthenticated) {
-            //direct to patient homepage
-            return <Redirect to = '/homepage/patient' /> ;
+            // direct the patient to the patient home page or he is taken back to the initial page he was trying to access before he was redirected.
+            return <Redirect to={fromPath} />;
         }
 
 		return (
             <div>
                 <Card className="p-4">
                     <Form noValidate onSubmit = {this.onSubmit} className="font-weight-bold">
-                        { message ? 
-                            <Card border="danger" className="text-center my-3"> 
-                                <Card.Body> 
-                                    <Card.Title><div className="text-monospace">{ message }</div> </Card.Title>
-                                </Card.Body> 
-                            </Card>
-                        : ''}
-                
                         <Form.Group controlId="formBasicUsername">
                             <Form.Label>Health Card Number</Form.Label>
                             <Form.Control name="healthCardNumber" type="text" placeholder="Enter Health Card Number" value = {this.state.healthCardNumber} onChange={this.onChange}/>

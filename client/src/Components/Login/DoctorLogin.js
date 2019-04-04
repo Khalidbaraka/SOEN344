@@ -43,7 +43,6 @@ class DoctorLogin extends Component{
                     const decoded = jwt.decode(res.data.token, {
                         complete: true
                     });
-                    localStorage.setItem('rawUserToken', res.data.token);
                     localStorage.setItem('userToken', JSON.stringify(decoded.payload));
 
                     this.setState({
@@ -51,10 +50,11 @@ class DoctorLogin extends Component{
                     });
                 } else {
                     this.setState({
-                        permitNumber: '',
                         password: '',
                         message: res.data.message
                     });
+
+                    this.props.updateMessage(this.state.message);
                 }
 
             })
@@ -66,27 +66,19 @@ class DoctorLogin extends Component{
 
 	render() {
 
-        const {
-            isAuthenticated,
-            message
-        } = this.state;
+        const { isAuthenticated } = this.state;
+
+        const { fromPath } = this.props.fromPath || { fromPath: { pathname: '/homepage/doctor' } };
 
         if (isAuthenticated) {
-            //direct to doctor homepage
-            return <Redirect to = '/homepage/doctor' /> ;
+            // direct the doctor to the doctor home page or he is taken back to the initial page he was trying to access before he was redirected.
+            return <Redirect to={fromPath} />;
         }
 
 		return(
             <div>
                 <Card className="p-4">
                     <Form noValidate onSubmit = {this.onSubmit} className="font-weight-bold">
-                        { message ? 
-                            <Card border="danger" className="text-center my-3"> 
-                                <Card.Body> 
-                                    <Card.Title><div className="text-monospace">{ message }</div> </Card.Title>
-                                </Card.Body> 
-                            </Card>
-                        : ''}
                         <Form.Group controlId="formBasicUsername">
                             <Form.Label>Permit Number</Form.Label>
                             <Form.Control name="permitNumber" type="text" placeholder="Enter 7-digits Permit Number" value = {this.state.permitNumber} onChange={this.onChange}/>
