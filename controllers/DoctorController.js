@@ -2,6 +2,7 @@
 const Doctor = require('./../models/Doctor');
 const Room = require('./../models/Room');
 const Timeslot = require('./../models/Timeslot');
+const Clinic = require('./../models/Clinic');
 var bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('./../config/keys');
@@ -13,40 +14,53 @@ const userFactory = require('./userFactoryController');
 
 //Create / register
 exports.doctor_register = (req, res) => {
-    Doctor.findOne({
-            permitNumber: req.body.permitNumber
-        })
-        .then(doctor => {
-            if (doctor) {
-                return res.status(400).json({
-                    permitNumber: 'Doctor with this permit number already exists'
-                });
-            } else {
-
-                let object = {
-                    permitNumber: req.body.permitNumber,
-                    password: req.body.password,
-                    firstName: req.body.firstName,
-                    lastName: req.body.lastName,
-                    speciality: req.body.speciality,
-                    city: req.body.city,
-                    appointments: [],
-                    schedules: []
+    Clinic.findById(req.params.clinic_id)
+        .then(clinic =>{
+            Doctor.findOne({
+                permitNumber: req.body.permitNumber
+            }).populate('clinic')
+            .then(doctor => {
+                if (doctor && doctor.clinic.equals(clinic._id)) {
+                    return res.status(400).json({
+                        success: false,
+                        message: 'Doctor with this permit number already exists'
+                    });
                 }
+                if (doctor && !doctor.clinic.equals(clinic._id)) {
+                    return res.status(400).json({
+                        success: false,
+                        message: 'Doctor with this permit number is already working at ' + doctor.clinic.name
+                    });
+                }else {
 
-                const newDoctor = userFactory(object, "doctor");
+                    let object = {
+                        permitNumber: req.body.permitNumber,
+                        password: req.body.password,
+                        firstName: req.body.firstName,
+                        lastName: req.body.lastName,
+                        speciality: req.body.speciality,
+                        city: req.body.city,
+                        clinic: clinic._id,
+                        appointments: [],
+                        schedules: []
+                    }
 
-                bcryptjs.genSalt(10, (err, salt) => {
-                    bcryptjs.hash(newDoctor.password, salt, (err, hash) => {
-                        if (err) {
-                            throw err;
-                        }
-                        newDoctor.password = hash;
-                        newDoctor.save().then(doctor => res.json(doctor)).catch(err => console.log(err));
+                    const newDoctor = userFactory(object, "doctor");
+
+                    bcryptjs.genSalt(10, (err, salt) => {
+                        bcryptjs.hash(newDoctor.password, salt, (err, hash) => {
+                            if (err) {
+                                throw err;
+                            }
+                            newDoctor.password = hash;
+                            clinic.doctors.push(newDoctor);
+                            clinic.save();
+                            newDoctor.save().then(doctor => res.json(doctor)).catch(err => console.log(err));
+                        })
                     })
-                })
-            }
-        });
+                }
+            });
+        }) 
 }
 
 //Read / getList
@@ -75,6 +89,7 @@ exports.doctor_login = (req, res) => {
                         firstName: doctor.firstName,
                         lastName: doctor.lastName,
                         speciality: doctor.speciality,
+                        clinic: doctor.clinic
                     };
 
                     var token = jwt.sign(payload, config.secret, {

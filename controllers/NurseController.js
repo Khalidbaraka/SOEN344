@@ -1,7 +1,7 @@
 // Nurse Model
 const Nurse = require('../models/Nurse');
 const Patient = require('./../models/Patient');
-const Clinic = require('./../models/Patient');
+const Clinic = require('./../models/Clinic');
 const Appointment = require('./../models/Appointment');
 const Room = require('./../models/Room');
 const Doctor = require('./../models/Doctor');
@@ -42,6 +42,7 @@ exports.nurse_login = (req, res) => {
                         accessID: nurse.accessID,
                         firstName: nurse.firstName,
                         lastName: nurse.lastName,
+                        clinic: nurse.clinic
                     };
 
                     var token = jwt.sign(payload, config.secret,{
@@ -72,44 +73,59 @@ exports.nurse_login = (req, res) => {
 
 // Create/Register nurse
 exports.nurse_register = (req, res) => {
-    Nurse.findOne({
-            accessID: req.body.accessID
-        })
-        .then(nurse => {
-            if (nurse) {
-                return res.status(400).json({
-                    permitNumber: 'Nurse with this accessID number already exists'
-                });
-            } else {
-
-                let object = {
-                    firstName: req.body.firstName,
-                    lastName: req.body.lastName,
-                    accessID: req.body.accessID,
-                    password: req.body.password
+    Clinic.findById(req.params.clinic_id)
+        .then(clinic =>{
+            console.log(" ddd " + req.params.clinic_id)
+            console.log(" dsdsd "+ clinic)
+            Nurse.findOne({
+                accessID: req.body.accessID
+            }).populate('clinic')
+            .then(nurse => {
+                if (nurse && nurse.clinic.equals(clinic._id)) {
+                    return res.status(400).json({
+                        success: false,
+                        message: 'Nurse with this access id already exists'
+                    });
                 }
+                if (nurse && !nurse.clinic.equals(clinic._id)) {
+                    return res.status(400).json({
+                        success: false,
+                        message: 'Nurse with this access id is already working at ' + nurse.clinic.name
+                    });
+                } else {
 
-                const newNurse = userFactory(object, "nurse");
+                    let object = {
+                        firstName: req.body.firstName,
+                        lastName: req.body.lastName,
+                        accessID: req.body.accessID,
+                        password: req.body.password,
+                        clinic: req.params.clinic_id
+                    }
 
-                bcryptjs.genSalt(10, (err, salt) => {
-                    bcryptjs.hash(newNurse.password, salt, (err, hash) => {
-                        if (err) {
-                            throw err;
-                        }
-                        newNurse.password = hash;
-                        newNurse.save().then(nurse => res.json({
-                            success: true,
-                            message: 'Signed up!'
-                        })).catch(err => {
-                            res.json({
-                                success: false,
-                                message: 'Error: Server error'
-                            });
+                    const newNurse = userFactory(object, "nurse");
+
+                    bcryptjs.genSalt(10, (err, salt) => {
+                        bcryptjs.hash(newNurse.password, salt, (err, hash) => {
+                            if (err) {
+                                throw err;
+                            }
+                            newNurse.password = hash;
+                            clinic.nurses.push(newNurse);
+                            clinic.save();
+                            newNurse.save().then(nurse => res.json({
+                                success: true,
+                                message: 'Signed up!'
+                            })).catch(err => {
+                                res.json({
+                                    success: false,
+                                    message: 'Error: Server error' + err
+                                });
+                            })
                         })
                     })
-                })
-            }
-        });
+                }
+            });
+        })
 }
 
 
