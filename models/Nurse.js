@@ -24,6 +24,7 @@ const NurseSchema = new Schema ({
     clinic: {
         //required: true,
         type: Schema.Types.ObjectId,
+        ref: 'clinic'
     }
 });
 

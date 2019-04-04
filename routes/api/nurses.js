@@ -4,12 +4,12 @@ const router = express.Router();
 const controller = require('./../../controllers/Controller');
 const decoder = require('../../middleware');
 
-// @route POST api/nurses/register
+// @route POST api/nurses/:clinic_id/register
 // @desc  Register Nurse
 // @access Public
 router.post('/:clinic_id/register', controller.nurseRegister);
 
-// @route POST api/nurses/register
+// @route POST api/nurses/login
 // @desc  Login Nurse
 // @access Public
 router.post('/login', controller.nurseLogin);

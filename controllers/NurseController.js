@@ -1,7 +1,7 @@
 // Nurse Model
 const Nurse = require('../models/Nurse');
 const Patient = require('./../models/Patient');
-const Clinic = require('./../models/Patient');
+const Clinic = require('./../models/Clinic');
 const Appointment = require('./../models/Appointment');
 const Room = require('./../models/Room');
 const Doctor = require('./../models/Doctor');
@@ -75,6 +75,8 @@ exports.nurse_login = (req, res) => {
 exports.nurse_register = (req, res) => {
     Clinic.findById(req.params.clinic_id)
         .then(clinic =>{
+            console.log(" ddd " + req.params.clinic_id)
+            console.log(" dsdsd "+ clinic)
             Nurse.findOne({
                 accessID: req.body.accessID
             }).populate('clinic')
@@ -96,7 +98,8 @@ exports.nurse_register = (req, res) => {
                         firstName: req.body.firstName,
                         lastName: req.body.lastName,
                         accessID: req.body.accessID,
-                        password: req.body.password
+                        password: req.body.password,
+                        clinic: req.params.clinic_id
                     }
 
                     const newNurse = userFactory(object, "nurse");
@@ -115,7 +118,7 @@ exports.nurse_register = (req, res) => {
                             })).catch(err => {
                                 res.json({
                                     success: false,
-                                    message: 'Error: Server error'
+                                    message: 'Error: Server error' + err
                                 });
                             })
                         })
