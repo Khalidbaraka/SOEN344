@@ -163,12 +163,20 @@ exports.doctor_delete = (req, res) => {
 //Create Timeslot
 exports.doctor_create_timeslot= (req, res) => {
     Doctor.findOne({
-        permitNumber: req.params.permit_number
+        permitNumber: req.params.permit_number,
+        clinic: req.params.clinic_id
     }).populate('schedules')
       .populate({
         path: 'clinic',
         populate: {path: 'rooms'}
     }).then(doctor => {
+        //Making sure the doctor from the permit Number has clinic_id as attribute
+        if(!doctor){
+            return res.status(400).json({
+                success: false,
+                message: 'There are no doctors with this permit number working at this clinic'
+            });
+        }
         appStart = new Date(req.body.start);
         appEnd = new Date(req.body.end);
         durationTime = (appEnd.getHours() - appStart.getHours()) * 60 + appEnd.getMinutes() - appStart.getMinutes();
@@ -304,6 +312,13 @@ exports.doctor_update_timeslot = (req, res) => {
         populate: {path: 'rooms'}
     })
         .then(allDoctors => {
+            //Making sure there are doctors registered in the clinic from the parameter.
+            if(!allDoctors){
+                return res.status(400).json({
+                    success: false,
+                    message: 'There are no doctors working at this clinic'
+                });
+            }
             // all doctors to all timeslots owned by a doctor
             let allTimeslots = [];
             //How many rooms are in the clinic 
