@@ -20,11 +20,21 @@ class Identification extends Component {
         const initialState = {
             appointmentType: "0",
             startTime: moment().startOf('day'),
+            clinic: '',
             message: '',
             variant: '',
             redirectToCart: false
         };
         return initialState;
+    }
+
+    componentDidMount = () => {
+        const clinic = JSON.parse(localStorage.getItem('Clinic'));
+
+        this.setState({
+            ...this.state,
+            clinic: clinic
+        })
     }
 
     setTimeout = (() => {
@@ -154,15 +164,15 @@ class Identification extends Component {
                 <hr/>
 
                 <Form className="my-4">
-                        <Form.Group as={Row} controlId="formGridState" noGutters>
-                            <Form.Label column md="4" className="font-weight-bold">Select an appointment type</Form.Label>
-                            <Col md={8}>
+                    <Form.Group as={Row} controlId="formGridState" noGutters>
+                        <Form.Label column md="4" className="font-weight-bold">Select an appointment type</Form.Label>
+                        <Col md={8}>
                             <Form.Control as="select" onChange={this.onAppointmentTypeHandler} value={appointmentType}>
                                 <option value="0"> Walk-in</option>
                                 <option value="1"> Annual</option>
                             </Form.Control>
-                            </Col>
-                        </Form.Group>
+                        </Col>
+                    </Form.Group>
                 </Form>
                 <hr/>
                 <AppCalender

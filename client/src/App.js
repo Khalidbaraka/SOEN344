@@ -21,6 +21,7 @@ import PatientRoute from "./Components/PrivateRoute/PatientRoute";
 import DoctorRoute from "./Components/PrivateRoute/DoctorRoute";
 import NurseRoute from "./Components/PrivateRoute/NurseRoute";
 import Error from "./Components/Error";
+import Clinics from "./Components/Appointment/Clinics";
 
 class App extends Component {
   render() {
@@ -55,6 +56,7 @@ class App extends Component {
             <PatientRoute path='/homepage/patient' component={ PatientHomepage }/>
             <PatientRoute exact path='/homepage/patient/scheduleAppointment' component={ PatientHomepage }/>
             <PatientRoute exact path='/homepage/patient/myAppointment' component={ PatientHomepage }/>
+            <PatientRoute exact path='/clinics' component={ Clinics } />
             <PatientRoute exact path='/cart' component={ Cart }/>
 
             <Route render={() => (<div> Sorry, this page does not exist. </div>)} />

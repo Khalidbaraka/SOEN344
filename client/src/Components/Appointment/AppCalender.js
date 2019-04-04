@@ -54,8 +54,8 @@ class AppCalender extends Component {
                                 <Form.Group as={Row} controlId="formGridState" noGutters>
                                     <Form.Label column md="4" className="font-weight-bold">Please select date and time of appointment</Form.Label>
                                     <Col md={7}><Form.Control disabled={true} value={this.props.startTime.format("YYYY-MM-DD HH:mm")} /></Col>
-                                    <Col md={1}>
-                                    <Button variant="outline-info"><i className="fa fa-calendar-plus-o" aria-hidden="true"></i></Button>
+                                    <Col md={1} >
+                                    <Button variant="outline-info" className="float-right"><i className="fa fa-calendar-plus-o" aria-hidden="true"></i></Button>
                                     </Col>
                                 </Form.Group>
                             </Form>
