@@ -182,13 +182,13 @@ exports.doctor_create_timeslot= (req, res) => {
             }
 
             if (personalTimeConflict == true){
-                res.status(400).json({
+                return res.status(400).json({
                     success: false,
                     message: 'The selected timeslot conflicts with your own schedule'
                 });
             }
             else if(roomOccupied.length >= 5){
-                res.status(400).json({
+                return res.status(400).json({
                     success: false,
                     message: 'Timeslot overlaps with an already existing timeslot'
                 });

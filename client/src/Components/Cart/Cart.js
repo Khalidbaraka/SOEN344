@@ -62,6 +62,10 @@ class Cart extends Component {
             timeslot: appointment
         }).then(res => {
             if (res.data) {
+                this.setState({
+                    message: "Your appointment has been set!",
+                    variant: "success",
+                });
                 this.handleClose();
                 this.getCartAppointments();
             } else {
