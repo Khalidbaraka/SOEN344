@@ -165,32 +165,37 @@ exports.doctor_create_timeslot= (req, res) => {
     Doctor.findOne({
         permitNumber: req.params.permit_number
     }).populate('schedules')
-    .then(doctor => {
+      .populate({
+        path: 'clinic',
+        populate: {path: 'rooms'}
+    }).then(doctor => {
         appStart = new Date(req.body.start);
         appEnd = new Date(req.body.end);
         durationTime = (appEnd.getHours() - appStart.getHours()) * 60 + appEnd.getMinutes() - appStart.getMinutes();
         let answer = false
         let roomOccupied = [];
         let personalTimeConflict = false;
+        let clinicRooms = doctor.clinic.rooms.length;
 
-        Timeslot.find().populate('doctor').populate('room')
+        //Only look for timeslot for the clinic_id passed as paramenter
+        Timeslot.find({clinic: req.params.clinic_id}).populate('doctor').populate('room')
         .then(timeslot => {
+            let roomNumber ="";
             for (var i=0; i<timeslot.length; i++) {
                 let start = timeslot[i].start;
                 let end = timeslot[i].end;
                 roomNumber = timeslot[i].room.number;
-                answer = HelperController.overlaps(appStart, appEnd, start, end); 
-     
+                answer = HelperController.overlaps(appStart, appEnd, start, end);
                 if(answer == true && timeslot[i].doctor.permitNumber==doctor.permitNumber){
                     personalTimeConflict = true;
                     break;
                 } 
-
-                if (answer == true && roomOccupied.length >= 5){
+                //if 
+                if (answer == true && roomOccupied.length >= clinicRooms){
                     break;
                 }
                 
-                if (answer == true && roomOccupied.length < 5){
+                if (answer == true && roomOccupied.length < clinicRooms){
                     roomOccupied.push(roomNumber);
                 }
 
@@ -202,22 +207,25 @@ exports.doctor_create_timeslot= (req, res) => {
                     message: 'The selected timeslot conflicts with your own schedule'
                 });
             }
-            else if(roomOccupied.length >= 5){
+            else if(roomOccupied.length >= clinicRooms){
                 return res.status(400).json({
                     success: false,
                     message: 'Timeslot overlaps with an already existing timeslot'
                 });
             }
             else{
-                roomAvailable = 1;
-                for(var j = 0; j<=roomOccupied.length; j++){
-                    if(!roomOccupied.includes(j+1)){
-                        roomAvailable = j+1
+                let roomObtained="";
+                for(var j = 0; j<doctor.clinic.rooms.length; j++){
+                    roomObtained = doctor.clinic.rooms[j].number;
+                    //if roomObtained is NOT in(included) roomOcupied, means roomObtained is available.
+                    if(!roomOccupied.includes(roomObtained)){
+                        const split = roomObtained.split("_");
+                        roomObtained = split[0]+"_"+(j+1).toString();
                         break;
                     }    
-                    }
+                }
                 Room.findOne({
-                    number : roomAvailable
+                    number : roomObtained
                 }).then( room => { 
 
                     const newTimeslot = new Timeslot({
@@ -227,11 +235,19 @@ exports.doctor_create_timeslot= (req, res) => {
                         duration : durationTime.toString(),
                         room: room._id
                     });
-
                     newTimeslot.save();//.then(newTimeslot => res.json(newTimeslot)); It was sending two res.json() (check the one in the bottom), so its throwing me a warning in the terminal.
                     doctor.schedules.push(newTimeslot); 
-                    doctor.save();
-                    res.json(doctor);
+                    doctor.save().then(doctor =>{
+                        return res.json({
+                            sucess: true,
+                            message: doctor.schedules
+                        });
+                    }).catch(err => {
+                        return res.status(400).json({
+                            success: false,
+                            message: err
+                        });
+                    });
                 })
             }
         })
@@ -276,17 +292,22 @@ exports.doctor_update_timeslot = (req, res) => {
     let timeslotToEditId = req.body.id;
     let newStart = new Date(req.body.start);
     let newEnd = new Date(req.body.end);
-
     let timeslotToEdit;
     let roomOccupied = [];
-    Doctor.find().populate({
+
+    //Only look for doctors for the clinic_id passed as paramenter
+    Doctor.find({clinic: req.params.clinic_id}).populate({
         path: 'schedules',
         populate: {path: 'doctor room'}
+    }).populate({
+        path: 'clinic',
+        populate: {path: 'rooms'}
     })
         .then(allDoctors => {
             // all doctors to all timeslots owned by a doctor
             let allTimeslots = [];
-
+            //How many rooms are in the clinic 
+            let clinicRooms = allDoctors[0].clinic.rooms.length;
             //allTimeslots = allDoctors.flatMap(doctor => doctor.schedules); NOTE: Seems our version of Node.js doesn't support this
             let arrayOfScheduleArrays = allDoctors.map(doctor => doctor.schedules);
             for (let scheduleArray of arrayOfScheduleArrays) {
@@ -303,11 +324,10 @@ exports.doctor_update_timeslot = (req, res) => {
                     message: "The timeslot was not found",
                 });
             }
-
             for (let scheduledTimeslot of allTimeslots) {
                 // true if the schedules take place in in different rooms and those rooms are for different doctors
-                let noRoomConflict = scheduledTimeslot.room.number !== timeslotToEdit.room.number &&
-                    scheduledTimeslot.doctor.permitNumber !== timeslotToEdit.doctor.permitNumber;
+                let noRoomConflict = scheduledTimeslot.room.number === timeslotToEdit.room.number &&
+                    scheduledTimeslot.doctor.permitNumber === timeslotToEdit.doctor.permitNumber;
 
                 // ignore the timeslot being edited or if no room conflict
                 if (scheduledTimeslot._id == timeslotToEditId || noRoomConflict) {
@@ -318,30 +338,35 @@ exports.doctor_update_timeslot = (req, res) => {
                 let isOverlapping = HelperController.overlaps(newStart, newEnd, scheduledTimeslot.start, scheduledTimeslot.end);
                 // check the schedules dont overlap and if it's a different doctor, check if another room is available
                 if (isOverlapping &&
-                    (scheduledTimeslot.doctor.permitNumber === timeslotToEdit.doctor.permitNumber || roomOccupied.length >= 5)) {
+                    (scheduledTimeslot.doctor.permitNumber === timeslotToEdit.doctor.permitNumber || roomOccupied.length >= clinicRooms)) {
                     return res.status(400).json({
                         success: false,
                         message: "The scheduled time conflicts with a time that's already scheduled",
                         conflictingSchedule: scheduledTimeslot,
                     });
                 }
-                if (isOverlapping && roomOccupied.length < 5) {
+                if (isOverlapping && roomOccupied.length < clinicRooms) {
                     roomOccupied.push(roomNumber);
                 }
             }
 
-            let roomNumber = 1;
-            for (let o = 0; o <= roomOccupied.length; o++) {
-                if (!roomOccupied.includes(o + 1)) {
-                    roomNumber = o + 1;
-                    break;
-                }
-            }
-
-            Doctor.findOne({_id: timeslotToEdit.doctor._id}).populate('appointments')
+            Doctor.findOne({_id: timeslotToEdit.doctor._id}).populate('appointments').populate({
+                path: 'clinic',
+                populate: {path: 'rooms'}
+            })
                 .then(doctor => {
+                    let roomObtained="";
+                    for(var j = 0; j<doctor.clinic.rooms.length; j++){
+                        roomObtained = doctor.clinic.rooms[j].number;
+                        //if roomObtained is NOT in(included) roomOcupied, means roomObtained is available.
+                        if(!roomOccupied.includes(roomObtained)){
+                            const split = roomObtained.split("_");
+                            roomObtained = split[0]+"_"+(j+1).toString();
+                            break;
+                        }
+                    }
                     Room.findOne({
-                        number: roomNumber
+                        number: roomObtained
                     }).then(room => {
                         for (let appointment of doctor.appointments) {
                             // find an appointment apart of the schedule and make sure the new dates wont break it
