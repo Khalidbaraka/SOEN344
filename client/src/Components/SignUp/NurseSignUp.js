@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 
 import {Redirect} from 'react-router-dom';
 import axios from 'axios';
+import moment from "../Appointment/Identification";
 
 const heroImage = require('./../../Resources/photo-1542801285-eabba3ba6ce2.jpg')
 
@@ -49,7 +50,7 @@ class NurseSignUp extends Component {
 
         if (errors.accessID === "" && errors.password === "") {
 
-            axios.post(`api/nurses/${clinic._id}/register`, {
+            axios.post('/api/nurses/' + clinic._id + '/register', {
                 firstName: nurse.firstName,
                 lastName: nurse.lastName,
                 accessID: nurse.accessID,
@@ -71,8 +72,14 @@ class NurseSignUp extends Component {
                             message: res.data.message
                         });
                     }
-                }).catch(error => {
-                console.log(error.res);
+                }).catch((error) => {
+                // Error
+                if (error.response) {
+                    // The request was made and the server responded with a status code
+                    // that falls out of the range of 2xx
+                    console.log(error.response.data.message)
+                }
+
             });
         }
     }

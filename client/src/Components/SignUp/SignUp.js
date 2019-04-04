@@ -7,31 +7,7 @@ const heroImage = require('./../../Resources/photo-1470075801209-17f9ec0cada6.jp
 class SignUp extends Component{
     constructor(props) {
         super(props);
-    
-        this.state = {
-          isPatientSignUpOpen: false,
-          isNurseSignUpOpen:false
-        };
-    }
 
-    patientSignUpHandler = () => {
-        const isPatientSignUpOpen = this.state.isPatientSignUpOpen;
-
-        this.setState(prevState => ({
-            ...prevState,
-            isPatientSignUpOpen: !isPatientSignUpOpen,
-            isNurseSignUpOpen: false
-          }))
-    }
-
-    nurseSignUpHandler = () => {
-        const isNurseSignUpOpen = this.state.isNurseSignUpOpen;
-
-        this.setState(prevState => ({
-            ...prevState,
-            isNurseSignUpOpen: !isNurseSignUpOpen,
-            isPatientSignUpOpen: false
-          }))
     }
 
     render() {
