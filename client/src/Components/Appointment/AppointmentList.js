@@ -40,7 +40,7 @@ class AppointmentList extends Component {
     // Displaying the list of items. _id is unique to MongoDB (Primary Key)
     return (
         <div>
-            <Table responsive striped bordered hover variant="dark" className="text-center my-0">
+            <Table responsive striped bordered hover style={{color: "#344955"}} className="text-center my-0">
                     <thead>
                         <tr>
                             <th scope="col"> Doctor </th>

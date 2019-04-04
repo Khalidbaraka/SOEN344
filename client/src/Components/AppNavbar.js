@@ -31,7 +31,7 @@ class AppNavbar extends Component {
                   <span className="navbar-toggler-icon"></span>
                 </button>
                 <div className={(!isOpen ? 'collapse' : '') + ' navbar-collapse'} id="navbarTogglerDemo01">
-                  <a className="navbar-brand text-light" href="#"> Clinic </a>
+                  <a className="navbar-brand text-light" href="/clinics"> Clinic </a>
                   <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
                     { localStorage.getItem('userToken') ? (
                       user.healthCardNumber ? (

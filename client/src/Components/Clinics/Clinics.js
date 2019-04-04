@@ -3,9 +3,9 @@ import {Card, CardDeck, Image} from 'react-bootstrap';
 import {Redirect} from 'react-router-dom';
 import axios from 'axios';
 
-const ClinicImage1 = require('./../../Resources/mid-atlantic-skin-surgery-institute-3.jpg');
-const ClinicImage2 = require('./../../Resources/clinic.jpg');
-const ClinicImage3 = require('./../../Resources/modern-dental-office-design-with-dental-office-design-ideas-modern-clinic-in-r-floor-plans.jpg');
+const ClinicImage1 = require('../../Resources/mid-atlantic-skin-surgery-institute-3.jpg');
+const ClinicImage2 = require('../../Resources/clinic.jpg');
+const ClinicImage3 = require('../../Resources/modern-dental-office-design-with-dental-office-design-ideas-modern-clinic-in-r-floor-plans.jpg');
 
 class Clinics extends Component {
 
@@ -14,25 +14,34 @@ class Clinics extends Component {
 
         this.state = {
             clinics: [],
-            imageURL: [],
-            onRedirect: false
+            onRedirect: false,
+            user: ''
         }
     }
 
     componentDidMount = () => {
         const imageURL = [ClinicImage1, ClinicImage2, ClinicImage3];
+        const user = this.props.location.state ? this.props.location.state.user : '';
 
         axios.get('/api/clinic/get_all')
             .then(res => {
                 if (res.data.success === true) {
+
+                    const clinicCopies = res.data.clinics;
+
+                    clinicCopies.map((clinic, i) => {
+                        clinic.imageURL = imageURL[i];
+                    })
+
                     this.setState({
                         ...this.state,
                         clinics: res.data.clinics,
-                        imageURL: imageURL
-                    });
+                        user: user
+                    })
                 }
             }).catch(err => console.log(err))
     }
+
 
     onSelectClinicHandler = (clinic) => {
         console.log("Click", clinic);
@@ -45,8 +54,22 @@ class Clinics extends Component {
 
     render() {
 
-        const {clinics, imageURL, onRedirect} = this.state;
-        const path = '/homepage/patient';
+        const {clinics, onRedirect, user} = this.state;
+        let path;
+        
+        switch (user) {
+            case 'nurse':
+                path = '/signup/nurse'
+                break;
+            case 'doctor':
+                path = '/homepage/doctor'
+                break;
+            case 'patient':
+                path = '/homepage/patient'
+                break;
+            default:
+                path = '/homepage/patient'
+        }
 
         if (onRedirect) {
             return <Redirect to={path}/>
@@ -54,6 +77,11 @@ class Clinics extends Component {
 
         return (
             <div className="container">
+
+                { this.props.user == "nurse" ? (
+                    <h4 className="text-monospace text-center mb-5"> Select your workplace </h4>
+                ) : '' }
+
 
                 <CardDeck>
 
@@ -64,19 +92,19 @@ class Clinics extends Component {
                                   className="shadow p-3 mb-5 bg-white rounded"
                                   style={{cursor: "pointer"}}>
 
-                                <Card.Img variant="top" src={imageURL[i]}/>
+                                <Card.Img variant="top" src={clinic.imageURL}/>
                                 <Card.Body>
                                     <Card.Title
                                         className="text-monospace text-center primary-color"> {clinic.name} </Card.Title>
                                     <hr/>
-                                    <Card.Text>
+                                    <Card.Text className="text-monospace" style={{height: "212px", overflow: "auto"}}>
                                         <p className="text-center font-weight-bold primary-color"> Our Team </p>
                                         <div>
                                             <span className="font-weight-bold secondary-color my-1"> Doctors </span>
                                             {clinic.doctors ? clinic.doctors.map(doctor => {
                                                 return (
                                                     <div className="pl-3">
-                                                        {doctor.firstName} {doctor.lastName}
+                                                        {doctor.firstName} {doctor.lastName} - {doctor.speciality}
                                                     </div>
                                                 )
                                             }) : ''}

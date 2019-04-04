@@ -67,7 +67,7 @@ class PatientLogin extends Component{
 
         const { isAuthenticated } = this.state;
 
-        const { fromPath } = this.props.fromPath || { fromPath: { pathname: '/homepage/patient' } };
+        const { fromPath } = this.props.fromPath || { fromPath: { pathname: '/clinics' } };
 
         if (isAuthenticated) {
             // direct the patient to the patient home page or he is taken back to the initial page he was trying to access before he was redirected.

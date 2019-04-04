@@ -1,8 +1,8 @@
-import {Button, Col, Container, Fade, Row} from 'react-bootstrap'
 import React, { Component } from 'react';
+import {Card, Row, Col, Jumbotron, Button, Container, Image} from 'react-bootstrap';
+import PatientSignUp from "./PatientSignUp";
 
-import NurseSignUp from './NurseSignUp';
-import PatientSignUp from './PatientSignUp';
+const heroImage = require('./../../Resources/photo-1470075801209-17f9ec0cada6.jpg')
 
 class SignUp extends Component{
     constructor(props) {
@@ -35,39 +35,24 @@ class SignUp extends Component{
     }
 
     render() {
-        const { isPatientSignUpOpen } = this.state;
-        const { isNurseSignUpOpen } = this.state;
-
+        var styles ={
+            backgroundImage: 'url(' + heroImage + ')'
+        }
         return (
-            <div>
-                <Container>
-                    <Row className="text-center align-middle my-5" >
-                        <Col md={12}>
-                            <Button
-                                onClick={this.patientSignUpHandler}
-                                variant="outline-info"
-                                className="w-25 mx-3"
-                            >
-                                Patient Sign Up
-                            </Button>
-                            <Button
-                                onClick={this.nurseSignUpHandler}
-                                variant="outline-info"
-                                className="w-25 mx-3"
-                                >
-                                Nurse Sign Up
-                            </Button>
-                        </Col>
-                    </Row>
-                    <hr/>
-                    <Row className="my-5">
-                        <Col md={{ span: 8, offset: 2}}>
-                            { isPatientSignUpOpen ? <PatientSignUp/> : "" }
-                            { isNurseSignUpOpen ? <NurseSignUp/> : "" }
-                        </Col>
-                    </Row>
-                </Container>
-            </div>           
+            <div className="container">
+                <Card className="shadow p-0 mb-5 bg-white rounded">
+                    <Card.Body className="p-0">
+                        <Row>
+                            <Col md={5} className="p-0">
+                                <Image src={heroImage} fluid style={{height:"100%"}}/>
+                            </Col>
+                            <Col md={7}>
+                                <PatientSignUp/>
+                            </Col>
+                        </Row>
+                    </Card.Body>
+                </Card>
+            </div>
         );
       }
 }

@@ -93,7 +93,7 @@ class MyAppointment extends Component {
 
         const { appointments, message, appointment, toUpdate, variant} = this.state;
         return (
-            <div className="container">
+            <div>
                 { message ? 
                     <Card border={variant} className="text-center my-4"> 
                         <Card.Body> 
@@ -103,16 +103,12 @@ class MyAppointment extends Component {
                         </Card.Body> 
                     </Card>
                 : ''}
-
-                    <Card className="my-5">
-                    
+                <h4 className="text-center text-monospace my-4">My Appointments</h4>
+                <hr/>
+                    <Card className="my-4">
                     { !toUpdate ? (
                         <div>
-                            <Card.Header>
-                                    <Card.Title className="text-center text-monospace">Your Appointments</Card.Title>
-                            </Card.Header>
-
-                            <AppointmentList 
+                            <AppointmentList
                                 appointments = {appointments}
                                 onUpdateAppointment = {this.onUpdateAppointment}
                                 toUpdate = {this.state.toUpdate}

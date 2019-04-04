@@ -5,6 +5,7 @@ import {Route, Switch} from "react-router-dom";
 import AppointmentsView from '../Appointment/MyAppointment';
 import Identification from '../Appointment/Identification';
 import {Link} from 'react-router-dom'
+import ClinicHomepage from "../Clinics/ClinicHomepage";
 
 class PatientHomepage extends Component {
 
@@ -22,9 +23,9 @@ class PatientHomepage extends Component {
                             <Col md={3}>
                                 <ListGroup variant="flush" className="my-4 text-monospace text-decoration-none">
                                     <ListGroup.Item className="text-center pb-1"> <h4> MENU </h4> </ListGroup.Item>
-                                    <ListGroup.Item><Link to='/homepage/patient/myAppointment' className="text-info text-decoration-none"> My
+                                    <ListGroup.Item><Link to='/homepage/patient/myAppointment' className="secondary-color text-decoration-none"> My
                                         Appointment </Link></ListGroup.Item>
-                                    <ListGroup.Item><Link to='/homepage/patient/scheduleAppointment' className="text-info text-decoration-none text-nowrap"> Schedule an
+                                    <ListGroup.Item><Link to='/homepage/patient/scheduleAppointment' className="secondary-color text-decoration-none text-nowrap"> Schedule an
                                         Appointment </Link></ListGroup.Item>
                                 </ListGroup>
                             </Col>
@@ -32,6 +33,7 @@ class PatientHomepage extends Component {
 
                             <Col md={9}>
                                 <Switch>
+                                    <Route exact path="/homepage/patient" component={ClinicHomepage}/>
                                     <Route path='/homepage/patient/myAppointment' component={AppointmentsView}/>
                                     <Route path='/homepage/patient/scheduleAppointment' component={Identification}/>
                                 </Switch>

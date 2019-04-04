@@ -34,7 +34,7 @@ class Identification extends Component {
         this.setState({
             ...this.state,
             clinic: clinic
-        })
+        });
     }
 
     setTimeout = (() => {
