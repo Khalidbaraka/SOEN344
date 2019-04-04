@@ -8,6 +8,7 @@ const catalogRouter = require('./routes/api/catalog');
 const nurseRouter = require('./routes/api/nurses');
 const patientsRouter = require('./routes/api/patients');
 const doctorRouter = require('./routes/api/doctors');
+const clinicRouter = require('./routes/api/clinic');
 
 const app = express();
 
@@ -30,6 +31,7 @@ app.use('/api/catalog', catalogRouter);
 app.use('/api/nurses', nurseRouter);
 app.use('/api/patients', patientsRouter);
 app.use('/api/doctors', doctorRouter);
+app.use('/api/clinic', clinicRouter);
 
 
 const PORT = process.env.PORT || 5000;

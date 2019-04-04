@@ -1,6 +1,7 @@
 const PatientController = require('./PatientController');
 const DoctorController = require('./DoctorController');
 const NurseController = require('./NurseController');
+const ClinicController = require('./ClinicController');
 
 module.exports = {
     // Patient
@@ -36,6 +37,7 @@ module.exports = {
     nurseList: NurseController.nurse_list,
     createAppointment: NurseController.nurse_create_appointment,
 
-
+    //Clinic
+    getClinics: ClinicController.clinic_get_all
 
 }
