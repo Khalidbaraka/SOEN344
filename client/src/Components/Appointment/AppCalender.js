@@ -42,7 +42,7 @@ class AppCalender extends Component {
             />);
 
         return (
-            <div classNameName="my-4">
+            <div className="my-4">
                 <DatePicker
                     animation="slide-up"
                     calendar={calendar}
@@ -51,11 +51,13 @@ class AppCalender extends Component {
                     ({startTime}) => {
                         return (
                             <Form>
-                                <Form.Row noGutters={true}>
-                                    <Col md={12}><Form.Label>Please select date and time of appointment</Form.Label></Col>
-                                    <Col md={3}><Form.Control disabled={true} value={this.props.startTime.format("YYYY-MM-DD HH:mm")} /></Col>
+                                <Form.Group as={Row} controlId="formGridState" noGutters>
+                                    <Form.Label column md="4" className="font-weight-bold">Please select date and time of appointment</Form.Label>
+                                    <Col md={7}><Form.Control disabled={true} value={this.props.startTime.format("YYYY-MM-DD HH:mm")} /></Col>
+                                    <Col md={1}>
                                     <Button variant="outline-info"><i className="fa fa-calendar-plus-o" aria-hidden="true"></i></Button>
-                                </Form.Row>
+                                    </Col>
+                                </Form.Group>
                             </Form>
                                 
                         )

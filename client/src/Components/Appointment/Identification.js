@@ -136,7 +136,7 @@ class Identification extends Component {
         }
 
         return (
-            <div className="container">
+            <div>
                 {message ?
                     <Card border={variant} className="text-center my-4">
                         <Card.Body>
@@ -150,20 +150,19 @@ class Identification extends Component {
                     </Card>
                     : ''}
 
-
                 <h4 className="text-center text-monospace my-4">Identification</h4>
                 <hr/>
 
                 <Form className="my-4">
-                    <Form.Row>
-                        <Form.Group as={Col} controlId="formGridState">
-                            <Form.Label>Select an appointment type</Form.Label>
+                        <Form.Group as={Row} controlId="formGridState" noGutters>
+                            <Form.Label column md="4" className="font-weight-bold">Select an appointment type</Form.Label>
+                            <Col md={8}>
                             <Form.Control as="select" onChange={this.onAppointmentTypeHandler} value={appointmentType}>
                                 <option value="0"> Walk-in</option>
                                 <option value="1"> Annual</option>
                             </Form.Control>
+                            </Col>
                         </Form.Group>
-                    </Form.Row>
                 </Form>
                 <hr/>
                 <AppCalender
