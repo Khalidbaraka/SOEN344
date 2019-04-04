@@ -5,10 +5,10 @@ const controller = require('../../controllers/Controller');
 const decoder = require('../../middleware');
 
 
-// @route post api/doctors/register
+// @route post api/doctors/:clinic_id/register
 // @desc  Register Doctor
 // @access Public
-router.post('/register', controller.doctorLogin);
+router.post('/:clinic_id/register', controller.doctorRegister);
 
 // @route post api/doctors/login
 // @desc  Login Doctor
