@@ -67,7 +67,6 @@ class DoctorLogin extends Component{
 	render() {
 
         const { isAuthenticated } = this.state;
-
         const { fromPath } = this.props.fromPath || { fromPath: { pathname: '/homepage/doctor' } };
 
         if (isAuthenticated) {

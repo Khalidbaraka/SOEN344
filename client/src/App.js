@@ -24,6 +24,7 @@ import Error from "./Components/Error";
 import Clinics from "./Components/Clinics/Clinics";
 import ClinicHomepage from "./Components/Clinics/ClinicHomepage";
 import NurseSignUp from "./Components/SignUp/NurseSignUp";
+import DoctorSignUp from "./Components/SignUp/DoctorSignUp";
 
 class App extends Component {
   render() {
@@ -42,6 +43,7 @@ class App extends Component {
             <Route path='/login' component={ Login }/>
             <Route exact path='/signup' component={ SignUp }/>
             <Route path='/signup/nurse' component={ NurseSignUp }/>
+            <Route path='/signup/doctor' component={ DoctorSignUp } />
             <Route path='/logout' component={ Logout }/>
             <Route path='/error' component={ Error } />
 

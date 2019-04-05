@@ -16,7 +16,7 @@ class SignUp extends Component{
         }
         return (
             <div className="container">
-                <Card className="shadow p-0 mb-5 bg-white rounded">
+                <Card className="shadow p-0 my-5 bg-white rounded">
                     <Card.Body className="p-0">
                         <Row>
                             <Col md={5} className="p-0">

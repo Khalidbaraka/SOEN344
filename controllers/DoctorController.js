@@ -55,7 +55,7 @@ exports.doctor_register = (req, res) => {
                             newDoctor.password = hash;
                             clinic.doctors.push(newDoctor);
                             clinic.save();
-                            newDoctor.save().then(doctor => res.json(doctor)).catch(err => console.log(err));
+                            newDoctor.save().then(doctor => res.json({success: true, doctor: doctor})).catch(err => console.log(err));
                         })
                     })
                 }

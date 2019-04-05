@@ -86,7 +86,7 @@ class NurseSignUp extends Component {
 
     render() {
 
-        const {isRegistered} = this.state;
+        const {isRegistered, message} = this.state;
         const clinic = JSON.parse(localStorage.getItem('Clinic'));
 
         if (isRegistered) {
@@ -96,14 +96,23 @@ class NurseSignUp extends Component {
             }}/>
         }
 
-        const message = this.state.message;
-
         return (
             <div className="container">
-                <Card className="shadow p-0 mb-5 bg-white rounded">
+
+                { message ?
+                    <Card border="danger" className="text-center my-4">
+                        <Card.Body>
+                            <Card.Title className="text-monospace">
+                                { message }
+                            </Card.Title>
+                        </Card.Body>
+                    </Card>
+                    : ''}
+
+                <Card className="shadow p-0 my-5 bg-white rounded">
                     <Row>
                         <Col md={5} className="p-0">
-                            <Image src={heroImage} fluid/>
+                            <Image src={heroImage} fluid style={{height: "auto"}}/>
                         </Col>
 
                         <Col md={7} className="p-5">

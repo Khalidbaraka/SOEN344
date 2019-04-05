@@ -62,7 +62,7 @@ class Clinics extends Component {
                 path = '/signup/nurse'
                 break;
             case 'doctor':
-                path = '/homepage/doctor'
+                path = '/signup/doctor'
                 break;
             case 'patient':
                 path = '/homepage/patient'
@@ -78,10 +78,9 @@ class Clinics extends Component {
         return (
             <div className="container">
 
-                { this.props.user == "nurse" ? (
-                    <h4 className="text-monospace text-center mb-5"> Select your workplace </h4>
+                { user == "nurse" || "doctor" ? (
+                    <h4 className="text-monospace text-center my-5"> Select your workplace </h4>
                 ) : '' }
-
 
                 <CardDeck>
 

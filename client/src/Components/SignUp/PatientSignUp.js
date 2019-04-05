@@ -107,15 +107,19 @@ class PatientSignUp extends Component{
             <div className="p-4">
                 <h4 className="text-monospace primary-color mt-4"> Register </h4>
                 <Row>
-                    <Col className="mb-4 secondary-color">
-                        <h6> New Patient? Start here! </h6>
+                    <Col md={12} className="text-center secondary-color mt-4">
+                        <h5> New Patient? Start here! </h5>
                     </Col>
-
-                    <Col className="text-center">
+                </Row>
+                <Row>
+                    <Col className="text-center text-monospace my-1">
                         <h6> OR </h6>
                     </Col>
-                    <Col className="text-right font-weight-bold secondary-color text-decoration-none">
-                        <span> Nurse? </span><Link to={{ pathname: "/clinics", state: { user: 'nurse' } }} className="secondary-color text-decoration-none"> Click here </Link>
+                </Row>
+                <Row>
+                    <Col className="text-center font-weight-bold secondary-color text-decoration-none mb-5">
+                        <span> Nurse - </span><Link to={{ pathname: "/clinics", state: { user: 'nurse' } }} className="secondary-color text-decoration-none"> Click here </Link> |
+                        <span> Doctor - </span><Link to={{ pathname: "/clinics", state: { user: 'doctor' } }} className="secondary-color text-decoration-none"> Click here </Link>
                     </Col>
                 </Row>
 
