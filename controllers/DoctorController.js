@@ -110,7 +110,7 @@ exports.doctor_login = (req, res) => {
                 }
             } else {
                 res.json({
-                    sucess: false,
+                    success: false,
                     message: 'Incorrect Permit Number or Password'
                 });
             }
