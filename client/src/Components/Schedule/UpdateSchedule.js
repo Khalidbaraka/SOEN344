@@ -54,6 +54,9 @@ class UpdateSchedule extends React.Component {
     }
 
     modifyTimeslot() {
+        const doctor = JSON.parse(localStorage.getItem('userToken'));
+        const clinicID = doctor.clinic;
+
         this.setState({error: null});
 
         let startDate = moment(this.state.date + ' ' + this.state.timeRange.start).toDate();
@@ -65,7 +68,7 @@ class UpdateSchedule extends React.Component {
             end: endDate,
         };
 
-        axios.put('/api/doctors/schedule/update', data).then(res => {
+        axios.put(`/api/doctors/${clinicID}/schedule/update`, data).then(res => {
             window.location.reload();
         }).catch(err => {
             this.setState({error: err});

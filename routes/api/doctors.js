@@ -15,10 +15,10 @@ router.post('/:clinic_id/register', controller.doctorRegister);
 // @access Public
 router.post('/login', controller.doctorLogin);
 
-// @route post api/doctors/:permit_number/schedule/create
+// @route post api/doctors/:clinic_id/:permit_number/schedule/create
 // @desc Create Timeslot
 // @access Public
-router.post('/:permit_number/schedule/create', controller.createTimeslot);
+router.post('/:clinic_id/:permit_number/schedule/create', controller.createTimeslot);
 
 
 // Protecting the routes below. The order is important
@@ -49,10 +49,10 @@ router.get('/:permit_number/schedule/get', controller.getSchedule);
 // @access Public
 // router.delete('/delete/:permit_number', doctorController.doctor_delete);
 
-// @route put api/doctors/schedule/update
+// @route put api/doctors/:clinic_id/schedule/update
 // @desc  Update a doctor's scheduled timeslot
 // @access Public
-router.put('/schedule/update', controller.updateTimeslot);
+router.put('/:clinic_id/schedule/update', controller.updateTimeslot);
 
 // @route post api/doctors/schedule/delete/:timeslotId
 // @desc  Delete a doctor's scheduled timeslot
