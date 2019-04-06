@@ -21,6 +21,10 @@ import PatientRoute from "./Components/PrivateRoute/PatientRoute";
 import DoctorRoute from "./Components/PrivateRoute/DoctorRoute";
 import NurseRoute from "./Components/PrivateRoute/NurseRoute";
 import Error from "./Components/Error";
+import Clinics from "./Components/Clinics/Clinics";
+import ClinicHomepage from "./Components/Clinics/ClinicHomepage";
+import NurseSignUp from "./Components/SignUp/NurseSignUp";
+import DoctorSignUp from "./Components/SignUp/DoctorSignUp";
 
 class App extends Component {
   render() {
@@ -37,7 +41,9 @@ class App extends Component {
             <Route path='/about' component={ About}/>
             <Route path='/items' component={ Items }/>
             <Route path='/login' component={ Login }/>
-            <Route path='/signup' component={ SignUp }/>
+            <Route exact path='/signup' component={ SignUp }/>
+            <Route path='/signup/nurse' component={ NurseSignUp }/>
+            <Route path='/signup/doctor' component={ DoctorSignUp } />
             <Route path='/logout' component={ Logout }/>
             <Route path='/error' component={ Error } />
 
@@ -56,6 +62,9 @@ class App extends Component {
             <PatientRoute exact path='/homepage/patient/scheduleAppointment' component={ PatientHomepage }/>
             <PatientRoute exact path='/homepage/patient/myAppointment' component={ PatientHomepage }/>
             <PatientRoute exact path='/cart' component={ Cart }/>
+
+            {/* Clinics */}
+            <Route exact path='/clinics' component={ Clinics } />
 
             <Route render={() => (<div> Sorry, this page does not exist. </div>)} />
           </Switch>

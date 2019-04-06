@@ -2,7 +2,7 @@ import {Button, Card, Form} from 'react-bootstrap';
 import React, { Component } from 'react';
 
 import Col from "react-bootstrap/Col";
-import {Redirect} from "react-router-dom";
+import {Redirect, Link} from "react-router-dom";
 import Row from "react-bootstrap/Row";
 import axios from 'axios';
 
@@ -104,75 +104,91 @@ class PatientSignUp extends Component{
         }
 
         return (
-            <div>
-                <Card className="p-4">
-                    <Form onSubmit = {this.onSubmit} className="font-weight-bold">
-                        <Form.Group>
-                        <Row>
-                            <Col>
-                                <Form.Label>First Name</Form.Label>
-                                <Form.Control placeholder="First name" name="firstName" value = {this.state.firstName} onChange={this.onChange} required/>
-                            </Col>
-                            <Col>
-                                <Form.Label>Last Name</Form.Label>
-                                <Form.Control placeholder="Last name" name="lastName" value = {this.state.lastName} onChange={this.onChange} required/>
-                            </Col>
-                        </Row>
-                        </Form.Group>
+            <div className="p-4">
+                <h4 className="text-monospace primary-color mt-4"> Register </h4>
+                <Row>
+                    <Col md={12} className="text-center secondary-color mt-4">
+                        <h5> New Patient? Start here! </h5>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col className="text-center text-monospace my-1">
+                        <h6> OR </h6>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col className="text-center font-weight-bold secondary-color text-decoration-none mb-5">
+                        <span> Nurse - </span><Link to={{ pathname: "/clinics", state: { user: 'nurse' } }} className="secondary-color text-decoration-none"> Click here </Link> |
+                        <span> Doctor - </span><Link to={{ pathname: "/clinics", state: { user: 'doctor' } }} className="secondary-color text-decoration-none"> Click here </Link>
+                    </Col>
+                </Row>
 
-                        <Form.Group>
-                            <Form.Label>Birthday</Form.Label>
-                            <Form.Control placeholder="Enter Birthday" name="birthday" value = {this.state.birthday} onChange={this.onChange} required/>
-                            <Form.Text className="text-muted">
-                                Format: DDMMYYYY ex:  22021995 for February 22nd, 1995
-                            </Form.Text>
-                        </Form.Group>
+                <Form onSubmit = {this.onSubmit} className="font-weight-bold">
+                    <Form.Group>
+                    <Row>
+                        <Col>
+                            <Form.Label>First Name</Form.Label>
+                            <Form.Control placeholder="First name" name="firstName" value = {this.state.firstName} onChange={this.onChange} required/>
+                        </Col>
+                        <Col>
+                            <Form.Label>Last Name</Form.Label>
+                            <Form.Control placeholder="Last name" name="lastName" value = {this.state.lastName} onChange={this.onChange} required/>
+                        </Col>
+                    </Row>
+                    </Form.Group>
 
-                        <Form.Group>
-                            <Form.Label>Gender</Form.Label>
-                            <Form.Control as="select" name="gender" value = {this.state.gender} onChange={this.onChange} required>
-                                <option>Male</option>
-                                <option>Female</option>
-                                <option>Other</option>
-                            </Form.Control>
-                        </Form.Group>
+                    <Form.Group>
+                        <Form.Label>Birthday</Form.Label>
+                        <Form.Control placeholder="Enter Birthday" name="birthday" value = {this.state.birthday} onChange={this.onChange} required/>
+                        <Form.Text className="text-muted">
+                            Format: DDMMYYYY ex:  22021995 for February 22nd, 1995
+                        </Form.Text>
+                    </Form.Group>
 
-                        <Form.Group>
-                            <Form.Label>Phone Number</Form.Label>
-                            <Form.Control placeholder="Enter Phone Number" name="phoneNumber" value = {this.state.phoneNumber} onChange={this.onChange} required/>
-                        </Form.Group>
+                    <Form.Group>
+                        <Form.Label>Gender</Form.Label>
+                        <Form.Control as="select" name="gender" value = {this.state.gender} onChange={this.onChange} required>
+                            <option>Male</option>
+                            <option>Female</option>
+                            <option>Other</option>
+                        </Form.Control>
+                    </Form.Group>
 
-                        <Form.Group>
-                            <Form.Label>Email</Form.Label>
-                            <Form.Control type="email" placeholder="Enter Email Address" name="emailAddress" value = {this.state.emailAddress} onChange={this.onChange} required/>
-                        </Form.Group>
+                    <Form.Group>
+                        <Form.Label>Phone Number</Form.Label>
+                        <Form.Control placeholder="Enter Phone Number" name="phoneNumber" value = {this.state.phoneNumber} onChange={this.onChange} required/>
+                    </Form.Group>
 
-                        <Form.Group>
-                            <Form.Label>Address</Form.Label>
-                            <Form.Control placeholder="Enter Address" name="physicalAddress" value = {this.state.physicalAddress} onChange={this.onChange} required/>
-                            <Form.Text className="text-muted">
-                                ex:  123 1st Avenue
-                            </Form.Text>
-                        </Form.Group>
+                    <Form.Group>
+                        <Form.Label>Email</Form.Label>
+                        <Form.Control type="email" placeholder="Enter Email Address" name="emailAddress" value = {this.state.emailAddress} onChange={this.onChange} required/>
+                    </Form.Group>
 
-                        <Form.Group>
-                            <Form.Label>Health Care ID</Form.Label>
-                            <Form.Control placeholder="Enter Health Card Number" name="healthCardNumber" value = {this.state.healthCardNumber} onChange={this.onChange} required/>
-                            <Form.Text className="text-muted">
-                                ex:  LOUX 0803 2317
-                            </Form.Text>
-                        </Form.Group>
+                    <Form.Group>
+                        <Form.Label>Address</Form.Label>
+                        <Form.Control placeholder="Enter Address" name="physicalAddress" value = {this.state.physicalAddress} onChange={this.onChange} required/>
+                        <Form.Text className="text-muted">
+                            ex:  123 1st Avenue
+                        </Form.Text>
+                    </Form.Group>
 
-                        <Form.Group>
-                            <Form.Label>Password</Form.Label>
-                            <Form.Control type="password" placeholder="Password" name="password" value = {this.state.password} onChange={this.onChange} required/>
-                        </Form.Group>
+                    <Form.Group>
+                        <Form.Label>Health Care ID</Form.Label>
+                        <Form.Control placeholder="Enter Health Card Number" name="healthCardNumber" value = {this.state.healthCardNumber} onChange={this.onChange} required/>
+                        <Form.Text className="text-muted">
+                            ex:  LOUX 0803 2317
+                        </Form.Text>
+                    </Form.Group>
 
-                        <Button variant="outline-info" type="submit" className="float-right mt-3" >
-                            Submit
-                        </Button>
-                    </Form>
-                </Card>
+                    <Form.Group>
+                        <Form.Label>Password</Form.Label>
+                        <Form.Control type="password" placeholder="Password" name="password" value = {this.state.password} onChange={this.onChange} required/>
+                    </Form.Group>
+
+                    <Button variant="outline-info" type="submit" className="float-right my-3" >
+                        Submit
+                    </Button>
+                </Form>
             </div>
         );
     }

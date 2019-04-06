@@ -57,7 +57,7 @@ class Login extends Component{
                 : ''}
             <Tabs 
               fill 
-              className="mt-5" 
+              className="shadow bg-white rounded mt-5"
               activeKey={ tab } 
               onSelect={ tab => this.setState({ tab }) }
               id="uncontrolled-tab-example" unmountOnExit="True">
