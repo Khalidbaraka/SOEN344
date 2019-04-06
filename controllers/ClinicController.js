@@ -30,7 +30,7 @@ exports.clinic_create = (req,res) =>{
         })
 }
 exports.clinic_get_all = (req,res) =>{
-    Clinic.find().populate('doctors').populate('nurses').populate('rooms').populate('appointments')
+    Clinic.find().sort({'_id': 1}).populate('doctors').populate('nurses').populate('rooms').populate('appointments')
         .then(clinics =>{
             return res.json({
                 success: true,
