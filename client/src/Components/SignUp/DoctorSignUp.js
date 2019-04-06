@@ -22,6 +22,11 @@ class DoctorSignUp extends Component {
         }
     }
 
+    componentWillUnmount() {
+        // Clear the clinic object in the localstorage, since we only need it to Register a doctor or nurse
+        localStorage.removeItem("Clinic");
+    }
+
     onChange = (e) => {
         this.setState({[e.target.name]: e.target.value});
     }
@@ -39,19 +44,23 @@ class DoctorSignUp extends Component {
             permitNumber: permitNumber,
             speciality: speciality,
             password: password
+
         }).then(res => {
             if (res.data.success) {
                 this.setState({
                     isRegistered: true
                 });
+
+                // Clear the clinic object in the localstorage, since we only need it to Register a doctor or nurse
+                localStorage.removeItem("Clinic");
             }
         }).catch((error) => {
             if (error.response) {
-
-                const message = error.response.data.message;
+                this.setState({
+                    message: error.response.data.message
+                })
             }
         });
-
     }
 
     render() {

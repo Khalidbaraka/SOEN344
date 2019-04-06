@@ -20,6 +20,11 @@ class Clinics extends Component {
     }
 
     componentDidMount = () => {
+
+        if (localStorage.getItem("Clinic")) {
+            localStorage.removeItem("Clinic");
+        }
+
         const imageURL = [ClinicImage1, ClinicImage2, ClinicImage3];
         const user = this.props.location.state ? this.props.location.state.user : '';
 
@@ -44,7 +49,6 @@ class Clinics extends Component {
 
 
     onSelectClinicHandler = (clinic) => {
-        console.log("Click", clinic);
         localStorage.setItem("Clinic", JSON.stringify(clinic));
 
         this.setState({
@@ -78,9 +82,9 @@ class Clinics extends Component {
         return (
             <div className="container">
 
-                { user == "nurse" || "doctor" ? (
+                { user == ("nurse" || "doctor") ? (
                     <h4 className="text-monospace text-center my-5"> Select your workplace </h4>
-                ) : '' }
+                ) : <h4 className="text-monospace text-center my-5"> Select your clinic </h4> }
 
                 <CardDeck>
 

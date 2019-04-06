@@ -3,7 +3,6 @@ import React, {Component} from 'react';
 
 import {Redirect} from 'react-router-dom';
 import axios from 'axios';
-import moment from "../Appointment/Identification";
 
 const heroImage = require('./../../Resources/photo-1542801285-eabba3ba6ce2.jpg')
 
@@ -21,6 +20,11 @@ class NurseSignUp extends Component {
         }
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+    }
+
+    componentWillUnmount() {
+        // Clear the clinic object in the localstorage, since we only need it to Register a doctor or nurse
+        localStorage.removeItem("Clinic");
     }
 
     onChange(e) {
@@ -55,31 +59,21 @@ class NurseSignUp extends Component {
                 lastName: nurse.lastName,
                 accessID: nurse.accessID,
                 password: nurse.password
-            })
-                .then(res => {
 
-                    if (res.data.success) {
-                        this.setState({
-                            isRegistered: true
-                        });
-
-                    } else {
-                        this.setState({
-                            firstName: '',
-                            lastName: '',
-                            accessID: '',
-                            password: '',
-                            message: res.data.message
-                        });
-                    }
-                }).catch((error) => {
-                // Error
+            }).then(res => {
+                if (res.data.success) {
+                    this.setState({
+                        isRegistered: true
+                    });
+                }
+            }).catch((error) => {
                 if (error.response) {
                     // The request was made and the server responded with a status code
                     // that falls out of the range of 2xx
-                    console.log(error.response.data.message)
+                    this.setState({
+                        message: error.response.data.message
+                    })
                 }
-
             });
         }
     }
@@ -99,11 +93,11 @@ class NurseSignUp extends Component {
         return (
             <div className="container">
 
-                { message ?
+                {message ?
                     <Card border="danger" className="text-center my-4">
                         <Card.Body>
                             <Card.Title className="text-monospace">
-                                { message }
+                                {message}
                             </Card.Title>
                         </Card.Body>
                     </Card>
@@ -119,13 +113,7 @@ class NurseSignUp extends Component {
                             <h4 className="text-monospace mt-4"> Signing up with {clinic.name} </h4>
 
                             <Form noValidate onSubmit={this.onSubmit} className="font-weight-bold my-5">
-                                {message ?
-                                    <Card border="danger" className="my-3">
-                                        <Card.Body>
-                                            <Card.Title>{message} </Card.Title>
-                                        </Card.Body>
-                                    </Card>
-                                    : ''}
+
                                 <Form.Group controlId="formFirstName">
                                     <Form.Label>First name</Form.Label>
                                     <Form.Control name="firstName" type="text" placeholder="Enter First Name"
