@@ -3,13 +3,14 @@ const DoctorController = require('./DoctorController');
 const NurseController = require('./NurseController');
 const ClinicController = require('./ClinicController');
 const Login = require('./Login');
+const Register = require('./Register');
 
 module.exports = {
 
     // Login
 
     // Patient
-    patientRegister: PatientController.patient_register,
+    patientRegister: function(req, res){ return Register.changeStrategy('patient',req,res) },
     patientLogin: function(req, res){ return Login.changeStrategy('patient',req,res) },
     patientList: PatientController.patient_list,
 
@@ -25,7 +26,7 @@ module.exports = {
     updateAppointment: PatientController.patient_update_appointment,
 
     // Doctor
-    doctorRegister: DoctorController.doctor_register,
+    doctorRegister: function(req, res){ return Register.changeStrategy('doctor',req,res) },
     doctorLogin: function(req, res){ return Login.changeStrategy('doctor',req,res)},
     doctorList: DoctorController.doctor_get_list,
 
@@ -36,7 +37,7 @@ module.exports = {
     updateTimeslot: DoctorController.doctor_update_timeslot,
 
     // Nurse
-    nurseRegister: NurseController.nurse_register,
+    nurseRegister: function(req, res){ return Register.changeStrategy('nurse',req,res) },
     nurseLogin: function(req, res){ return Login.changeStrategy('nurse',req,res)},
     nurseList: NurseController.nurse_list,
     createAppointment: NurseController.nurse_create_appointment,
