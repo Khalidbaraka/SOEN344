@@ -159,8 +159,6 @@ exports.nurse_delete = (req, res) => {
 
 //Nurse Creates Appointment for Patient
 exports.nurse_create_appointment  = (req,res)=>{
-    Nurse.findOne({accessID: req.params.access_id})
-    .then(nurse => {
         Patient.findOne({healthCardNumber: req.params.health_card_number}).populate('appointments')
         .then(patient =>{
             var type = req.body.type;
@@ -180,87 +178,90 @@ exports.nurse_create_appointment  = (req,res)=>{
             }  
             let annualCheckUpFound = false; let personalAppointmentOverlap = false;
             let roomOverlap = false; let doctorAvailable = false; 
-            Room.find().sort({'_id': 1}).populate('appointments')
+            Room.find({ clinic: req.params.clinic_id }).sort({ number: 1 }).collation({ locale: "en_US", numericOrdering: true }).populate('appointments')
                 .then(rooms =>{
-                    Doctor.find().populate('schedules')
+                    Doctor.find({ clinic: req.params.clinic_id }).populate('schedules')
                         .then(doctors =>{
-                            let i = 0; //room index
-                            let k=0; //doctor index
-                            //First Check, check if patient already has annual check up appointment
-                            if(type == 1){
-                                annualCheckUpFound = HelperController.check_annual_checkup(patient,type,startTime,endTime);
-                            }
-                            if(annualCheckUpFound == false){
-                                //Second check, check if patient already has an appointment at the selected startTime
-                                
-                                personalAppointmentOverlap = HelperController.check_personal_overlap(patient,startTime,endTime);
-                                
-                                if (personalAppointmentOverlap == false){
-                                    //Third check, check for available rooms at the selected time
-                                    while(i<rooms.length){
-                                        roomOverlap = HelperController.check_room_overlap(rooms[i], startTime, endTime);
-                                        if (roomOverlap == false){
-                                            //Fourth check, check for available doctor at the selected time
-                                            while(k<doctors.length){
-                                                doctorAvailable = HelperController.check_doctor_available(doctors[k],startTime,endTime)
-                                                if(doctorAvailable.answer&& doctorAvailable.roomFound.equals(rooms[i]._id)){
-                                                    break;
+                            Appointment.find({ patient: patient._id, clinic: req.params.clinic_id })
+                                .then(appointments => {
+                                    let i = 0; //room index
+                                    let k=0; //doctor index
+                                    //First Check, check if patient already has annual check up appointment
+                                    if(type == 1){
+                                        annualCheckUpFound = HelperController.check_annual_checkup(appointments,type,startTime,endTime);
+                                    }
+                                    if(annualCheckUpFound == false){
+                                        //Second check, check if patient already has an appointment at the selected startTime
+                                        
+                                        personalAppointmentOverlap = HelperController.check_personal_overlap(patient,startTime,endTime);
+                                        
+                                        if (personalAppointmentOverlap == false){
+                                            //Third check, check for available rooms at the selected time
+                                            while(i<rooms.length){
+                                                roomOverlap = HelperController.check_room_overlap(rooms[i], startTime, endTime);
+                                                if (roomOverlap == false){
+                                                    //Fourth check, check for available doctor at the selected time
+                                                    while(k<doctors.length){
+                                                        doctorAvailable = HelperController.check_doctor_available(doctors[k],startTime,endTime)
+                                                        if(doctorAvailable.answer&& doctorAvailable.roomFound.equals(rooms[i]._id)){
+                                                            break;
+                                                        }
+                                                    k++;   
+                                                    }
+                                                    if(doctorAvailable.answer == true && doctorAvailable.roomFound.equals(rooms[i]._id)){                                    
+                                                        var newAppointment = new Appointment({
+                                                        type: type,
+                                                        clinic: req.params.clinic_id,
+                                                        doctor: doctors[k]._id,
+                                                        room: rooms[i]._id,
+                                                        start: startTime,
+                                                        patient: patient._id,
+                                                        end: endTime,
+                                                        duration: duration.toString(),
+                                                        price: price
+                                                        })
+                                                        newAppointment.save();
+                                                        rooms[i].appointments.push(newAppointment);
+                                                        rooms[i].save();
+                                                        doctors[k].appointments.push(newAppointment);
+                                                        doctors[k].save();
+                                                        patient.appointments.push(newAppointment);
+                                                        patient.save();                                                                                                                                                 
+                                                        //res.json({success:true})
+                                                        return res.json(rooms[i])
+                                                    }
+                                                    else{
+                                                        return res.status(400).json({
+                                                            success: false,
+                                                            message: 'Sorry, a room is available but no doctors are available at the selected time '
+                                                        });
+                                                    } 
                                                 }
-                                            k++;   
+                                                else if (roomOverlap==true && i>rooms.length){
+                                                    return res.status(400).json({
+                                                        success: false,
+                                                        message: 'All rooms are occupied at the selected time'
+                                                    });
+                                                }
+                                                i++;
                                             }
-                                            if(doctorAvailable.answer == true && doctorAvailable.roomFound.equals(rooms[i]._id)){                                    
-                                                var newAppointment = new Appointment({
-                                                type: type,
-                                                clinic: null,
-                                                doctor: doctors[k]._id,
-                                                room: rooms[i]._id,
-                                                start: startTime,
-                                                patient: patient._id,
-                                                end: endTime,
-                                                duration: duration.toString(),
-                                                price: price
-                                                })
-                                                newAppointment.save();
-                                                rooms[i].appointments.push(newAppointment);
-                                                rooms[i].save();
-                                                doctors[k].appointments.push(newAppointment);
-                                                doctors[k].save();
-                                                patient.appointments.push(newAppointment);
-                                                patient.save();                                                                                                                                                 
-                                                //res.json({success:true})
-                                                return res.json(rooms[i])
-                                            }
-                                            else{
-                                                return res.status(400).json({
-                                                    success: false,
-                                                    message: 'Sorry, a room is available but no doctors are available at the selected time '
-                                                });
-                                            } 
                                         }
-                                        else if (roomOverlap==true && i>rooms.length){
+                                        else{
                                             return res.status(400).json({
                                                 success: false,
-                                                message: 'All rooms are occupied at the selected time'
+                                                message: 'Error. The patient already has an appointment for the selected time.'
                                             });
-                                        }
-                                        i++;
+                                        }                                      
                                     }
-                                }
-                                else{
-                                    return res.status(400).json({
-                                        success: false,
-                                        message: 'Error. The patient already has an appointment for the selected time.'
-                                    });
-                                }                                      
-                            }
-                            else{
-                                return res.status(400).json({
-                                    success: false,
-                                    message: 'The patient already has an annual check up for the year. '
-                                });
-                            }
+                                    else{
+                                        return res.status(400).json({
+                                            success: false,
+                                            message: 'The patient already has an annual check up for the year. '
+                                        });
+                                    }
+                                })
                         })
                 })
         })
-    })
+
 }
