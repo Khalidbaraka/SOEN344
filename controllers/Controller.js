@@ -1,9 +1,16 @@
+import Login from "../client/src/Components/Login/Login";
+
 const PatientController = require('./PatientController');
 const DoctorController = require('./DoctorController');
 const NurseController = require('./NurseController');
 const ClinicController = require('./ClinicController');
+const LoginController = require('./LoginController');
 
 module.exports = {
+
+    // Login
+    doctorLogin: LoginController.login,
+
     // Patient
     patientRegister: PatientController.patient_register,
     patientLogin: PatientController.patient_login,
@@ -22,7 +29,6 @@ module.exports = {
 
     // Doctor
     doctorRegister: DoctorController.doctor_register,
-    doctorLogin: DoctorController.doctor_login,
     doctorList: DoctorController.doctor_get_list,
 
     // Schedule
