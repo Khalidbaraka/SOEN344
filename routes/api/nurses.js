@@ -34,10 +34,10 @@ router.get('/nursesList', controller.nurseList);
 // @access Public
 // router.delete('/delete', nurse_controller.nurse_delete);
 
-// @route post api/nurses/access_id/health_card_number/create
+// @route post api/nurses/access_id/health_card_number/clinic_id/create
 // @desc  create new appointment for patient
 // @access Public
-router.post('/:access_id/:health_card_number/appointment/create', controller.createAppointment);
+router.post('/:access_id/:health_card_number/:clinic_id/appointment/create', controller.createAppointment);
 
 // @route post api/patients/appointment/delete
 // @desc  Delete Appointment

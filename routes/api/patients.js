@@ -20,10 +20,10 @@ router.post('/login', controller.patientLogin);
 // @access Public
 router.delete('/:health_card_number/appointment/:id/delete', controller.deleteAppointment);
 
-// @route get api/patients/health_card_number/appointment/get
+// @route get api/patients/health_card_number/clinic_id/appointment/get
 // @desc  update patient
 // @access Public
-router.get('/:health_card_number/appointment/get', controller.getAllAppointments);
+router.get('/:health_card_number/:clinic_id/appointment/get', controller.getAllAppointments);
 
 // Protecting the routes below. The order is important
 //router.use(decoder); // Comment out for api testing
@@ -43,10 +43,10 @@ router.get('/patientsList', controller.patientList);
 // @access Public
 // router.put('/update/:id', patientController.patient_update);
 
-// @route post api/patients/:health_card_number/cart/checkout
+// @route post api/patients/:health_card_number/clinic_id/cart/checkout
 // @desc  update patient
 // @access Public
-router.post('/:health_card_number/cart/checkout', controller.checkoutAppointment);
+router.post('/:health_card_number/:clinic_id/cart/checkout', controller.checkoutAppointment);
 
 // @route post api/patients/:health_card_number/cart/get
 // @desc  returns patient cart
@@ -58,10 +58,10 @@ router.get('/:health_card_number/cart/get', controller.returnCart);
 // @access Public
 router.put('/:health_card_number/cart/delete', controller.deleteCartEntry);
 
-// @route post api/patients/:health_card_number/cart/save
+// @route post api/patients/:health_card_number/:clinic_id/cart/save
 // @desc  update patient
 // @access Public
-router.post('/:health_card_number/cart/save', controller.saveToCart);
+router.post("/:health_card_number/:clinic_id/cart/save", controller.saveToCart);
 
 // @route put api/patients/health_card_number/appointment/update
 // @desc  update patient
