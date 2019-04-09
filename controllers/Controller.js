@@ -1,19 +1,16 @@
-import Login from "../client/src/Components/Login/Login";
-
 const PatientController = require('./PatientController');
 const DoctorController = require('./DoctorController');
 const NurseController = require('./NurseController');
 const ClinicController = require('./ClinicController');
-const LoginController = require('./LoginController');
+const Login = require('./Login');
 
 module.exports = {
 
     // Login
-    doctorLogin: LoginController.login,
 
     // Patient
     patientRegister: PatientController.patient_register,
-    patientLogin: PatientController.patient_login,
+    patientLogin: function(req, res){ return Login.changeStrategy('patient',req,res) },
     patientList: PatientController.patient_list,
 
     // Cart
@@ -29,6 +26,7 @@ module.exports = {
 
     // Doctor
     doctorRegister: DoctorController.doctor_register,
+    doctorLogin: function(req, res){ return Login.changeStrategy('doctor',req,res)},
     doctorList: DoctorController.doctor_get_list,
 
     // Schedule
@@ -39,7 +37,7 @@ module.exports = {
 
     // Nurse
     nurseRegister: NurseController.nurse_register,
-    nurseLogin: NurseController.nurse_login,
+    nurseLogin: function(req, res){ return Login.changeStrategy('nurse',req,res)},
     nurseList: NurseController.nurse_list,
     createAppointment: NurseController.nurse_create_appointment,
 
