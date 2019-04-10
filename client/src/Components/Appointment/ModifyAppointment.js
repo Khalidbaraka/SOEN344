@@ -1,4 +1,4 @@
-import { Button, Card, Col, Form, Row } from 'react-bootstrap';
+import {Button, Card, Col, Form, Row} from 'react-bootstrap';
 import React, {Component} from 'react';
 
 import AppCalender from './AppCalender';
@@ -21,22 +21,36 @@ class ModifyAppointment extends Component {
                 start: '',
                 type: ''
             },
-            onUpdate: false, 
+            onUpdate: false,
         }
     }
- 
+
     // Load the selected appointment, set the state of the component of the props.appointment value
     componentDidMount = () => {
         const appointment = this.props.appointment ? this.props.appointment : '';
+        let clinic = {}
 
-        console.log("Appointment", appointment);
+        // Get the clinic information by its id. Required for patient and nurse.
+        axios.get(`/api/clinic/${appointment.clinic}/get`)
+            .then(res => {
+                if (res.data.success) {
+                    this.setState({
+                        ...this.state,
+                        appointment: {
+                            ...this.state.appointment,
+                            clinic: res.data.clinic
+                        }
+                    })
+                }
+            }).catch(error => {
+                console.log(error);
+        });
 
         const nextState = {
             ...this.state,
             appointment: {
                 ...this.state.appointment,
                 _id: appointment._id,
-                clinic: appointment.clinic,
                 doctor: appointment.doctor,
                 duration: appointment.duration,
                 end: moment(appointment.end),
@@ -109,7 +123,7 @@ class ModifyAppointment extends Component {
     // Once the patient select the start time to update, the Calendar is displayed and the end time is removed.
     onUpdateTimeHandler = () => {
 
-        const { onUpdate } = this.state
+        const {onUpdate} = this.state
 
         const nextState = ({
             ...this.state,
@@ -123,12 +137,9 @@ class ModifyAppointment extends Component {
         this.setState(nextState);
     }
 
-    
-    onSubmit= (e) => {
 
+    onSubmit = (e) => {
         e.preventDefault();
-
-        // const momentDate = moment(this.state.start,'YYYY-MM-DD HH:mm');
 
         const appointmentToUpdate = {
             appointmentId: this.state.appointment._id,
@@ -136,128 +147,132 @@ class ModifyAppointment extends Component {
             startTime: this.state.appointment.start
         };
 
-        console.log("Appointment To Update", appointmentToUpdate);
-
         const user = JSON.parse(localStorage.getItem('userToken'));
         let healthCardNumber;
 
+        // Depending on the user; a patient or nurse.
         if (this.props.healthCardNumber) {
             healthCardNumber = this.props.healthCardNumber
         } else {
             healthCardNumber = encodeURI(user.healthCardNumber);
         }
 
-        axios.put('/api/patients/'+ healthCardNumber+ '/appointment/update', {
-                appointmentId: appointmentToUpdate.appointmentId,
-                type: appointmentToUpdate.type,
-                startTime: appointmentToUpdate.startTime
-            })
+        axios.put('/api/patients/' + healthCardNumber + '/appointment/update', {
+            appointmentId: appointmentToUpdate.appointmentId,
+            type: appointmentToUpdate.type,
+            startTime: appointmentToUpdate.startTime
+        })
             .then(res => {
                 if (res.data.success) {
                     let message = res.data.message;
                     let variant = 'success';
                     let toUpdate = false;
+
                     this.props.onReset(message, variant, toUpdate);
-                
                 }
             }).catch((error) => {
-                if (error.response) {
+            if (error.response) {
+                let message = error.response.data.message;
+                let variant = 'danger';
+                let toUpdate = true;
 
-                    let message = error.response.data.message;
-                    let variant = 'danger';
-                    let toUpdate = true;
-                    this.props.onReset(message, variant, toUpdate);                   
-                }  
-            });
+                this.props.onReset(message, variant, toUpdate);
+
+                setTimeout(function () {
+                    window.location.reload();
+                }, 3000);
+            }
+        });
 
     }
 
     render() {
-        const { appointment, onUpdate } = this.state;
+        const {appointment, onUpdate} = this.state;
 
         return (
-            <div>
-                <Card.Body>
-                    <Form>
-                        <Form.Group controlId="">
-                            <Form.Label>Clinic</Form.Label>
-                            <Form.Control type="text" readOnly value={appointment.clinic} disabled />
-                        </Form.Group>
+            <div className="py-4 font-weight-bold">
+                <Form>
+                    <Form.Group controlId="">
+                        <Form.Label>Clinic</Form.Label>
+                        <Form.Control type="text" readOnly value={appointment.clinic.name} disabled/>
+                    </Form.Group>
 
-                        <Row>
-                            <Col>
-                                <Form.Group controlId="">
-                                    <Form.Label>Doctor</Form.Label>
-                                    <Form.Control type="text" readOnly  value={appointment.doctor} disabled />
-                                </Form.Group>
-                            </Col>
-
-                            <Col>
-                                <Form.Group controlId="">
-                                    <Form.Label>Room</Form.Label>
-                                    <Form.Control type="text" value={appointment.room} disabled />
-                                </Form.Group>
-                            </Col>
-                        </Row>
-
-                         <Form.Group controlId="formGridState">
-                            <Form.Label>Select an appointment type</Form.Label>
-                            <Form.Control as="select" onChange={this.onAppointmentTypeHandler} value={appointment.type}>
-                                <option value="0"> Walk-in </option>
-                                <option value="1"> Annual </option>
-                            </Form.Control>
-                       </Form.Group>
-
-                        { onUpdate === false ? (
+                    <Row>
+                        <Col>
                             <Form.Group controlId="">
-                                <Form.Label>Start time</Form.Label>
-                                <Form.Control type="text" value={appointment.start.toString()} onClick={this.onUpdateTimeHandler} />
+                                <Form.Label>Doctor</Form.Label>
+                                <Form.Control type="text" readOnly value={appointment.doctor} disabled/>
                             </Form.Group>
-                        ) : (
-                            <div>
-                                <hr/>
-                                <AppCalender
-                                    disabledHours = {this.disabledHours}
-                                    disabledMinutes = {this.disabledMinutes}
-                                    disabledSeconds = {this.disabledSeconds}
-                                    disabledDate = {this.disabledDate}
-                                    onChange = {this.onChange}
-                                    startTime = {appointment.start}
-                                    type = {appointment.type}
-                                />
-                                <hr/>
-                            </div>
-                        )}
+                        </Col>
 
+                        <Col>
+                            <Form.Group controlId="">
+                                <Form.Label>Room</Form.Label>
+                                <Form.Control type="text" value={appointment.room} disabled/>
+                            </Form.Group>
+                        </Col>
+                    </Row>
+
+                    <Form.Group controlId="formGridState">
+                        <Form.Label>Select an appointment type</Form.Label>
+                        <Form.Control as="select" onChange={this.onAppointmentTypeHandler} value={appointment.type}>
+                            <option value="0"> Walk-in</option>
+                            <option value="1"> Annual</option>
+                        </Form.Control>
+                    </Form.Group>
+
+                    {onUpdate === false ? (
                         <Form.Group controlId="">
-                            <Form.Label>End time</Form.Label>
-                            <Form.Control type="text" readOnly value={appointment.end.toString()} disabled />
+                            <Form.Label>Start time</Form.Label>
+                            <Form.Control type="text" value={appointment.start.toString()} onClick={this.onUpdateTimeHandler}/>
                         </Form.Group>
+                    ) : (
+                        <div>
+                            <hr/>
+                            <AppCalender
+                                disabledHours={this.disabledHours}
+                                disabledMinutes={this.disabledMinutes}
+                                disabledSeconds={this.disabledSeconds}
+                                disabledDate={this.disabledDate}
+                                onChange={this.onChange}
+                                startTime={appointment.start}
+                                type={appointment.type}
+                            />
+                            <hr/>
+                        </div>
+                    )}
 
-                        <Row>
-                            <Col>
-                                <Form.Group controlId="">
-                                    <Form.Label>Duration</Form.Label>
-                                    <Form.Control type="text" readOnly  value={appointment.type === 0 ? "20 min" : "60 min"} disabled />
-                                </Form.Group>
-                            </Col>
-                            <Col>
-                                <Form.Group controlId="">
-                                    <Form.Label>Price</Form.Label>
-                                    <Form.Control type="text" readOnly  value={appointment.type === 0 ? "20 $" : "60 $"} disabled />
-                                </Form.Group>
-                            </Col>
-                        </Row>
+                    <Form.Group controlId="">
+                        <Form.Label>End time</Form.Label>
+                        <Form.Control type="text" readOnly value={appointment.end.toString()} disabled/>
+                    </Form.Group>
 
-                        <Button variant="outline-info" className="float-right my-3" type="button" onClick={this.onSubmit}>
-                            Proceed
-                        </Button>
+                    <Row>
+                        <Col>
+                            <Form.Group controlId="">
+                                <Form.Label>Duration</Form.Label>
+                                <Form.Control type="text" readOnly value={appointment.type === 0 ? "20 min" : "60 min"}
+                                              disabled/>
+                            </Form.Group>
+                        </Col>
+                        <Col>
+                            <Form.Group controlId="">
+                                <Form.Label>Price</Form.Label>
+                                <Form.Control type="text" readOnly value={appointment.type === 0 ? "20 $" : "60 $"}
+                                              disabled/>
+                            </Form.Group>
+                        </Col>
+                    </Row>
+
+                    <Button variant="outline-info" className="float-right my-3" type="button" onClick={this.onSubmit}>
+                        Proceed
+                    </Button>
                 </Form>
-                </Card.Body>
             </div>
 
         );
 
-    }}
+    }
+}
 
 export default ModifyAppointment;

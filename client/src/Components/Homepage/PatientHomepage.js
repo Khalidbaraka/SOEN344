@@ -21,7 +21,7 @@ class PatientHomepage extends Component {
                     <Card.Body>
                         <Row>
                             <Col md={3}>
-                                <ListGroup variant="flush" className="my-4 text-monospace text-decoration-none">
+                                <ListGroup variant="flush" className="my-4 text-monospace text-decoration-none font-weight-bold">
                                     <ListGroup.Item className="text-center pb-1"> <h4> MENU </h4> </ListGroup.Item>
                                     <ListGroup.Item><Link to='/homepage/patient/myAppointment' className="secondary-color text-decoration-none"> My
                                         Appointment </Link></ListGroup.Item>

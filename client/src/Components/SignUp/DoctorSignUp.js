@@ -24,7 +24,7 @@ class DoctorSignUp extends Component {
 
     componentWillUnmount() {
         // Clear the clinic object in the localstorage, since we only need it to Register a doctor or nurse
-        localStorage.removeItem("Clinic");
+        localStorage.removeItem("clinic");
     }
 
     onChange = (e) => {
@@ -34,7 +34,7 @@ class DoctorSignUp extends Component {
     onSubmit = (e) => {
         e.preventDefault();
 
-        const clinic = JSON.parse(localStorage.getItem('Clinic'));
+        const clinic = JSON.parse(localStorage.getItem('clinic'));
         const { firstName, lastName, city, permitNumber, speciality, password } = this.state;
 
         axios.post('/api/doctors/' + clinic._id + '/register', {
@@ -52,7 +52,7 @@ class DoctorSignUp extends Component {
                 });
 
                 // Clear the clinic object in the localstorage, since we only need it to Register a doctor or nurse
-                localStorage.removeItem("Clinic");
+                localStorage.removeItem("clinic");
             }
         }).catch((error) => {
             if (error.response) {
@@ -64,7 +64,7 @@ class DoctorSignUp extends Component {
     }
 
     render() {
-        const clinic = JSON.parse(localStorage.getItem('Clinic'));
+        const clinic = JSON.parse(localStorage.getItem('clinic'));
         const { message, isRegistered } = this.state;
 
         if (isRegistered) {

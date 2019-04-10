@@ -8,4 +8,9 @@ const controller = require('../../controllers/Controller');
 // @access Public
 router.get('/get_all', controller.getClinics);
 
+// @route get api/clinic/:id/get
+// @desc  Get a clinic by its id
+// @access Public
+router.get('/:clinic_id/get', controller.getClinicById);
+
 module.exports = router;

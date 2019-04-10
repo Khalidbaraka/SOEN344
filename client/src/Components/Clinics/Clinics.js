@@ -21,10 +21,6 @@ class Clinics extends Component {
 
     componentDidMount = () => {
 
-        if (localStorage.getItem("Clinic")) {
-            localStorage.removeItem("Clinic");
-        }
-
         const imageURL = [ClinicImage1, ClinicImage2, ClinicImage3];
         const user = this.props.location.state ? this.props.location.state.user : '';
 
@@ -49,7 +45,7 @@ class Clinics extends Component {
 
 
     onSelectClinicHandler = (clinic) => {
-        localStorage.setItem("Clinic", JSON.stringify(clinic));
+        localStorage.setItem("clinic", JSON.stringify(clinic));
 
         this.setState({
             onRedirect: true
@@ -106,8 +102,8 @@ class Clinics extends Component {
                                             <span className="font-weight-bold secondary-color my-1"> Doctors </span>
                                             {clinic.doctors ? clinic.doctors.map(doctor => {
                                                 return (
-                                                    <div className="pl-3">
-                                                        {doctor.firstName} {doctor.lastName} - {doctor.speciality}
+                                                    <div className="pl-3 py-1">
+                                                        <span className="font-weight-bold"> {doctor.firstName} {doctor.lastName} </span> - {doctor.speciality}
                                                     </div>
                                                 )
                                             }) : ''}
@@ -116,8 +112,8 @@ class Clinics extends Component {
                                             <span className="font-weight-bold secondary-color my-1"> Nurses </span>
                                             {clinic.nurses ? clinic.nurses.map(nurse => {
                                                 return (
-                                                    <div className="pl-3">
-                                                        {nurse.firstName} {nurse.lastName}
+                                                    <div className="pl-3 py-1">
+                                                        <span className="font-weight-bold"> {nurse.firstName} {nurse.lastName} </span>
                                                     </div>
                                                 )
                                             }) : ''}

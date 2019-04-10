@@ -1,5 +1,6 @@
-import { Button, Table } from 'react-bootstrap';
+import {Button, ButtonGroup, Table} from 'react-bootstrap';
 import React, { Component } from 'react';
+import {Link} from "react-router-dom";
 
 const CartList = (props) => {
     
@@ -33,14 +34,14 @@ const CartList = (props) => {
 
     // Displaying the list of items. _id is unique to MongoDB (Primary Key)
     return (
-        <Table striped bordered hover variant="dark" className="text-center my-0">
-            <thead>
+        <Table responsive bordered hover style={{color: "#344955"}} className="text-center shadow p-3 mb-5 bg-white rounded">
+            <thead style={{backgroundColor: "#344955", color: "#fff"}}>
             <tr>
+                <th scope="col"></th>
                 <th scope="col"> Type </th>
                 <th scope="col"> Date </th>
                 <th scope="col"> Duration </th>
                 <th scope="col"> Price </th>
-                <th scope="col"></th>
             </tr>
             </thead>
             <tbody>
@@ -50,32 +51,38 @@ const CartList = (props) => {
                         appointments.map(appointment => {
                             return (
                                 <tr key={appointment._id}>
+                                    <td style={{backgroundColor: "#344955"}}>
+                                        <ButtonGroup>
+                                            <Button
+                                                onClick={() => props.handleShow(appointment)}
+                                                type="button"
+                                                variant="outline-light"
+                                                size="sm">
+                                                <i className="fa fa-shopping-cart" aria-hidden="true"></i>
+                                            </Button>
+                                            <Button
+                                                onClick={() => props.handleDelete(appointment)}
+                                                type="button"
+                                                variant="outline-light"
+                                                size="sm">
+                                                <i className="fa fa-trash-o" aria-hidden="true"></i>
+                                            </Button>
+                                        </ButtonGroup>
+                                    </td>
                                     <td> {formatType(appointment.duration)} </td>
-                                    <td> {formatDate(appointment.start)} </td>
+                                    <th> {formatDate(appointment.start)} </th>
                                     <td> {appointment.duration + " minutes"} </td>
                                     <td> {appointment.duration+ "$"} </td>
-                                    <td> 
-                                        <Button 
-                                            onClick={() => props.handleShow(appointment)} 
-                                            type="button" 
-                                            variant="outline-success" 
-                                            className="mr-3"
-                                            size="sm">
-                                            Checkout
-                                        </Button> 
-                                        <Button 
-                                            onClick={() => props.handleDelete(appointment)} 
-                                            type="button" 
-                                            variant="outline-danger"
-                                            size="sm">
-                                            Delete
-                                        </Button> 
-                                    </td>
                                 </tr>
                             )
                         })
                     ) : (
-                        ''                        
+                        <td colSpan="8">
+                            <div className="my-3 font-weight-bold"> Your Cart is Empty.
+                            <Link className="primary-color text-decoration-none mx-3 font-weight-bold"
+                                  to="/homepage/patient/scheduleAppointment"> Schedule an Appointment ? </Link>
+                            </div>
+                        </td>
                     )
             }
             </tbody>
