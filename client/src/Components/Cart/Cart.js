@@ -35,9 +35,9 @@ class Cart extends Component {
 
         axios.get('/api/patients/'+ healthCardNumber+ '/cart/get')
             .then(res => {
-                if (res.data) {
+                if (res.data.success) {
                     this.setState({
-                        appointments: res.data
+                        appointments: res.data.timeslots
                     })
 
                     console.log("Appointments", this.state.appointments)

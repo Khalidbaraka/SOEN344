@@ -32,12 +32,19 @@ const CartList = (props) => {
         return  date;
     }
 
+    function formatRoom(clinicName) {
+        let formatClinicName = clinicName.toString().slice("_");
+        return formatClinicName[0];
+    }
+
     // Displaying the list of items. _id is unique to MongoDB (Primary Key)
     return (
         <Table responsive bordered hover style={{color: "#344955"}} className="text-center shadow p-3 mb-5 bg-white rounded">
             <thead style={{backgroundColor: "#344955", color: "#fff"}}>
             <tr>
                 <th scope="col"></th>
+                <th scope="col"> Clinic </th>
+                <th scope="col"> Room </th>
                 <th scope="col"> Type </th>
                 <th scope="col"> Date </th>
                 <th scope="col"> Duration </th>
@@ -69,6 +76,8 @@ const CartList = (props) => {
                                             </Button>
                                         </ButtonGroup>
                                     </td>
+                                    <td> {appointment.clinic} </td>
+                                    <td> {formatRoom(appointment.room)} </td>
                                     <td> {formatType(appointment.duration)} </td>
                                     <th> {formatDate(appointment.start)} </th>
                                     <td> {appointment.duration + " minutes"} </td>

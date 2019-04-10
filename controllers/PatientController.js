@@ -211,10 +211,29 @@ exports.patient_delete_cart_entry = (req, res) =>{
 //Returns Patient Cart
 exports.return_patient_cart = (req, res) =>{
     Patient.findOne({healthCardNumber: req.params.health_card_number})
-    .populate('cart')
-            .then(patient =>{
-                res.json(patient.cart);
-                })
+    .populate({path: 'cart', populate: {path: 'room', populate: {path: 'clinic'}}})
+            .then(patient => {
+                let timeslots = [];
+
+                for (let i = 0; i < patient.cart.length; i++) {
+                    let timeslot = {
+                        _id: patient.cart[i]._id,
+                        doctor: patient.cart[i].doctor,
+                        start: patient.cart[i].start,
+                        end: patient.cart[i].end,
+                        duration: patient.cart[i].duration,
+                        room: patient.cart[i].room.number,
+                        clinic: patient.cart[i].room.clinic.name
+                    }
+
+                    timeslots.push(timeslot);
+                }
+
+                res.json({
+                    success: true,
+                    timeslots: timeslots
+                });
+            })
             .catch(err => res.status(404).json({
                 success: false
          }))

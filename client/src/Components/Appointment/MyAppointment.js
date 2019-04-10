@@ -50,10 +50,11 @@ class MyAppointment extends Component {
         axios.get(`/api/patients/${user.healthCardNumber}/${clinic._id}/appointment/get`)
             .then(res => {
                 if (res.data) {
-                    console.log(res.data);
                     this.setState({
                         appointments: res.data
                     })
+
+                    console.log("appointments", res.data);
                 }
             })
             .catch(err => console.log(err))
