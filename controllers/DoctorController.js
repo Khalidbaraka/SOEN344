@@ -9,59 +9,6 @@ const config = require('./../config/keys');
 const HelperController = require('./HelperController');
 const userFactory = require('./userFactoryController');
 
-//  Callback functions for the routes
-
-
-//Create / register
-exports.doctor_register = (req, res) => {
-    Clinic.findById(req.params.clinic_id)
-        .then(clinic =>{
-            Doctor.findOne({
-                permitNumber: req.body.permitNumber
-            }).populate('clinic')
-            .then(doctor => {
-                if (doctor && doctor.clinic.equals(clinic._id)) {
-                    return res.status(400).json({
-                        success: false,
-                        message: 'Doctor with this permit number already exists'
-                    });
-                }
-                if (doctor && !doctor.clinic.equals(clinic._id)) {
-                    return res.status(400).json({
-                        success: false,
-                        message: 'Doctor with this permit number is already working at ' + doctor.clinic.name
-                    });
-                }else {
-
-                    let object = {
-                        permitNumber: req.body.permitNumber,
-                        password: req.body.password,
-                        firstName: req.body.firstName,
-                        lastName: req.body.lastName,
-                        speciality: req.body.speciality,
-                        city: req.body.city,
-                        clinic: clinic._id,
-                        appointments: [],
-                        schedules: []
-                    }
-
-                    const newDoctor = userFactory(object, "doctor");
-
-                    bcryptjs.genSalt(10, (err, salt) => {
-                        bcryptjs.hash(newDoctor.password, salt, (err, hash) => {
-                            if (err) {
-                                throw err;
-                            }
-                            newDoctor.password = hash;
-                            clinic.doctors.push(newDoctor);
-                            clinic.save();
-                            newDoctor.save().then(doctor => res.json({success: true, doctor: doctor})).catch(err => console.log(err));
-                        })
-                    })
-                }
-            });
-        }) 
-}
 
 //Read / getList
 exports.doctor_get_list = (req, res) => {
@@ -75,48 +22,6 @@ exports.doctor_get_by_permit = (req, res) => {
         })
         .then(doctor => res.json(doctor))
 }
-
-//Login
-exports.doctor_login = (req, res) => {
-    Doctor.findOne({
-            permitNumber: req.body.permitNumber
-        })
-        .then(doctor => {
-            if (doctor) {
-                if (bcryptjs.compareSync(req.body.password, doctor.password)) {
-                    const payload = {
-                        permitNumber: doctor.permitNumber,
-                        firstName: doctor.firstName,
-                        lastName: doctor.lastName,
-                        speciality: doctor.speciality,
-                        clinic: doctor.clinic
-                    };
-
-                    var token = jwt.sign(payload, config.secret, {
-                        expiresIn: 86400 //24h
-                    });
-
-                    res.json({
-                        success: true,
-                        message: 'Doctor Logged in Succesfully',
-                        token: token
-                    });
-
-                } else {
-                    res.json({
-                        success: false,
-                        message: 'Incorrect Permit Number or Password'
-                    });
-                }
-            } else {
-                res.json({
-                    success: false,
-                    message: 'Incorrect Permit Number or Password'
-                });
-            }
-        })
-}
-
 //Update
 exports.doctor_update = (req, res) => {
     bcryptjs.hash(req.body.password, 10, (err, hash) => {
