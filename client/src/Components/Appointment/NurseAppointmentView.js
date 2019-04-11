@@ -127,17 +127,14 @@ class NurseAppointment extends Component {
         } else {
             return (
                 <div>
-                    <Card.Header>
-                        <Row>
-                            <Col md={1}>
-                                <Button variant="outline-info" onClick={this.onReturn.bind(this)}> <i
-                                    className="fa fa-chevron-left" aria-hidden="true"></i> </Button>
-                            </Col>
-                            <Col md={11}>
-                                <Card.Title className="text-center text-monospace">Modify the Appointment</Card.Title>
-                            </Col>
-                        </Row>
-                    </Card.Header>
+                    <Row>
+                        <Col md={1}>
+                            <Button size="sm" variant="outline-info" onClick={this.onReturn.bind(this)}> <i className="fa fa-chevron-left" aria-hidden="true"></i> </Button>
+                        </Col>
+                        <Col md={11}>
+                            <h5 className="text-monospace">Modify the Appointment</h5>
+                        </Col>
+                    </Row>
 
                     <ModifyAppointment
                         healthCardNumber={this.state.healthCardNumber}
@@ -166,7 +163,7 @@ class NurseAppointment extends Component {
                 <h4 className="text-center text-monospace my-4">Search Appointments</h4>
                 <hr/>
 
-                <Form noValidate className="font-weight-bold" onSubmit={this.onSubmit}>
+                <Form noValidate className="font-weight-bold my-5" onSubmit={this.onSubmit}>
                     <Form.Group controlId="formBasicUsername">
                         <Form.Label>Health Card Number</Form.Label>
                         <InputGroup>

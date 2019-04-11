@@ -34,6 +34,11 @@ class AppointmentList extends Component {
         return  date;
     }
 
+     formatRoom = (clinicName) => {
+        let formatClinicName = clinicName.toString().slice("_");
+        return formatClinicName[2];
+    }
+
     render (){
 
     let appointments = this.props.appointments;
@@ -80,7 +85,7 @@ class AppointmentList extends Component {
                                     </td>
                                     <td> {appointment.doctor } </td>
                                     <td> {this.formatType(appointment.duration)} </td>
-                                    <td> {appointment.room} </td>
+                                    <td> {this.formatRoom(appointment.room)} </td>
                                     <th> {this.formatDate(appointment.start)} </th>
                                     <td> {appointment.duration + " minutes"} </td>
                                     <td> {appointment.duration+ "$"} </td>

@@ -34,7 +34,7 @@ const CartList = (props) => {
 
     function formatRoom(clinicName) {
         let formatClinicName = clinicName.toString().slice("_");
-        return formatClinicName[0];
+        return formatClinicName[2];
     }
 
     // Displaying the list of items. _id is unique to MongoDB (Primary Key)
