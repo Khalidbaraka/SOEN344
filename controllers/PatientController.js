@@ -265,11 +265,15 @@ exports.patient_checkout_appointment = (req, res) =>{
                                     }
                                     if(annualCheckUpFound == false){
                                         while(i<rooms.length){
+                                            //console.log("room length " + rooms.length  + " room num " + rooms[i].number + " room id " + rooms[i]._id);
                                             roomOverlap=HelperController.check_room_overlap(rooms[i],appStart, appEnd);
                                             if (roomOverlap == false){
                                                 while(k<doctors.length){
+                                                    //console.log("i = " + i + " and k = " + k);
                                                     doctorAvailable = HelperController.check_doctor_available(doctors[k],appStart,appEnd);
-                                                    console.log("doc avai11 = " + doctorAvailable.answer + "   " + doctorAvailable.roomFound)
+                                                    //console.log("doc avai11 = " + doctorAvailable.answer + " doctorAvailable.roomFound   " + doctorAvailable.roomFound)
+                                                    //console.log("doc name " + doctors[k].firstName );
+                                                    //console.log("rooms[i]._id " + rooms[i]._id );
                                                     if(doctorAvailable.answer&& doctorAvailable.roomFound.equals(rooms[i]._id)){
                                                         break;
                                                     }
@@ -471,15 +475,15 @@ exports.patient_update_appointment = (req, res) => {
     } 
 
     let appointmentToUpdate;
-    Appointment.find().populate('doctor').populate('room')
+    Appointment.find({patient: patient._id, clinic: req.params.clinic_id}).populate('doctor').populate('room')
         .then(allAppointments => {
             Patient.findOne({healthCardNumber: req.params.health_card_number}).populate('appointments')
                 .then(patient=>{
                     let roomOverlap = false; 
                     let doctorAvailable = false;
-                    Room.find().sort({'_id': 1}).populate('appointments')
+                    Room.find({clinic: req.params.clinic_id}).sort({ number: 1 }).collation({ locale: "en_US", numericOrdering: true }).populate('appointments')
                         .then(rooms =>{
-                            Doctor.find().sort({'_id': 1}).populate('schedules')
+                            Doctor.find({clinic: req.params.clinic_id}).sort({'_id': 1}).populate('schedules')
                                 .then(doctors =>{
                                     let j=0; y=0;x=0;
                                     appointmentToUpdate = allAppointments.find(appointment => appointment._id == appointmentToUpdateId);
@@ -555,7 +559,8 @@ exports.patient_update_appointment = (req, res) => {
                                                         "room": rooms[j]._id,
                                                         "duration": duration.toString(),
                                                         "price": price,
-                                                        "type" : newType
+                                                        "type" : newType,
+                                                        "clinic" : req.params.clinic_id
                                                     }})
                                                     .then(() => {
                                                     }) 
