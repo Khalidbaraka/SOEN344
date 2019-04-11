@@ -21,7 +21,7 @@ router.post('/login', controller.patientLogin);
 router.delete('/:health_card_number/appointment/:id/delete', controller.deleteAppointment);
 
 // @route get api/patients/health_card_number/clinic_id/appointment/get
-// @desc  update patient
+// @desc  get appointments
 // @access Public
 router.get('/:health_card_number/:clinic_id/appointment/get', controller.getAllAppointments);
 
@@ -44,7 +44,7 @@ router.get('/patientsList', controller.patientList);
 // router.put('/update/:id', patientController.patient_update);
 
 // @route post api/patients/:health_card_number/clinic_id/cart/checkout
-// @desc  update patient
+// @desc  checkout patient
 // @access Public
 router.post('/:health_card_number/:clinic_id/cart/checkout', controller.checkoutAppointment);
 
@@ -59,13 +59,13 @@ router.get('/:health_card_number/cart/get', controller.returnCart);
 router.put('/:health_card_number/cart/delete', controller.deleteCartEntry);
 
 // @route post api/patients/:health_card_number/:clinic_id/cart/save
-// @desc  update patient
+// @desc  save cart for patient
 // @access Public
 router.post("/:health_card_number/:clinic_id/cart/save", controller.saveToCart);
 
 // @route put api/patients/health_card_number/appointment/update
 // @desc  update patient
 // @access Public
-router.put('/:health_card_number/appointment/update', controller.updateAppointment);
+router.put('/:health_card_number/:clinic_id/appointment/update', controller.updateAppointment);
 
 module.exports = router;
