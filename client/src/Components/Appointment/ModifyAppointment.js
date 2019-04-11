@@ -177,10 +177,6 @@ class ModifyAppointment extends Component {
                 let toUpdate = true;
 
                 this.props.onReset(message, variant, toUpdate);
-
-                setTimeout(function () {
-                    window.location.reload();
-                }, 3000);
             }
         });
 

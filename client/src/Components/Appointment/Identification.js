@@ -1,6 +1,6 @@
 import 'rc-calendar/assets/index.css';
 
-import {Alert, Button, Col, Form, Row} from 'react-bootstrap';
+import {Alert, Button, Col, Form, Row, Modal} from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import React, {Component} from 'react';
 
@@ -103,10 +103,6 @@ class Identification extends Component {
                     message: "Appointment successfully added!",
                     variant: "success"
                 });
-
-                setTimeout(function () {
-                    window.location.reload();
-                }, 3000);
             }
         }).catch((error) => {
             // Error
@@ -119,12 +115,13 @@ class Identification extends Component {
                     appointmentType: "0",
                     startTime: moment().startOf('day')
                 });
-
-                setTimeout(function () {
-                    window.location.reload();
-                }, 3000);
             }
         });
+    }
+
+    handleClose = () => {
+        const nextState = this.getInitialState();
+        this.setState(nextState);
     }
 
     render() {
@@ -132,17 +129,19 @@ class Identification extends Component {
 
         return (
             <div>
-
-                { message ?
-                    <Alert variant="light" className="mt-4">
-                        <h5 style={variant === "success" ? {color: "#F9AA33"} : {color:"#800020"}} className="text-monospace text-center">{ message }
-                            {variant === "success" ? (
-                                <Link className="secondary-color text-decoration-none mx-4 font-weight-bold"
-                                       to="/cart"> Go to Cart ? </Link>
-                            ) : ''}
-                        </h5>
-                    </Alert>
-                    : ''}
+                <Modal show={message ? message : ''} onHide={this.handleClose}>
+                    <Modal.Body closeButton>
+                        <Alert variant="light" className="mt-4">
+                            <h5 style={variant === "success" ? {color: "#F9AA33"} : {color:"#800020"}} className="text-monospace text-center">
+                                <div>{ message }  </div>
+                                {variant === "success" ? (
+                                    <Link className="secondary-color text-decoration-none mx-4 font-weight-bold"
+                                          to="/cart"> Go to Cart ? </Link>
+                                ) : ''}
+                            </h5>
+                        </Alert>
+                    </Modal.Body>
+                </Modal>
 
                 <h4 className="text-center text-monospace my-4">Identification</h4>
                 <hr/>
