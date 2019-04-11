@@ -1,22 +1,8 @@
 const Nurse = require('../models/Nurse');
 const Patient = require('./../models/Patient');
 const Doctor = require('./../models/Doctor');
-const jwt = require('jsonwebtoken');
-const config = require('./../config/keys');
 let bcryptjs = require('bcryptjs');
-
-const Room = require('./../models/Room');
-const Timeslot = require('./../models/Timeslot');
 const Clinic = require('./../models/Clinic');
-
-const HelperController = require('./HelperController');
-
-
-// Nurse Model
-const Appointment = require('./../models/Appointment');
-const bcrypt = require('bcrypt');
-
-
 const userFactory = require('./userFactoryController');
 
 

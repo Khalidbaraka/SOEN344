@@ -7,8 +7,6 @@ const Register = require('./Register');
 
 module.exports = {
 
-    // Login
-
     // Patient
     patientRegister: function(req, res){ return Register.changeStrategy('patient',req,res) },
     patientLogin: function(req, res){ return Login.changeStrategy('patient',req,res) },

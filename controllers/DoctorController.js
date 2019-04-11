@@ -9,7 +9,6 @@ const config = require('./../config/keys');
 const HelperController = require('./HelperController');
 const userFactory = require('./userFactoryController');
 
-//  Callback functions for the routes
 
 //Read / getList
 exports.doctor_get_list = (req, res) => {
