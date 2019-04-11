@@ -186,7 +186,7 @@ exports.doctor_create_timeslot= (req, res) => {
         let clinicRooms = doctor.clinic.rooms.length;
 
         //Only look for timeslot for the clinic_id passed as paramenter
-        Timeslot.find().populate('doctor').populate('room')
+        Timeslot.find({clinic: req.params.clinic_id}).populate('doctor').populate('room')
         .then(timeslot => {
             let roomNumber ="";
             for (var i=0; i<timeslot.length; i++) {
@@ -235,13 +235,13 @@ exports.doctor_create_timeslot= (req, res) => {
                 Room.findOne({
                     number : roomObtained
                 }).then( room => { 
-
                     const newTimeslot = new Timeslot({
                         doctor: doctor._id,
                         start: appStart,
                         end: appEnd,
                         duration : durationTime.toString(),
-                        room: room._id
+                        room: room._id,
+                        clinic: req.params.clinic_id
                     });
                     newTimeslot.save();//.then(newTimeslot => res.json(newTimeslot)); It was sending two res.json() (check the one in the bottom), so its throwing me a warning in the terminal.
                     doctor.schedules.push(newTimeslot); 

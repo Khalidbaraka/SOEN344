@@ -237,7 +237,7 @@ exports.nurse_create_appointment  = (req,res)=>{
                                                         });
                                                     } 
                                                 }
-                                                else if (roomOverlap==true && i>rooms.length){
+                                                else if (roomOverlap==true && i+1>=rooms.length){
                                                     return res.status(400).json({
                                                         success: false,
                                                         message: 'All rooms are occupied at the selected time'
