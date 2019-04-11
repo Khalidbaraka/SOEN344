@@ -186,7 +186,7 @@ exports.doctor_create_timeslot= (req, res) => {
         let clinicRooms = doctor.clinic.rooms.length;
 
         //Only look for timeslot for the clinic_id passed as paramenter
-        Timeslot.find({clinic: req.params.clinic_id}).populate('doctor').populate('room')
+        Timeslot.find().populate('doctor').populate('room')
         .then(timeslot => {
             let roomNumber ="";
             for (var i=0; i<timeslot.length; i++) {
