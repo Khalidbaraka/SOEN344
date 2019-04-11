@@ -28,8 +28,17 @@ let patient_flyweight_default_object = {
     cart: []
 };
 
+let nurse_flyweight_default_object = {
+    firstName: "nurse",
+	lastName: "Nurse",
+	accessID: "NUR12345",
+	password: "password",
+	clinic: "5ca56fb48332364762c446ec"
+};
+
 doctor_flyweight = new Doctor(doctor_flyweight_default_object);
 patient_flyweight = new Patient(patient_flyweight_default_object);
+nurse_flyweight = new Nurse(nurse_flyweight_default_object);
 
 const userFactory = function(object, type){
     if(type === 'patient'){
@@ -63,7 +72,15 @@ const userFactory = function(object, type){
         return doctor_flyweight;
 
     } else if(type === 'nurse'){
-        return new Nurse(object)
+        
+        nurse_flyweight.firstName = object.firstName;
+        nurse_flyweight.lastName = object.lastName;
+        nurse_flyweight.accessID = object.accessID;
+        nurse_flyweight.password = object.password;
+        nurse_flyweight.clinic = object.clinic;
+
+        return nurse_flyweight;
+
     }
 }
 
