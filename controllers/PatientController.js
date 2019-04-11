@@ -415,7 +415,8 @@ exports.patient_cart_save = (req,res)=>{
                                                                     start: startTime,
                                                                     end: endTime,
                                                                     duration: duration.toString(),
-                                                                    room: rooms[i]._id
+                                                                    room: rooms[i]._id,
+                                                                    clinic: req.params.clinic_id
                                                                 })
                                                                 newTimeslot.save();
                                                                 patient.cart.push(newTimeslot);
@@ -429,7 +430,7 @@ exports.patient_cart_save = (req,res)=>{
                                                                 });
                                                             } 
                                                         }
-                                                        else if (roomOverlap==true && i>rooms.length){
+                                                        else if (roomOverlap==true && i+1>=rooms.length){
                                                             return res.status(400).json({
                                                                     success: false,
                                                                     message: 'All rooms in the clinic are occupied at the selected time'

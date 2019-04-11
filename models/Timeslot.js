@@ -23,6 +23,11 @@ const timeslotSchema = new Schema ({
     room:{
         required: true,
         type: Schema.Types.ObjectId, ref: 'room' 
+    },
+    clinic: {
+        //required: true,
+        type: Schema.Types.ObjectId,
+        ref: 'clinic'
     }
 });
 

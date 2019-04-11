@@ -1,22 +1,29 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import {Button, Card, Form, Row, Col} from "react-bootstrap";
+import {Button, Card, Form, Row, Col, Modal, Alert} from "react-bootstrap";
 import 'rc-calendar/assets/index.css';
 import AppCalenderNewTimeslotEnd from "../Timeslots/AppCalenderNewTimeslotEnd";
 import AppCalenderNewTimeslotStart from "../Timeslots/AppCalenderNewTimeslotStart";
+import moment from "../Appointment/Identification";
 
 class CreateTimeslot extends Component {
 
     constructor(props) {
         super(props);
 
-        this.state = {
+        this.state = this.getInitialState();
+    }
+
+    getInitialState = () => {
+        const initialState = {
             doctor: '',
             start: '',
             end: '',
             duration: '',
-            message: ''
-        }
+            message: '',
+            variant: '',
+        };
+        return initialState;
     }
 
     onChange = (e) => {
@@ -38,8 +45,6 @@ class CreateTimeslot extends Component {
     }
 
     onChangeEnd = (value) => {
-
-
 
         const nextState = {
             ...this.state,
@@ -74,39 +79,54 @@ class CreateTimeslot extends Component {
             end: timeslot.end
         })
             .then(res => {
-                if(res.status == 200) {
-                    console.log("Timeslot successfully added!");
-                    this.routeChange();
-                } else {
-                    console.log("Unable to add timeslot");
-                    console.log(res);
+                if(res.data.success) {
+                    this.setState({
+                        message: res.data.message,
+                        variant: "success"
+                    })
                 }
             })
-            .catch(err => {
-                console.log(err)
+            .catch((error) => {
+                if (error.response) {
+                    this.setState({
+                        message: error.response.data.message,
+                        variant: "danger"
+                    });
+                }
             });
     };
+
+    handleClose = () => {
+        const nextState = this.getInitialState();
+        this.setState(nextState);
+
+        this.routeChange();
+    }
 
     render() {
 
         const {
-            message
+            message, variant
         } = this.state;
 
         return (
             <div className="container">
+
+                <Modal show={message ? message : ''} onHide={this.handleClose}>
+                    <Modal.Body closeButton>
+                        <Alert variant="light" className="mt-4">
+                            <h5 style={variant === "success" ? {color: "#7cab64"} : {color:"#800020"}} className="text-monospace text-center">
+                                { message }
+                            </h5>
+                        </Alert>
+                    </Modal.Body>
+                </Modal>
+
                 <Card className="my-5">
                     <Card.Body>
                         <h4 className="text-center text-monospace"> Enter Details for creating your schedule below: </h4>
                         <hr/>
                         <Form noValidate onSubmit = {this.onSubmit} className="font-weight-bold">
-                            { message ?
-                                <Card border="danger" className="text-center my-3">
-                                    <Card.Body>
-                                        <Card.Title><div className="text-monospace">{ message }</div> </Card.Title>
-                                    </Card.Body>
-                                </Card>
-                                : ''}
                             <Row>
                                 <Col>
                                     <AppCalenderNewTimeslotStart
