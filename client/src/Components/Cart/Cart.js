@@ -4,25 +4,31 @@ import React, { Component } from 'react';
 import CartList from './CartList';
 import axios from 'axios';
 import {Link} from "react-router-dom";
+import moment from "../Appointment/Identification";
 
 class Cart extends Component {
 
     constructor(props) {
         super(props);
 
-        this.state = {
-            message: '',
-            appointments:[],
-            appointment:'',
-            show: false,
-            variant: '', 
-        }
+        this.state = this.getInitialState();
 
         this.handleShow = this.handleShow.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.checkoutAppointment = this.checkoutAppointment.bind(this)
 
+    }
+
+    getInitialState = () => {
+        const initialState = {
+            message: '',
+            appointments:[],
+            appointment:'',
+            show: false,
+            variant: '',
+        };
+        return initialState;
     }
 
     componentDidMount() {
@@ -65,9 +71,6 @@ class Cart extends Component {
                 this.handleClose();
                 this.getCartAppointments();
 
-                setTimeout(function () {
-                    window.location.reload();
-                }, 3000);
             } else {
                 console.log("failure");
             }
@@ -111,6 +114,17 @@ class Cart extends Component {
                 }
             })
             .catch(err => console.log(err))
+    }
+
+    handleCloseMessage = () => {
+        this.setState({
+            ...this.state,
+            message: '',
+            appointment:'',
+            variant: '',
+        });
+
+        this.getCartAppointments();
     }
 
     render() {
@@ -160,16 +174,20 @@ class Cart extends Component {
                         </Button>
                     </Modal.Footer>
                 </Modal>
-                { message ?
-                    <Alert variant="light" className="mt-4">
-                        <h5 style={variant === "success" ? {color: "#F9AA33"} : {color:"#800020"}} className="text-monospace text-center">{ message }
-                            {variant === "success" ? (
-                                <Link className="secondary-color text-decoration-none mx-4 font-weight-bold"
-                                      to="/homepage/patient/myAppointment"> View your Appointments ? </Link>
-                            ) : ''}
-                        </h5>
-                    </Alert>
-                    : ''}
+
+                <Modal show={message ? message : ''} onHide={this.handleCloseMessage}>
+                    <Modal.Body closeButton>
+                        <Alert variant="light" className="mt-4">
+                            <h5 style={variant === "success" ? {color: "#F9AA33"} : {color:"#800020"}} className="text-monospace text-center">
+                                <div>{ message }  </div>
+                                {variant === "success" ? (
+                                    <Link className="secondary-color text-decoration-none mx-4 font-weight-bold"
+                                          to="/homepage/patient/myAppointment"> View your Appointments ? </Link>
+                                ) : ''}
+                            </h5>
+                        </Alert>
+                    </Modal.Body>
+                </Modal>
 
                 <div className="my-5">
                     <h4 className="text-center text-monospace my-5"> Your Cart - Appointments</h4>
