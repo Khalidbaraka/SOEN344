@@ -7,7 +7,8 @@ var bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('./../config/keys');
 const HelperController = require('./HelperController');
-const userFactory = require('./userFactoryController');
+const userFlyWeight = require('./UserFlyWeightController');
+
 
 //  Callback functions for the routes
 
@@ -45,7 +46,8 @@ exports.doctor_register = (req, res) => {
                         schedules: []
                     }
 
-                    const newDoctor = userFactory(object, "doctor");
+                    const newDoctor = userFlyWeight(object, "doctor");
+                    console.log("new Doctor " + newDoctor);
 
                     bcryptjs.genSalt(10, (err, salt) => {
                         bcryptjs.hash(newDoctor.password, salt, (err, hash) => {

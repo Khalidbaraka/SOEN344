@@ -10,7 +10,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const config = require('./../config/keys');
 const HelperController = require('./HelperController');
-const userFactory = require('./userFactoryController');
+const userFlyWeight = require('./UserFlyWeightController');
 
 // Display list of all Nurse
 exports.nurse_list = (req, res) => {
@@ -75,8 +75,6 @@ exports.nurse_login = (req, res) => {
 exports.nurse_register = (req, res) => {
     Clinic.findById(req.params.clinic_id)
         .then(clinic =>{
-            console.log(" ddd " + req.params.clinic_id)
-            console.log(" dsdsd "+ clinic)
             Nurse.findOne({
                 accessID: req.body.accessID
             }).populate('clinic')
@@ -102,7 +100,7 @@ exports.nurse_register = (req, res) => {
                         clinic: req.params.clinic_id
                     }
 
-                    const newNurse = userFactory(object, "nurse");
+                    const newNurse = userFlyWeight(object, "nurse");
 
                     bcryptjs.genSalt(10, (err, salt) => {
                         bcryptjs.hash(newNurse.password, salt, (err, hash) => {
