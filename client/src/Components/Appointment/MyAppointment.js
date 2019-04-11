@@ -1,24 +1,30 @@
 import 'rc-calendar/assets/index.css';
 
-import {Alert, Button, Card, Col, Dropdown, DropdownButton, Form, Row} from 'react-bootstrap';
+import {Alert, Button, Col, Modal, Row} from 'react-bootstrap';
 import React, {Component} from 'react';
 
 import AppointmentList from './AppointmentList';
 import ModifyAppointment from './ModifyAppointment';
 import axios from 'axios';
+import {Link} from "react-router-dom";
+import moment from "./Identification";
 
 class MyAppointment extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {
+        this.state = this.getInitialState();
+    }
+
+    getInitialState = () => {
+        const initialState = {
             appointments: [],
             appointment: '',
             toUpdate: false,
             variant: '',
             message: ''
-        }
-
+        };
+        return initialState;
     }
 
     componentDidMount = () => {
@@ -39,8 +45,6 @@ class MyAppointment extends Component {
                 }
             })
             .catch(err => console.log(err))
-
-        window.location.reload()
     }
 
     getAppointments = () => {
@@ -61,8 +65,6 @@ class MyAppointment extends Component {
     }
 
     onUpdateAppointment = (appointment) => {
-
-        console.log("Appointment on Update", appointment);
 
         this.setState({
             toUpdate: true,
@@ -90,19 +92,33 @@ class MyAppointment extends Component {
         this.getAppointments();
     }
 
+    handleClose = () => {
+        this.setState({
+            ...this.state,
+            appointment: '',
+            toUpdate: false,
+            variant: '',
+            message: ''
+        });
+
+        this.getAppointments();
+    }
+
     render() {
 
         const {appointments, message, appointment, toUpdate, variant} = this.state;
 
         return (
             <div>
-                { message ?
-                    <Alert variant="light" className="mt-4">
-                        <h5 style={variant === "success" ? {color: "#7cab64"} : {color:"#800020"}} className="text-monospace text-center">
-                            { message }
-                        </h5>
-                    </Alert>
-                    : ''}
+                <Modal show={message ? message : ''} onHide={this.handleClose}>
+                    <Modal.Body closeButton>
+                        <Alert variant="light" className="mt-4">
+                            <h5 style={variant === "success" ? {color: "#7cab64"} : {color:"#800020"}} className="text-monospace text-center">
+                                { message }
+                            </h5>
+                        </Alert>
+                    </Modal.Body>
+                </Modal>
 
                 <h4 className="text-center text-monospace my-4">My Appointments</h4>
 

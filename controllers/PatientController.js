@@ -494,7 +494,7 @@ exports.patient_update_appointment = (req, res) => {
     } 
 
     let appointmentToUpdate;
-    Appointment.find({patient: patient._id, clinic: req.params.clinic_id}).populate('doctor').populate('room')
+    Appointment.find({clinic: req.params.clinic_id}).populate('doctor').populate('room')
         .then(allAppointments => {
             Patient.findOne({healthCardNumber: req.params.health_card_number}).populate('appointments')
                 .then(patient=>{

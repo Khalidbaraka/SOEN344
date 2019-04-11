@@ -148,16 +148,22 @@ class ModifyAppointment extends Component {
         };
 
         const user = JSON.parse(localStorage.getItem('userToken'));
+        const clinic = JSON.parse(localStorage.getItem('clinic'));
         let healthCardNumber;
+        let clinicID;
 
         // Depending on the user; a patient or nurse.
         if (this.props.healthCardNumber) {
-            healthCardNumber = this.props.healthCardNumber
+            healthCardNumber = this.props.healthCardNumber;
+            clinicID = user.clinic;
         } else {
             healthCardNumber = encodeURI(user.healthCardNumber);
+            clinicID = clinic._id;
         }
 
-        axios.put('/api/patients/' + healthCardNumber + '/appointment/update', {
+        console.log("user", user);
+
+        axios.put(`/api/patients/${healthCardNumber}/${clinicID}/appointment/update`, {
             appointmentId: appointmentToUpdate.appointmentId,
             type: appointmentToUpdate.type,
             startTime: appointmentToUpdate.startTime
@@ -177,10 +183,6 @@ class ModifyAppointment extends Component {
                 let toUpdate = true;
 
                 this.props.onReset(message, variant, toUpdate);
-
-                setTimeout(function () {
-                    window.location.reload();
-                }, 3000);
             }
         });
 
