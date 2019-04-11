@@ -247,8 +247,8 @@ exports.doctor_create_timeslot= (req, res) => {
                     doctor.schedules.push(newTimeslot); 
                     doctor.save().then(doctor =>{
                         return res.json({
-                            sucess: true,
-                            message: doctor.schedules
+                            success: true,
+                            message: "Timeslot successfully added to your schedule!"
                         });
                     }).catch(err => {
                         return res.status(400).json({
