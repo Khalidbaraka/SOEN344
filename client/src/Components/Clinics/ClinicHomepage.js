@@ -18,7 +18,7 @@ class ClinicHomepage extends Component {
     }
 
     componentDidMount = () => {
-        const clinic = localStorage.getItem('Clinic') ? JSON.parse(localStorage.getItem('Clinic')) : null;
+        const clinic = localStorage.getItem('clinic') ? JSON.parse(localStorage.getItem('clinic')) : null;
 
         this.setState({
             ...this.state,
@@ -41,9 +41,7 @@ class ClinicHomepage extends Component {
                         selectedDoctorSchedule: res.data
                     });
 
-                   console.log('SelectedDoctorSchedule', this.state.selectedDoctorSchedule);
                    const scheduleCopy = [...this.state.selectedDoctorSchedule];
-                   console.log('ScheduleCopy', scheduleCopy);
                    let newArray = [];
 
                    scheduleCopy.map(timeslot => {
@@ -105,14 +103,14 @@ class ClinicHomepage extends Component {
                                 <Image src={clinic.imageURL} fluid rounded/>
                             </Col>
                             <Col md={6} className="text-monospace">
-                                <p className="text-center font-weight-bold primary-color"> Our Team </p>
+                                <p className="text-center font-weight-bold primary-color lead"> Our Team </p>
 
                                 <div>
                                     <span className="font-weight-bold secondary-color my-1"> Doctors </span>
                                     {clinic.doctors ? clinic.doctors.map(doctor => {
                                         return (
-                                            <div className="pl-3">
-                                                <span style={{cursor: "pointer"}} onClick={this.onSelectDoctor.bind(this, doctor)}> {doctor.firstName} {doctor.lastName} - {doctor.speciality} </span>
+                                            <div className="pl-3" style={{cursor: "pointer"}} onClick={this.onSelectDoctor.bind(this, doctor)}>
+                                                <span className="font-weight-bold"> {doctor.firstName} {doctor.lastName} </span> - {doctor.speciality}
                                             </div>
                                         )
                                     }) : ''}
@@ -122,7 +120,7 @@ class ClinicHomepage extends Component {
                                     {clinic.nurses ? clinic.nurses.map(nurse => {
                                         return (
                                             <div className="pl-3">
-                                                {nurse.firstName} {nurse.lastName}
+                                                <span className="font-weight-bold"> {nurse.firstName} {nurse.lastName} </span>
                                             </div>
                                         )
                                     }) : ''}

@@ -24,7 +24,7 @@ class NurseSignUp extends Component {
 
     componentWillUnmount() {
         // Clear the clinic object in the localstorage, since we only need it to Register a doctor or nurse
-        localStorage.removeItem("Clinic");
+        localStorage.removeItem("clinic");
     }
 
     onChange(e) {
@@ -42,7 +42,7 @@ class NurseSignUp extends Component {
             password: this.state.password
         }
 
-        const clinic = JSON.parse(localStorage.getItem('Clinic'));
+        const clinic = JSON.parse(localStorage.getItem('clinic'));
 
         //access id and password front end validation
         const errors = {}
@@ -81,7 +81,7 @@ class NurseSignUp extends Component {
     render() {
 
         const {isRegistered, message} = this.state;
-        const clinic = JSON.parse(localStorage.getItem('Clinic'));
+        const clinic = JSON.parse(localStorage.getItem('clinic'));
 
         if (isRegistered) {
             return <Redirect to={{

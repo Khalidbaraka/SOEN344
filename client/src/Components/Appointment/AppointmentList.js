@@ -1,5 +1,6 @@
-import { Button, Table } from 'react-bootstrap';
+import {Button, ButtonGroup, Table} from 'react-bootstrap';
 import React, { Component } from 'react';
+import {Link} from "react-router-dom";
 
 class AppointmentList extends Component {
     constructor(props) {
@@ -9,8 +10,7 @@ class AppointmentList extends Component {
     formatType = (duration) => {
         let type = '';
         console.log("Duration", duration);
-        
-        
+
         if (duration === "20") {
             type = "Walk-in";
         } else {
@@ -34,22 +34,27 @@ class AppointmentList extends Component {
         return  date;
     }
 
+     formatRoom = (clinicName) => {
+        let formatClinicName = clinicName.toString().slice("_");
+        return formatClinicName[2];
+    }
+
     render (){
 
     let appointments = this.props.appointments;
     // Displaying the list of items. _id is unique to MongoDB (Primary Key)
     return (
         <div>
-            <Table responsive striped bordered hover style={{color: "#344955"}} className="text-center my-0">
-                    <thead>
+            <Table responsive bordered hover style={{color: "#344955"}} className="text-center my-0">
+                    <thead style={{backgroundColor: "#344955", color: "#fff"}}>
                         <tr>
+                            <th scope="col"></th>
                             <th scope="col"> Doctor </th>
                             <th scope="col"> Type </th>
                             <th scope="col"> Room N° </th>
                             <th scope="col"> Date </th>
                             <th scope="col"> Duration </th>
                             <th scope="col"> Price </th>
-                            <th scope="col"></th>
                         </tr>
                     </thead>
              <tbody>
@@ -59,35 +64,41 @@ class AppointmentList extends Component {
                         appointments.map(appointment => {
                             return (
                                 <tr key={appointment._id}>
-                                    <th> {appointment.doctor } </th>
+                                    <td style={{backgroundColor: "#344955"}}>
+                                        <ButtonGroup>
+                                            <Button
+                                                onClick={() => this.props.onUpdateAppointment(appointment)}
+                                                type="button"
+                                                variant="outline-light"
+                                                size="sm">
+                                                <i className="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                            </Button>
+
+                                            <Button
+                                                onClick = {() => this.props.deleteItem(appointment._id)}
+                                                type="button"
+                                                variant="outline-light"
+                                                size="sm">
+                                                <i className="fa fa-trash-o" aria-hidden="true"></i>
+                                            </Button>
+                                        </ButtonGroup>
+                                    </td>
+                                    <td> {appointment.doctor } </td>
                                     <td> {this.formatType(appointment.duration)} </td>
-                                    <td> {appointment.room} </td>
-                                    <td> {this.formatDate(appointment.start)} </td>
+                                    <td> {this.formatRoom(appointment.room)} </td>
+                                    <th> {this.formatDate(appointment.start)} </th>
                                     <td> {appointment.duration + " minutes"} </td>
                                     <td> {appointment.duration+ "$"} </td>
-                                    <td> 
-                                        <Button 
-                                            onClick={() => this.props.onUpdateAppointment(appointment)}  
-                                            type="button" 
-                                            variant="outline-warning"
-                                            size="sm">
-                                            Update
-                                        </Button> 
-                                    </td>
-                                    <td>
-                                        <Button 
-                                            onClick = {() => this.props.deleteItem(appointment._id)} 
-                                            type="button" 
-                                            variant="outline-danger"
-                                            size="sm">
-                                            Delete
-                                        </Button> 
-                                    </td>
                                 </tr>
                             )
                         })
                     ) : (
-                        <td colSpan="8"> <div className="my-3 font-weight-bold">No Appointment</div> </td>
+                        <td colSpan="8">
+                            <div className="my-3 font-weight-bold"> No appointment.
+                                <Link className="primary-color text-decoration-none mx-3 font-weight-bold"
+                                      to="/homepage/patient/scheduleAppointment"> Schedule an Appointment ? </Link>
+                            </div>
+                        </td>
                     )
             }
             </tbody>

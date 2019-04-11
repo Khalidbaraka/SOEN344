@@ -11,9 +11,6 @@ class SignUp extends Component{
     }
 
     render() {
-        var styles ={
-            backgroundImage: 'url(' + heroImage + ')'
-        }
         return (
             <div className="container">
                 <Card className="shadow p-0 my-5 bg-white rounded">

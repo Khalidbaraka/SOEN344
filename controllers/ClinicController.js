@@ -38,3 +38,13 @@ exports.clinic_get_all = (req,res) =>{
             });
         }).catch(err => console.log(err));
 }
+
+exports.clinic_get_by_id = (req, res) => {
+    Clinic.findOne({_id: req.params.clinic_id}).populate('doctors').populate('nurses').populate('rooms').populate('appointments')
+        .then(clinic => {
+            return res.json({
+                success: true,
+                clinic: clinic
+            })
+        }).catch(err => console.log(err));
+}

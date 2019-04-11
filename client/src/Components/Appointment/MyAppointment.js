@@ -1,67 +1,70 @@
 import 'rc-calendar/assets/index.css';
 
-import { Button, Card, Col, Dropdown, DropdownButton, Form, Row } from 'react-bootstrap';
-import React, { Component } from 'react';
+import {Alert, Button, Col, Modal, Row} from 'react-bootstrap';
+import React, {Component} from 'react';
 
 import AppointmentList from './AppointmentList';
 import ModifyAppointment from './ModifyAppointment';
 import axios from 'axios';
+import {Link} from "react-router-dom";
+import moment from "./Identification";
 
 class MyAppointment extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            appointments: [],
-            appointment: '',
-            toUpdate: false, 
-            variant: '', 
-            message: ''
-        }
-
+        this.state = this.getInitialState();
     }
 
-    componentDidMount() {
+    getInitialState = () => {
+        const initialState = {
+            appointments: [],
+            appointment: '',
+            toUpdate: false,
+            variant: '',
+            message: ''
+        };
+        return initialState;
+    }
+
+    componentDidMount = () => {
         this.getAppointments();
     }
 
-    deleteItem(id) {
+    deleteItem = (id) => {
 
         let string = localStorage.getItem('userToken');
         let jsonToken = JSON.parse(string);
 
         axios.delete(`/api/patients/${jsonToken['healthCardNumber']}/appointment/${id}/delete`)
             .then(res => {
-                if(res.data){
+                if (res.data) {
                     this.setState({
                         message: "Appointment successfully deleted"
                     })
                 }
             })
             .catch(err => console.log(err))
-
-        window.location.reload()
     }
 
-    getAppointments () {
-        const user = JSON.parse(localStorage.getItem('userToken'));
-        const healthCardNumber = encodeURI(user.healthCardNumber);
+    getAppointments = () => {
+        const user = localStorage.getItem('userToken') ? JSON.parse(localStorage.getItem('userToken')) : null;
+        const clinic = localStorage.getItem('clinic') ? JSON.parse(localStorage.getItem('clinic')) : null;
 
-        axios.get('/api/patients/'+ healthCardNumber+ '/appointment/get')
+        axios.get(`/api/patients/${user.healthCardNumber}/${clinic._id}/appointment/get`)
             .then(res => {
-                if(res.data){
-                    console.log(res.data);
+                if (res.data) {
                     this.setState({
                         appointments: res.data
                     })
+
+                    console.log("appointments", res.data);
                 }
             })
             .catch(err => console.log(err))
     }
 
     onUpdateAppointment = (appointment) => {
-
-        console.log("Appointment on Update", appointment );
 
         this.setState({
             toUpdate: true,
@@ -82,59 +85,70 @@ class MyAppointment extends Component {
     onReset = (message, variant, toUpdate) => {
         this.setState({
             toUpdate: toUpdate,
-            message: message, 
+            message: message,
             variant: variant
         })
 
         this.getAppointments();
     }
 
+    handleClose = () => {
+        this.setState({
+            ...this.state,
+            appointment: '',
+            toUpdate: false,
+            variant: '',
+            message: ''
+        });
+
+        this.getAppointments();
+    }
+
     render() {
 
-        const { appointments, message, appointment, toUpdate, variant} = this.state;
+        const {appointments, message, appointment, toUpdate, variant} = this.state;
+
         return (
             <div>
-                { message ? 
-                    <Card border={variant} className="text-center my-4"> 
-                        <Card.Body> 
-                            <Card.Title className="text-monospace"> { message }
-                                
-                            </Card.Title>
-                        </Card.Body> 
-                    </Card>
-                : ''}
+                <Modal show={message ? message : ''} onHide={this.handleClose}>
+                    <Modal.Body closeButton>
+                        <Alert variant="light" className="mt-4">
+                            <h5 style={variant === "success" ? {color: "#7cab64"} : {color:"#800020"}} className="text-monospace text-center">
+                                { message }
+                            </h5>
+                        </Alert>
+                    </Modal.Body>
+                </Modal>
+
                 <h4 className="text-center text-monospace my-4">My Appointments</h4>
+
                 <hr/>
-                    <Card className="my-4">
-                    { !toUpdate ? (
+
+                <div className="my-4">
+                    {!toUpdate ? (
                         <div>
                             <AppointmentList
-                                appointments = {appointments}
-                                onUpdateAppointment = {this.onUpdateAppointment}
-                                toUpdate = {this.state.toUpdate}
-                                deleteItem = {this.deleteItem} />
+                                appointments={appointments}
+                                onUpdateAppointment={this.onUpdateAppointment}
+                                toUpdate={this.state.toUpdate}
+                                deleteItem={this.deleteItem}/>
                         </div>
-
                     ) : (
-                        
                         <div>
-                            <Card.Header>
-                                <Row>
-                                    <Col md={1}>
-                                        <Button variant="outline-info" onClick={this.onReturn.bind(this)}> <i className="fa fa-chevron-left" aria-hidden="true"></i> </Button>
-                                    </Col>
-                                    <Col md={11}>
-                                        <Card.Title className="text-center text-monospace">Modify the Appointment</Card.Title>
-                                    </Col>
-                                </Row>
-                            </Card.Header>
+                            <Row>
+                                <Col md={1}>
+                                    <Button size="sm" variant="outline-info" onClick={this.onReturn.bind(this)}> <i className="fa fa-chevron-left" aria-hidden="true"></i> </Button>
+                                </Col>
+                                <Col md={11}>
+                                    <h5 className="text-monospace">Modify the Appointment</h5>
+                                </Col>
+                            </Row>
 
-                            <ModifyAppointment appointment = {appointment} onReset={this.onReset}/>
+                            <ModifyAppointment appointment={appointment} onReset={this.onReset}/>
                         </div>
                     )}
-
-                </Card>
-           </div>
+                </div>
+            </div>
         );
     }
 }

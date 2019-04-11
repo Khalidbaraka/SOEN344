@@ -10,11 +10,12 @@ module.exports = {
     //Method verifies if an appintments date lies within a timeslot
     within: function(appStart, appEnd, start, end) {
         return ((appStart >= start) && (appEnd <= end));
-    },
-    check_annual_checkup: function(patient,type,startTime){
-        for(let i=0; i<patient.appointments.length; i++){
-            let ptAppointmentType = patient.appointments[i].type;
-            let ptAppointmentStart = new Date(patient.appointments[i].start).getFullYear();
+    }, 
+    check_annual_checkup: function (appointments,type,startTime){
+        console.log("appointment length " + appointments.length);
+        for(let i=0; i<appointments.length; i++){
+            let ptAppointmentType = appointments[i].type;
+            let ptAppointmentStart = new Date(appointments[i].start).getFullYear();
             if (ptAppointmentType == type && ptAppointmentStart == startTime.getFullYear()){
                 return true;
             }

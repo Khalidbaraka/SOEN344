@@ -1,27 +1,34 @@
-import { Button, Card, Col, Dropdown, DropdownButton, Form, Modal, Row } from 'react-bootstrap';
+import {Alert, Button, Card, Col, Dropdown, DropdownButton, Form, Modal, Row} from 'react-bootstrap';
 import React, { Component } from 'react';
 
 import CartList from './CartList';
 import axios from 'axios';
+import {Link} from "react-router-dom";
+import moment from "../Appointment/Identification";
 
 class Cart extends Component {
 
     constructor(props) {
         super(props);
 
-        this.state = {
-            message: '',
-            appointments:[],
-            appointment:'',
-            show: false,
-            variant: '', 
-        }
+        this.state = this.getInitialState();
 
         this.handleShow = this.handleShow.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.checkoutAppointment = this.checkoutAppointment.bind(this)
 
+    }
+
+    getInitialState = () => {
+        const initialState = {
+            message: '',
+            appointments:[],
+            appointment:'',
+            show: false,
+            variant: '',
+        };
+        return initialState;
     }
 
     componentDidMount() {
@@ -34,17 +41,12 @@ class Cart extends Component {
 
         axios.get('/api/patients/'+ healthCardNumber+ '/cart/get')
             .then(res => {
-                if (res.data) {
+                if (res.data.success) {
                     this.setState({
-                        appointments: res.data
+                        appointments: res.data.timeslots
                     })
-                } 
 
-                if (this.state.appointments.length == 0) {
-                    this.setState({
-                        message: "Your cart is empty", 
-                        variant: "warning"
-                    })
+                    console.log("Appointments", this.state.appointments)
                 }
             })
             .catch(err => console.log(err))
@@ -53,12 +55,12 @@ class Cart extends Component {
     checkoutAppointment = () => {
 
         const user = JSON.parse(localStorage.getItem('userToken'));
-        const healthCardNumber = encodeURI(user.healthCardNumber);
+        const clinic = JSON.parse(localStorage.getItem('clinic'));
 
-        let appointment = this.state.appointment;
+        let { appointment } = this.state;
         console.log(appointment);
 
-        axios.post('/api/patients/'+ healthCardNumber +'/cart/checkout', {
+        axios.post(`/api/patients/${user.healthCardNumber}/${clinic._id}/cart/checkout`, {
             timeslot: appointment
         }).then(res => {
             if (res.data) {
@@ -68,6 +70,7 @@ class Cart extends Component {
                 });
                 this.handleClose();
                 this.getCartAppointments();
+
             } else {
                 console.log("failure");
             }
@@ -113,9 +116,15 @@ class Cart extends Component {
             .catch(err => console.log(err))
     }
 
-    handleRedirectToSchedule = () => {
-        let path = `homepage/patient/scheduleAppointment`;
-        this.props.history.push(path);
+    handleCloseMessage = () => {
+        this.setState({
+            ...this.state,
+            message: '',
+            appointment:'',
+            variant: '',
+        });
+
+        this.getCartAppointments();
     }
 
     render() {
@@ -166,24 +175,24 @@ class Cart extends Component {
                     </Modal.Footer>
                 </Modal>
 
-                { message ? 
-                    <Card border={variant} className="text-center my-4"> 
-                        <Card.Body> 
-                            <Card.Title className="text-monospace"> { message }
-                                { variant == "warning" ? (
-                                    <Button variant="warning" className="mx-5" onClick={this.handleRedirectToSchedule}> Schedule an Appointment? </Button>
-                                ):''}
-                            </Card.Title>
-                        </Card.Body> 
-                    </Card>
-                : ''}
+                <Modal show={message ? message : ''} onHide={this.handleCloseMessage}>
+                    <Modal.Body closeButton>
+                        <Alert variant="light" className="mt-4">
+                            <h5 style={variant === "success" ? {color: "#F9AA33"} : {color:"#800020"}} className="text-monospace text-center">
+                                <div>{ message }  </div>
+                                {variant === "success" ? (
+                                    <Link className="secondary-color text-decoration-none mx-4 font-weight-bold"
+                                          to="/homepage/patient/myAppointment"> View your Appointments ? </Link>
+                                ) : ''}
+                            </h5>
+                        </Alert>
+                    </Modal.Body>
+                </Modal>
 
-                <Card className="my-5">
-                    <Card.Header>
-                        <Card.Title className="text-center text-monospace"> Your Cart - Appointments</Card.Title>
-                    </Card.Header>
+                <div className="my-5">
+                    <h4 className="text-center text-monospace my-5"> Your Cart - Appointments</h4>
                     <CartList handleShow = {this.handleShow} handleDelete={this.handleDelete} appointments={appointments} />
-                </Card>
+                </div>
 
             </div>
         );

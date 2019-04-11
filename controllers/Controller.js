@@ -41,6 +41,7 @@ module.exports = {
     createAppointment: NurseController.nurse_create_appointment,
 
     //Clinic
-    getClinics: ClinicController.clinic_get_all
+    getClinics: ClinicController.clinic_get_all,
+    getClinicById: ClinicController.clinic_get_by_id
 
 }

@@ -1,10 +1,10 @@
 import 'rc-calendar/assets/index.css';
 
-import {Button, Card, Col, Dropdown, DropdownButton, Form, Row} from 'react-bootstrap';
+import {Alert, Button, Col, Form, Row, Modal} from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import React, {Component} from 'react';
 
 import AppCalender from './AppCalender';
-import {Redirect} from 'react-router-dom'
 import axios from 'axios';
 import moment from 'moment';
 
@@ -13,7 +13,6 @@ class Identification extends Component {
         super(props);
 
         this.state = this.getInitialState();
-
     }
 
     getInitialState = () => {
@@ -23,7 +22,6 @@ class Identification extends Component {
             clinic: '',
             message: '',
             variant: '',
-            redirectToCart: false
         };
         return initialState;
     }
@@ -36,10 +34,6 @@ class Identification extends Component {
             clinic: clinic
         });
     }
-
-    setTimeout = (() => {
-        window.location.reload(true);
-    }, 3000);
 
     onAppointmentTypeHandler = (event) => {
 
@@ -93,27 +87,22 @@ class Identification extends Component {
     }
 
     onSubmit = (event) => {
-
         event.preventDefault();
         const {appointmentType, startTime} = this.state;
 
         const user = JSON.parse(localStorage.getItem('userToken'));
-        const healthCardNumber = encodeURI(user.healthCardNumber);
+        const clinic = JSON.parse(localStorage.getItem('clinic'));
 
-        axios.post('/api/patients/' + healthCardNumber + '/cart/save', {
+        axios.post(`/api/patients/${user.healthCardNumber}/${clinic._id}/cart/save`, {
             type: appointmentType,
             startTime: startTime,
             endTime: startTime
         }).then(res => {
             if (res) {
                 this.setState({
-                    message: "Appointment successfully added",
+                    message: "Appointment successfully added!",
                     variant: "success"
                 });
-
-                setTimeout(function () {
-                    window.location.reload();
-                }, 3000);
             }
         }).catch((error) => {
             // Error
@@ -125,40 +114,34 @@ class Identification extends Component {
                     variant: "danger",
                     appointmentType: "0",
                     startTime: moment().startOf('day')
-                })
+                });
             }
         });
     }
 
-    handleRedirectToCart = () => {
-
-        this.setState({
-            redirectToCart: true
-        })
+    handleClose = () => {
+        const nextState = this.getInitialState();
+        this.setState(nextState);
     }
 
     render() {
-        const {appointmentType, startTime, message, variant, redirectToCart} = this.state;
-
-        if (redirectToCart) {
-            //direct to nurse homepage
-            return <Redirect to='/cart'/>;
-        }
+        const {appointmentType, startTime, message, variant} = this.state;
 
         return (
             <div>
-                {message ?
-                    <Card border={variant} className="text-center my-4">
-                        <Card.Body>
-                            <Card.Title className="text-monospace"> {message}
-                                {variant == "success" ? (
-                                    <Button variant="outline-info" className="mx-4"
-                                            onClick={this.handleRedirectToCart}> Go to Cart</Button>
+                <Modal show={message ? message : ''} onHide={this.handleClose}>
+                    <Modal.Body closeButton>
+                        <Alert variant="light" className="mt-4">
+                            <h5 style={variant === "success" ? {color: "#F9AA33"} : {color:"#800020"}} className="text-monospace text-center">
+                                <div>{ message }  </div>
+                                {variant === "success" ? (
+                                    <Link className="secondary-color text-decoration-none mx-4 font-weight-bold"
+                                          to="/cart"> Go to Cart ? </Link>
                                 ) : ''}
-                            </Card.Title>
-                        </Card.Body>
-                    </Card>
-                    : ''}
+                            </h5>
+                        </Alert>
+                    </Modal.Body>
+                </Modal>
 
                 <h4 className="text-center text-monospace my-4">Identification</h4>
                 <hr/>
