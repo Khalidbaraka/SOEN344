@@ -10,7 +10,6 @@ const jwt = require('jsonwebtoken');
 const config = require('./../config/keys');
 const HelperController = require('./HelperController');
 const mongoose = require('mongoose');
-const userFactory = require('./userFactoryController');
 //  Callback functions that they will invoke on our routes
 
 // Display list of all items.
@@ -194,15 +193,11 @@ exports.patient_checkout_appointment = (req, res) =>{
                                     }
                                     if(annualCheckUpFound == false){
                                         while(i<rooms.length){
-                                            //console.log("room length " + rooms.length  + " room num " + rooms[i].number + " room id " + rooms[i]._id);
                                             roomOverlap=HelperController.check_room_overlap(rooms[i],appStart, appEnd);
                                             if (roomOverlap == false){
                                                 while(k<doctors.length){
-                                                    //console.log("i = " + i + " and k = " + k);
                                                     doctorAvailable = HelperController.check_doctor_available(doctors[k],appStart,appEnd);
-                                                    //console.log("doc avai11 = " + doctorAvailable.answer + " doctorAvailable.roomFound   " + doctorAvailable.roomFound)
-                                                    //console.log("doc name " + doctors[k].firstName );
-                                                    //console.log("rooms[i]._id " + rooms[i]._id );
+
                                                     if(doctorAvailable.answer&& doctorAvailable.roomFound.equals(rooms[i]._id)){
                                                         break;
                                                     }

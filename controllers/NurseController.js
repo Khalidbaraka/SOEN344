@@ -10,7 +10,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const config = require('./../config/keys');
 const HelperController = require('./HelperController');
-const userFactory = require('./userFactoryController');
 
 // Display list of all Nurse
 exports.nurse_list = (req, res) => {
