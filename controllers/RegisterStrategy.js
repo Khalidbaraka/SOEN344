@@ -3,7 +3,7 @@ const Patient = require('./../models/Patient');
 const Doctor = require('./../models/Doctor');
 let bcryptjs = require('bcryptjs');
 const Clinic = require('./../models/Clinic');
-const userFactory = require('./userFactoryController');
+const userFlyWeight = require('./UserFlyWeightController');
 
 
 exports.patient_register_strategy = (req, res) => {
@@ -31,7 +31,7 @@ exports.patient_register_strategy = (req, res) => {
                     cart: []
                 }
 
-                const newPatient = userFactory(object, "patient");
+                const newPatient = userFlyWeight(object, "patient");
                 bcryptjs.genSalt(10, (err, salt) => {
                     bcryptjs.hash(newPatient.password, salt, (err, hash) => {
                         if (err) {
@@ -82,7 +82,7 @@ exports.doctor_register_strategy = (req, res) => {
                             schedules: []
                         }
 
-                        const newDoctor = userFactory(object, "doctor");
+                        const newDoctor = userFlyWeight(object, "doctor");
 
                         bcryptjs.genSalt(10, (err, salt) => {
                             bcryptjs.hash(newDoctor.password, salt, (err, hash) => {
@@ -131,7 +131,7 @@ exports.nurse_register_strategy = (req, res) => {
                             clinic: req.params.clinic_id
                         }
 
-                        const newNurse = userFactory(object, "nurse");
+                        const newNurse = userFlyWeight(object, "nurse");
 
                         bcryptjs.genSalt(10, (err, salt) => {
                             bcryptjs.hash(newNurse.password, salt, (err, hash) => {
